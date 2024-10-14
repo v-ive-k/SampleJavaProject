@@ -4,8 +4,8 @@ FROM openjdk:17-alpine
 # 2. Set the working directory inside the container
 WORKDIR /app
 
-# 3. Copy the current directory contents (including HelloWorld.java) into the container at /app
-COPY myproject/src/main/java/myproject/HelloWorld.java .
+# 3. Copy HelloWorld.java from the correct path into the container at /app
+COPY HelloWorld.java .
 
 # 4. Compile the HelloWorld.java file
 RUN javac HelloWorld.java

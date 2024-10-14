@@ -10,7 +10,7 @@ COPY src/main/java/myproject/HelloWorld.java .
 
 # 4. Compile the HelloWorld.java file
 RUN pwd && ls -la
-RUN mvn validate compile package
+RUN javac HelloWorld.java
 
 # 5. Run the HelloWorld class
 CMD ["java", "HelloWorld"]

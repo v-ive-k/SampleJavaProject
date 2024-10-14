@@ -5,7 +5,7 @@ FROM openjdk:17-alpine
 WORKDIR /app
 
 # 3. Copy HelloWorld.java from the correct path into the container at /app
-COPY myproject/src/main/java/myproject/HelloWorld .
+COPY workspace/firstproject/src/main/java/myproject/HelloWorld.java .
 
 # 4. Compile the HelloWorld.java file
 RUN pwd && ls -la

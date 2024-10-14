@@ -18,7 +18,7 @@ FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 
 # 7. Copy the JAR file from the build stage
-COPY --from=build /app/target/myproject-0.0.1-SNAPSHOT.jar ./myproject.jar
+COPY --from=build /app/target/myproject-myproject.jar ./myproject.jar
 
 # 8. Run the Spring Boot application
 CMD ["java", "-jar", "myproject.jar"]

@@ -1,16 +1,24 @@
-# 1. Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-alpine
+# 1. Use an official Maven image to build the application
+FROM maven:3.9.4-openjdk-17-slim AS build
 
 # 2. Set the working directory inside the container
 WORKDIR /app
 
-# 3. Copy HelloWorld.java from the correct path into the container at /app
-RUN pwd
-COPY src/main/java/myproject/HelloWorld.java .
+# 3. Copy the pom.xml and the source code into the container
+COPY pom.xml .
+COPY src ./src
 
-# 4. Compile the HelloWorld.java file
-RUN pwd && ls -la
-RUN javac HelloWorld.java
+# 4. Build the application using Maven
+RUN mvn clean package -DskipTests
 
-# 5. Run the HelloWorld class
-CMD ["java", "HelloWorld"]
+# 5. Use a lightweight OpenJDK runtime for the final image
+FROM openjdk:17-alpine
+
+# 6. Set the working directory inside the container
+WORKDIR /app
+
+# 7. Copy the JAR file from the build stage
+COPY --from=build /app/target/myproject-0.0.1-SNAPSHOT.jar ./myproject.jar
+
+# 8. Run the Spring Boot application
+CMD ["java", "-jar", "myproject.jar"]

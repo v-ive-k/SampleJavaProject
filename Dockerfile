@@ -6,7 +6,7 @@ WORKDIR /app
 
 # 3. Copy HelloWorld.java from the correct path into the container at /app
 RUN pwd
-COPY /var/lib/jenkins/workspace/firstproject/src/main/java/myproject/HelloWorld.java .
+COPY src/main/java/myproject/HelloWorld.java .
 
 # 4. Compile the HelloWorld.java file
 RUN pwd && ls -la

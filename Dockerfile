@@ -8,8 +8,7 @@ WORKDIR /app
 COPY myproject/src/main/java/myproject/HelloWorld .
 
 # 4. Compile the HelloWorld.java file
-CMD ls
-CMD pwd
+RUN pwd && ls -la
 RUN mvn validate compile package
 
 # 5. Run the HelloWorld class

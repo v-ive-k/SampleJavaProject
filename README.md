@@ -1,46 +1,48 @@
-# ====== CLEAN OLD KUBELOGIN ======
-Write-Host "Removing old kubelogin binaries..."
-$oldPaths = @(where kubelogin 2>$null)
-foreach ($p in $oldPaths) {
+# === REMOVE OLD KUBELOGIN ===
+Write-Host "Removing any old kubelogin binaries..."
+$oldKubelogin = @(where kubelogin 2>$null)
+foreach ($p in $oldKubelogin) {
     try { Remove-Item $p -Force -ErrorAction SilentlyContinue } catch {}
 }
 choco uninstall kubelogin -y 2>$null
 
-# ====== INSTALL CORRECT AZURE KUBELOGIN ======
-Write-Host "Downloading Azure kubelogin..."
-$rel = Invoke-RestMethod https://api.github.com/repos/Azure/kubelogin/releases/latest
-$zip = ($rel.assets | Where-Object {$_.name -match 'kubelogin-win-amd64.zip'}).browser_download_url
-$dst = "C:\admin\bin"
-$temp = "$env:TEMP\kubelogin.zip"
-New-Item -ItemType Directory -Force -Path $dst | Out-Null
-Invoke-WebRequest -Uri $zip -OutFile $temp
-Expand-Archive -Path $temp -DestinationPath $dst -Force
+# === DOWNLOAD & INSTALL AZURE KUBELOGIN ===
+Write-Host "Downloading latest Azure kubelogin..."
+$release = Invoke-RestMethod -Uri "https://api.github.com/repos/Azure/kubelogin/releases/latest"
+$asset = $release.assets | Where-Object { $_.name -match "kubelogin-win-amd64.zip" }
+$zipUrl = $asset.browser_download_url
 
-# ====== UPDATE PATH ======
-if (-not ($env:Path -split ';' | Where-Object { $_ -eq $dst })) {
-    setx PATH "$($env:PATH);$dst" | Out-Null
+$dstDir = "C:\admin\bin"
+$tempZip = "$env:TEMP\kubelogin.zip"
+
+New-Item -ItemType Directory -Force -Path $dstDir | Out-Null
+Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip
+Expand-Archive -Path $tempZip -DestinationPath $dstDir -Force
+
+# === UPDATE PATH ===
+if (-not ($env:Path -split ';' | Where-Object { $_ -eq $dstDir })) {
+    setx PATH "$($env:PATH);$dstDir" | Out-Null
 }
-$env:Path = "$env:Path;$dst"
+$env:Path = "$env:Path;$dstDir"
 
-# ====== VERIFY ======
-Write-Host "kubelogin version:"
+# === VERIFY INSTALL ===
+Write-Host "kubelogin version:" -ForegroundColor Cyan
 kubelogin --version
-Write-Host "kubelogin help contains convert-kubeconfig? "
-kubelogin --help | Select-String -SimpleMatch "convert-kubeconfig"
+Write-Host "kubelogin help (checking convert-kubeconfig):" -ForegroundColor Cyan
+kubelogin --help | Select-String "convert-kubeconfig"
 
-# ====== LOGIN TO AZURE ======
-Write-Host "Logging into Azure..."
+# === LOGIN TO AZURE ===
 az login
 
-# ====== GET AKS CREDENTIALS ======
+# === GET AKS CREDENTIALS ===
 $ResourceGroup = "<RESOURCE_GROUP>"
-$ClusterName = "<CLUSTER_NAME>"
+$ClusterName   = "<CLUSTER_NAME>"
 az aks get-credentials --resource-group $ResourceGroup --name $ClusterName --overwrite-existing
 
-# ====== CONVERT KUBECONFIG ======
+# === CONVERT KUBECONFIG TO USE AZURE CLI ===
 kubelogin convert-kubeconfig --login azurecli
 
-# ====== TEST ======
+# === TEST CONNECTION ===
 kubectl config current-context
 kubectl get nodes
 kubectl get pods -A

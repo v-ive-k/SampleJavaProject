@@ -1,4 +1,4 @@
-terraform import azurerm_resource_group.mr8-dev-rg /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/mr8-dev-rg
-export SUBID=$(az account show --query id -o tsv)
-
-source ~/.bashrc
+terraform import \
+  -var-file=dev.tfvars \
+  azurerm_resource_group.rg \
+  /subscriptions/<SUBID>/resourceGroups/<RG-NAME>

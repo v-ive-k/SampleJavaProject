@@ -70,3 +70,9 @@ terraform state rm 'azurerm_subnet_network_security_group_association.assoc_dmz'
 terraform state rm 'azurerm_subnet_network_security_group_association.assoc_bot_wvd'
 
 
+--------------------------------------
+
+az network vnet subnet show -g mr8-dev-rg --vnet-name mr8-dev-scus-vnet -n mr8-dev-scus-internal-snet --query id -o tsv
+az network nsg show -g mr8-dev-rg -n mr8-dev-scus-internal-nsg --query id -o tsv
+
+

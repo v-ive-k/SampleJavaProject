@@ -1,10 +1,15 @@
-terraform import azurerm_subnet_network_security_group_association.<assoc_name> \
-"/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP_NAME>/providers/Microsoft.Network/virtualNetworks/<VNET_NAME>/subnets/<SUBNET_NAME>"
+# Internal Subnet → Internal NSG
+terraform import azurerm_subnet_network_security_group_association.internal_assoc \
+"/subscriptions/<your-subscription-id>/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet|/subscriptions/<your-subscription-id>/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-internal-nsg"
 
+# WVD Subnet → WVD NSG
+terraform import azurerm_subnet_network_security_group_association.wvd_assoc \
+"/subscriptions/<your-subscription-id>/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet|/subscriptions/<your-subscription-id>/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-WVD-nsg"
 
-terraform import azurerm_subnet_network_security_group_association.app_assoc \
-"/subscriptions/${SUBID}/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-app-subnet"
+# DMZ Subnet → DMZ NSG
+terraform import azurerm_subnet_network_security_group_association.dmz_assoc \
+"/subscriptions/<your-subscription-id>/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet|/subscriptions/<your-subscription-id>/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-dmz-nsg"
 
-
-terraform import azurerm_subnet_network_security_group_association.db_assoc \
-"/subscriptions/${SUBID}/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-db-subnet"
+# BOT WVD Subnet → BOT WVD NSG
+terraform import azurerm_subnet_network_security_group_association.bot_wvd_assoc \
+"/subscriptions/<your-subscription-id>/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet|/subscriptions/<your-subscription-id>/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-bot-scus-WVD-nsg"

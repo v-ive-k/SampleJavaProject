@@ -20,3 +20,28 @@ terraform import azurerm_subnet_network_security_group_association.assoc_interna
 
 
 
+
+
+
+
+==================================
+
+az-admin@ONT-Infra-23:/mnt/c/Users/VKovi/azure-infra/subscriptions/Ont-Dev1/mr8-dev-rg$ az group show -n mr8-dev-rg --query name -o tsv
+mr8-dev-rg
+mr8-dev-scus-vnet
+az-admin@ONT-Infra-23:/mnt/c/Users/VKovi/azure-infra/subscriptions/Ont-Dev1/mr8-dev-rg$ az network vnet subnet list -g mr8-dev-rg --vnet-name mr8-dev-scus-vnet --query "[].name" -o tsv
+mr8-dev-scus-internal-snet
+mr8-dev-scus-WVD-snet
+mr8-dev-scus-dmz-snet
+mr8-dev-bot-scus-WVD-snet
+az-admin@ONT-Infra-23:/mnt/c/Users/VKovi/azure-infra/subscriptions/Ont-Dev1/mr8-dev-rg$ az network nsg list -g mr8-dev-rg --query "[].name" -o tsv
+mr8-dev-bot-scus-WVD-nsg
+mr8-dev-scus-dmz-nsg
+mr8-dev-scus-internal-nsg
+mr8-dev-scus-wvd-nsg
+temp-dev-vnet-01-NSG
+
+
+
+
+

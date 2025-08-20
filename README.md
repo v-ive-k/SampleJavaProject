@@ -39,6 +39,10 @@ az network nsg show -g mr8-dev-rg -n mr8-dev-scus-dmz-nsg --query id -o tsv
 az network nsg show -g mr8-dev-rg -n mr8-dev-bot-scus-WVD-nsg --query id -o tsv
 
 
+terraform import azurerm_subnet_network_security_group_association.<NAME> \
+"<SUBNET_ID>|<NSG_ID>"
+
+
 
 
 

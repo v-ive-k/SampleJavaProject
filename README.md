@@ -10,51 +10,43 @@ terraform import azurerm_windows_virtual_machine.vm_buildcontroller \
 
 
 
-# vms.tf
-resource "azurerm_windows_virtual_machine" "vm_buildcontroller" {
-  name                = "BUILDCONTROLLER-test"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-
-  size                = "Standard_D2as_v5"              # from state
-  network_interface_ids = [
-    azurerm_network_interface.nic_buildcontroller.id
-  ]
-
-  # Windows VMs usually require these on create, but for imported VMs we don't want diffs.
-  # Provide placeholder and ignore changes.
-  admin_username = "imported"        # placeholder
-  admin_password = "DoNotUse123!"    # placeholder
-
-  os_disk {
-    caching              = "ReadWrite"                  # from state
-    storage_account_type = "Premium_LRS"                # from state
-    # disk_size_gb       = 127                          # only if present in state
-  }
-
-  # If state shows an image reference, declare it to avoid drift
-  source_image_reference {
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2019-Datacenter"
-    version   = "latest"
-  }
-
-  # If boot diagnostics are enabled:
-  # boot_diagnostics {
-  #   storage_account_uri = azurerm_storage_account.diag.primary_blob_endpoint
-  # }
-
-  tags = var.global_tags
-
-  lifecycle {
-    ignore_changes = [
-      admin_username,
-      admin_password,
-      # If the VM was created from a specific version/image or has a plan:
-      source_image_reference,
-      # Optional: computer_name, timeouts, patch_settings, secret/certificate sets, etc.
-      # Add any fields that show noisy diffs in your plan
+az-admin@ONT-Infra-23:/mnt/c/Users/VKovi/azure-infra/subscriptions/Ont-Dev1/mr8-dev-rg$ terraform state show azurerm_virtual_machine.vm_buildcontroller
+# azurerm_virtual_machine.vm_buildcontroller:
+resource "azurerm_virtual_machine" "vm_buildcontroller" {
+    id                           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/BUILDCONTROLLER-test"
+    location                     = "southcentralus"
+    name                         = "BUILDCONTROLLER-test"
+    network_interface_ids        = [
+        "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-BUILDCONTROLLER-00-test",
     ]
-  }
+    primary_network_interface_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-BUILDCONTROLLER-00-test"
+    resource_group_name          = "mr8-dev-rg"
+    tags                         = {}
+    vm_size                      = "Standard_D2as_v5"
+    zones                        = []
+
+    boot_diagnostics {
+        enabled     = true
+        storage_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+    }
+
+    identity {
+        identity_ids = []
+        principal_id = "59349bd0-4d8f-452a-8e07-880d71c29dc3"
+        tenant_id    = "e69ffd5c-8131-4a50-ac19-b4123a1e5502"
+        type         = "SystemAssigned"
+    }
+
+    storage_os_disk {
+        caching                   = "ReadWrite"
+        create_option             = "Attach"
+        disk_size_gb              = 100
+        image_uri                 = null
+        managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/BUILDCONTROLLER-OSdisk-00-test"
+        managed_disk_type         = "Premium_LRS"
+        name                      = "BUILDCONTROLLER-OSdisk-00-test"
+        os_type                   = "Windows"
+        vhd_uri                   = null
+        write_accelerator_enabled = false
+    }
 }

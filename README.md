@@ -90,8 +90,110 @@ resource "azurerm_virtual_machine" "vm_buildcontroller" {
   }
 }
 
+#### =======================#####
 
 
+nics.tf
+
+resource "azurerm_network_interface" "nic" {
+  for_each            = var.nics
+  name                = each.value.name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+
+  ip_configuration {
+    name                          = "${each.value.name}-ipConfig"
+    primary                       = true
+    private_ip_address_allocation = each.value.allocation               # "Dynamic" or "Static"
+    private_ip_address            = each.value.allocation == "Static" ? each.value.private_ip : null
+    private_ip_address_version    = "IPv4"
+    subnet_id                     = each.value.subnet_id
+    # public_ip_address_id, gateway_load_balancer_frontend_ip_configuration_id intentionally omitted
+  }
+}
+
+--------------------
+
+# OS DISKS (imported) — keep read-only to avoid accidental replacement
+resource "azurerm_managed_disk" "os" {
+  for_each            = var.os_disks
+  name                = each.value.name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+
+  # We’re tracking existing OS disks; don’t mutate them
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+# DATA DISKS (optional, only if you populate var.data_disks)
+resource "azurerm_managed_disk" "data" {
+  for_each            = local.data_disks_map
+  name                = each.value.name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  storage_account_type = each.value.sku
+
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+# Attach DATA DISKS to their VMs
+resource "azurerm_virtual_machine_data_disk_attachment" "attach" {
+  for_each           = local.data_disks_map
+  managed_disk_id    = azurerm_managed_disk.data[each.key].id
+  virtual_machine_id = azurerm_virtual_machine.vm[each.value.vm_key].id
+  lun                = each.value.lun
+  caching            = each.value.caching
+}
+
+-----------------------
+
+# Use legacy resource to support existing VMs booting from attached OS disks
+resource "azurerm_virtual_machine" "vm" {
+  for_each              = var.vms
+  name                  = each.value.name
+  location              = var.location_name
+  resource_group_name   = var.rg_name
+  vm_size               = each.value.size
+  network_interface_ids = [ azurerm_network_interface.nic[each.value.nic_key].id ]
+
+  # Match your working config: storage_uri (not storage_account_uri)
+  dynamic "boot_diagnostics" {
+    for_each = each.value.boot_diag_uri != "" ? [1] : []
+    content {
+      enabled     = true
+      storage_uri = each.value.boot_diag_uri
+    }
+  }
+
+  dynamic "identity" {
+    for_each = each.value.identity_type != "" ? [1] : []
+    content {
+      type = each.value.identity_type
+    }
+  }
+
+  storage_os_disk {
+    name              = var.os_disks[each.value.os_disk_key].name
+    caching           = "ReadWrite"
+    create_option     = "Attach"
+    managed_disk_id   = azurerm_managed_disk.os[each.value.os_disk_key].id
+    managed_disk_type = var.os_disks[each.value.os_disk_key].storage_account_type != "" ? var.os_disks[each.value.os_disk_key].storage_account_type : null
+    os_type           = var.os_disks[each.value.os_disk_key].os_type != "" ? var.os_disks[each.value.os_disk_key].os_type : null
+    disk_size_gb      = var.os_disks[each.value.os_disk_key].disk_size_gb != 0 ? var.os_disks[each.value.os_disk_key].disk_size_gb : null
+  }
+
+  lifecycle {
+    ignore_changes = [
+      boot_diagnostics,
+      identity,
+      storage_os_disk,
+    ]
+  }
+}
 
 
 

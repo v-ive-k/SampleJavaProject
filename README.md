@@ -221,6 +221,10 @@ terraform state mv \
 
 
 
+<img width="705" height="250" alt="{0A58A2A4-C8E3-483E-98D0-07BC1877EC19}" src="https://github.com/user-attachments/assets/a2e4007e-623c-4af0-b7c2-186414d6ab2d" />
+
+
+
 
 
 

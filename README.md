@@ -197,6 +197,67 @@ resource "azurerm_virtual_machine" "vm" {
 
 
 
+======================================
+
+
+╷
+│ Error: parsing "azurerm_subnet.internal.id": parsing the Subnet ID: the number of segments didn't match
+│
+│ Expected a Subnet ID that matched (containing 10 segments):
+│
+│ > /subscriptions/12345678-1234-9876-4563-123456789012/resourceGroups/example-resource-group/providers/Microsoft.Network/virtualNetworks/virtualNetworksValue/subnets/subnetValue    
+│
+│ However this value was provided (which was parsed into 0 segments):
+│
+│ > azurerm_subnet.internal.id
+│
+│ The following Segments are expected:
+│
+│ * Segment 0 - this should be the literal value "subscriptions"
+│ * Segment 1 - this should be the UUID of the Azure Subscription
+│ * Segment 2 - this should be the literal value "resourceGroups"
+│ * Segment 3 - this should be the name of the Resource Group
+│ * Segment 4 - this should be the literal value "providers"
+│ * Segment 5 - this should be the name of the Resource Provider [for example 'Microsoft.Network']
+│ * Segment 6 - this should be the literal value "virtualNetworks"
+│ * Segment 7 - this should be the user specified value for this virtualNetwork [for example "virtualNetworksValue"]
+│ * Segment 8 - this should be the literal value "subnets"
+│ * Segment 9 - this should be the user specified value for this subnet [for example "subnetValue"]
+│
+│ The following Segments were parsed:
+│
+│ * Segment 0 - not found
+│ * Segment 1 - not found
+│ * Segment 2 - not found
+│ * Segment 3 - not found
+│ * Segment 4 - not found
+│ * Segment 5 - not found
+│ * Segment 6 - not found
+│ * Segment 7 - not found
+│ * Segment 8 - not found
+│ * Segment 9 - not found
+│
+│
+│   with azurerm_network_interface.nic["buildcontroller_test"],
+│   on nics.tf line 13, in resource "azurerm_network_interface" "nic":
+│   13:     subnet_id                     = each.value.su
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -12,25 +12,89 @@ terraform import azurerm_windows_virtual_machine.vm_buildcontroller \
 
 ====================
 
- # azurerm_managed_disk.osdisk_buildcontroller must be replaced
--/+ resource "azurerm_managed_disk" "osdisk_buildcontroller" {
-      ~ disk_iops_read_only               = 0 -> (known after apply)
-      ~ disk_iops_read_write              = 500 -> (known after apply)
-      ~ disk_mbps_read_only               = 0 -> (known after apply)
-      ~ disk_mbps_read_write              = 100 -> (known after apply)
-      - hyper_v_generation                = "V1" -> null # forces replacement
-      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/BUILDCONTROLLER-OSdisk-00-test" -> (known after apply)
-      + logical_sector_size               = (known after apply)
-      ~ max_shares                        = 0 -> (known after apply)
-        name                              = "BUILDCONTROLLER-OSdisk-00-test"
-      - on_demand_bursting_enabled        = false -> null
-      - os_type                           = "Windows" -> null
-      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-BUILDCON-BuildCon-6a158948-864b-47cb-841a-0e40f85e7658/bookmark/25ee4005-6918-496e-9206-d5b50b1eb4e8" -> null # forces replacement
-      + source_uri                        = (known after apply)
-      - tags                              = {
-          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
-        } -> null
-      ~ tier                              = "P10" -> (known after apply)
-      - trusted_launch_enabled            = false -> null
-      - upload_size_bytes                 = 0 -> null
-        # (18 unchanged attributes hidden)
+resource "azurerm_network_interface" "nic_buildcontroller" {
+  name                = "nic-BUILDCONTROLLER-00-test"
+  location            = var.location_name
+  resource_group_name = var.rg_name
+
+  ip_configuration {
+    gateway_load_balancer_frontend_ip_configuration_id = null
+    name                                               = "nic-BUILDCONTROLLER-00-test-ipConfig"
+    primary                                            = true
+    private_ip_address                                 = "10.210.0.19"
+    private_ip_address_allocation                      = "Dynamic"
+    private_ip_address_version                         = "IPv4"
+    public_ip_address_id                               = null
+    subnet_id                                          = azurerm_subnet.internal.id
+  }
+}
+-------------------------
+
+resource "azurerm_managed_disk" "osdisk_buildcontroller" {
+  name                 = "BUILDCONTROLLER-OSdisk-00-test"
+  location             = var.location_name
+  resource_group_name  = var.rg_name
+  storage_account_type = "Premium_LRS"
+  disk_size_gb         = 100
+  create_option        = "Restore"
+  hyper_v_generation   = "V1"
+  os_type              = "Windows"
+
+  lifecycle {
+    ignore_changes = [
+      hyper_v_generation,
+      source_resource_id,
+      trusted_launch_enabled,
+    ]
+
+  }
+}
+
+
+---------------------------
+
+# Creating VMs
+
+resource "azurerm_virtual_machine" "vm_buildcontroller" {
+  name                  = "BUILDCONTROLLER-test"
+  location              = var.location_name
+  resource_group_name   = var.rg_name
+  network_interface_ids = [azurerm_network_interface.nic_buildcontroller.id]
+  vm_size               = "Standard_D2as_v5"
+
+  boot_diagnostics {
+    enabled     = true
+    storage_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  storage_os_disk {
+    name              = "BUILDCONTROLLER-OSdisk-00-test"
+    caching           = "ReadWrite"
+    create_option     = "Attach"
+    managed_disk_id   = azurerm_managed_disk.osdisk_buildcontroller.id
+    managed_disk_type = "Premium_LRS"
+    os_type           = "Windows"
+    disk_size_gb      = 100
+  }
+
+  lifecycle {
+    ignore_changes = [
+      boot_diagnostics,
+      identity,
+      storage_os_disk,
+    ]
+  }
+}
+
+
+
+
+
+
+
+
+

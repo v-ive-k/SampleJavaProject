@@ -10,7 +10,7 @@ terraform import azurerm_windows_virtual_machine.vm_buildcontroller \
 
 
 
-
+====================
 resource "azurerm_virtual_machine" "vm_buildcontroller" {
   name                  = "BUILDCONTROLLER-test"
   location              = var.location_name

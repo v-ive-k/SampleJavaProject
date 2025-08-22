@@ -12,178 +12,25 @@ terraform import azurerm_windows_virtual_machine.vm_buildcontroller \
 
 ====================
 
-az-admin@ONT-Infra-23:/mnt/c/Users/VKovi/azure-infra/subscriptions/Ont-Dev1/mr8-dev-rg$ terraform plan -refresh-only
-azurerm_resource_group.rg: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg]
-azurerm_subnet.dmz: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet]
-azurerm_managed_disk.osdisk_buildcontroller: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/BUILDCONTROLLER-OSdisk-00-test]
-azurerm_subnet.wvd: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet]
-azurerm_network_security_group.nsg_wvd: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-wvd-nsg]
-azurerm_subnet.bot_wvd: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet]
-azurerm_subnet.internal: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet]
-azurerm_virtual_network.main_vnet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet]
-azurerm_network_security_group.nsg_dmz: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-dmz-nsg]
-azurerm_network_security_group.nsg_internal: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-internal-nsg]
-azurerm_network_security_group.nsg_bot_wvd: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-bot-scus-WVD-nsg]
-azurerm_network_interface.nic_buildcontroller: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-BUILDCONTROLLER-00-test]
-azurerm_subnet_network_security_group_association.assoc_bot_wvd: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet]
-azurerm_subnet_network_security_group_association.assoc_wvd: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet]
-azurerm_subnet_network_security_group_association.assoc_dmz: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet]
-azurerm_subnet_network_security_group_association.assoc_internal: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet]
-azurerm_virtual_machine.vm_buildcontroller: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/BUILDCONTROLLER-test]
-
-Note: Objects have changed outside of Terraform
-
-Terraform detected the following changes made outside of Terraform since the last "terraform apply" which may have affected this plan:
-
-  # azurerm_virtual_network.main_vnet has changed
-  ~ resource "azurerm_virtual_network" "main_vnet" {
-        id                             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet"
-        name                           = "mr8-dev-scus-vnet"
-      ~ subnet                         = [
-          - {
-              - address_prefixes                              = [
-                  - "10.239.64.0/24",
-                ]
-              - default_outbound_access_enabled               = false
-              - delegation                                    = []
-              - id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet"
-              - name                                          = "mr8-dev-scus-internal-snet"
-              - private_endpoint_network_policies             = "Disabled"
-              - private_link_service_network_policies_enabled = true
-              - route_table_id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt"
-              - security_group                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-internal-nsg"
-              - service_endpoint_policy_ids                   = []
-              - service_endpoints                             = [
-                  - "Microsoft.KeyVault",
-                  - "Microsoft.Storage",
-                ]
-            },
-          - {
-              - address_prefixes                              = [
-                  - "10.239.65.0/24",
-                ]
-              - default_outbound_access_enabled               = false
-              - delegation                                    = []
-              - id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet"
-              - name                                          = "mr8-dev-scus-dmz-snet"
-              - private_endpoint_network_policies             = "Enabled"
-              - private_link_service_network_policies_enabled = true
-              - route_table_id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt"
-              - security_group                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-dmz-nsg"
-              - service_endpoint_policy_ids                   = []
-              - service_endpoints                             = []
-            },
-          - {
-              - address_prefixes                              = [
-                  - "10.239.66.0/26",
-                ]
-              - default_outbound_access_enabled               = false
-              - delegation                                    = []
-              - id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet"
-              - name                                          = "mr8-dev-scus-WVD-snet"
-              - private_endpoint_network_policies             = "Enabled"
-              - private_link_service_network_policies_enabled = true
-              - route_table_id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt"
-              - security_group                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-wvd-nsg"
-              - service_endpoint_policy_ids                   = []
-              - service_endpoints                             = [
-                  - "Microsoft.KeyVault",
-                  - "Microsoft.Storage",
-                ]
-            },
-          - {
-              - address_prefixes                              = [
-                  - "10.239.66.64/26",
-                ]
-              - default_outbound_access_enabled               = false
-              - delegation                                    = []
-              - id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet"
-              - name                                          = "mr8-dev-bot-scus-WVD-snet"
-              - private_endpoint_network_policies             = "Disabled"
-              - private_link_service_network_policies_enabled = true
-              - route_table_id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt"
-              - security_group                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-bot-scus-WVD-nsg"
-              - service_endpoint_policy_ids                   = []
-              - service_endpoints                             = [
-                  - "Microsoft.Storage",
-                ]
-            },
-          + {
-              + address_prefixes                              = [
-                  + "10.239.64.0/24",
-                ]
-              + default_outbound_access_enabled               = false
-              + delegation                                    = []
-              + id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-Dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet"
-              + name                                          = "mr8-dev-scus-internal-snet"
-              + private_endpoint_network_policies             = "Disabled"
-              + private_link_service_network_policies_enabled = true
-              + route_table_id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt"
-              + security_group                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-internal-nsg"
-              + service_endpoint_policy_ids                   = []
-              + service_endpoints                             = [
-                  + "Microsoft.KeyVault",
-                  + "Microsoft.Storage",
-                ]
-            },
-          + {
-              + address_prefixes                              = [
-                  + "10.239.65.0/24",
-                ]
-              + default_outbound_access_enabled               = false
-              + delegation                                    = []
-              + id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-Dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet"
-              + name                                          = "mr8-dev-scus-dmz-snet"
-              + private_endpoint_network_policies             = "Enabled"
-              + private_link_service_network_policies_enabled = true
-              + route_table_id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt"
-              + security_group                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-dmz-nsg"
-              + service_endpoint_policy_ids                   = []
-              + service_endpoints                             = []
-            },
-          + {
-              + address_prefixes                              = [
-                  + "10.239.66.0/26",
-                ]
-              + default_outbound_access_enabled               = false
-              + delegation                                    = []
-              + id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-Dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet"
-              + name                                          = "mr8-dev-scus-WVD-snet"
-              + private_endpoint_network_policies             = "Enabled"
-              + private_link_service_network_policies_enabled = true
-              + route_table_id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt"
-              + security_group                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-wvd-nsg"
-              + service_endpoint_policy_ids                   = []
-              + service_endpoints                             = [
-                  + "Microsoft.KeyVault",
-                  + "Microsoft.Storage",
-                ]
-            },
-          + {
-              + address_prefixes                              = [
-                  + "10.239.66.64/26",
-                ]
-              + default_outbound_access_enabled               = false
-              + delegation                                    = []
-              + id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-Dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet"
-              + name                                          = "mr8-dev-bot-scus-WVD-snet"
-              + private_endpoint_network_policies             = "Disabled"
-              + private_link_service_network_policies_enabled = true
-              + route_table_id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt"
-              + security_group                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-bot-scus-WVD-nsg"
-              + service_endpoint_policy_ids                   = []
-              + service_endpoints                             = [
-                  + "Microsoft.Storage",
-                ]
-            },
-        ]
-        tags                           = {
-            "environment" = "Development"
-            "owner"       = "Jaspinder Singh"
-        }
-        # (9 unchanged attributes hidden)
-    }
-
-
-This is a refresh-only plan, so Terraform will not take any actions to undo these. If you were expecting these changes then you can apply this plan to record the updated values in   
-the Terraform state without changing any remote objects.
+ # azurerm_managed_disk.osdisk_buildcontroller must be replaced
+-/+ resource "azurerm_managed_disk" "osdisk_buildcontroller" {
+      ~ disk_iops_read_only               = 0 -> (known after apply)
+      ~ disk_iops_read_write              = 500 -> (known after apply)
+      ~ disk_mbps_read_only               = 0 -> (known after apply)
+      ~ disk_mbps_read_write              = 100 -> (known after apply)
+      - hyper_v_generation                = "V1" -> null # forces replacement
+      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/BUILDCONTROLLER-OSdisk-00-test" -> (known after apply)
+      + logical_sector_size               = (known after apply)
+      ~ max_shares                        = 0 -> (known after apply)
+        name                              = "BUILDCONTROLLER-OSdisk-00-test"
+      - on_demand_bursting_enabled        = false -> null
+      - os_type                           = "Windows" -> null
+      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-BUILDCON-BuildCon-6a158948-864b-47cb-841a-0e40f85e7658/bookmark/25ee4005-6918-496e-9206-d5b50b1eb4e8" -> null # forces replacement
+      + source_uri                        = (known after apply)
+      - tags                              = {
+          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
+        } -> null
+      ~ tier                              = "P10" -> (known after apply)
+      - trusted_launch_enabled            = false -> null
+      - upload_size_bytes                 = 0 -> null
+        # (18 unchanged attributes hidden)

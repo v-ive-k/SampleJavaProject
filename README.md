@@ -20,7 +20,7 @@ resource "azurerm_virtual_machine" "vm_buildcontroller" {
 
   boot_diagnostics {
     enabled     = true
-    storage_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+    storage_uri = 
   }
 
   identity {

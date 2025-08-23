@@ -216,12 +216,34 @@ terraform state mv \
   'azurerm_virtual_machine.vm["buildcontroller_test"]'
 
 
+================================================================
+
+NIC Block
+
+terraform import 'azurerm_network_interface.nic[""]' \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-BUILDCONTROLLER-00-test
+
+DISK BLock
+
+terraform import 'azurerm_managed_disk.os[""]' \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/BUILDCONTROLLER-OSdisk-00-test
+
+VM Block
+
+terraform import 'azurerm_virtual_machine.vm[""]' \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/BUILDCONTROLLER-test
 
 
 
 
 
-<img width="705" height="250" alt="{0A58A2A4-C8E3-483E-98D0-07BC1877EC19}" src="https://github.com/user-attachments/assets/a2e4007e-623c-4af0-b7c2-186414d6ab2d" />
+
+
+
+
+
+
+
 
 
 

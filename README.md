@@ -598,19 +598,8 @@ resource "azurerm_managed_disk" "os" {
 
 
 
-
-  dynamic "storage_data_disk" {
-    for_each = lookup(var.data_disks, each.key, [])
-    content {
-      name                 = storage_data_disk.value.name
-      lun                  = storage_data_disk.value.lun
-      disk_size_gb         = storage_data_disk.value.disk_size_gb
-      managed_disk_type    = storage_data_disk.value.storage_account_type
-      caching              = storage_data_disk.value.caching
-      create_option        = "Attach"
-      managed_disk_id      = azurerm_managed_disk.data[storage_data_disk.value.name].id
-    }
-  }
+terraform import 'azurerm_managed_disk.data["rpa01_data01"]' \
+  /subscriptions/<sub>/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/dvkib2-rpa01_datadisk01
 
 
 

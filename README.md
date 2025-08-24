@@ -1,3 +1,59 @@
+resource "azurerm_managed_disk" "data" {
+  for_each = {
+    for pair in flatten([
+      for vm, disks in var.data_disks : [
+        for index, disk in disks : {
+          key   = "${vm}-${index}"
+          value = disk
+        }
+      ]
+    ]) : pair.key => pair.value
+  }
+
+  name                 = each.value.name
+  location             = var.location_name
+  resource_group_name  = var.rg_name
+  storage_account_type = each.value.storage_account_type
+  create_option        = "Attach"
+  disk_size_gb         = each.value.disk_size_gb
+  lun                  = try(each.value.lun, null)
+  caching              = try(each.value.caching, null)
+
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 terraform import azurerm_network_interface.nic_buildcontroller \
 "/subscriptions/<sub_id>/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-BUILDCONTROLLER-00-test"
 

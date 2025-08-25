@@ -1,150 +1,254 @@
-resource "azurerm_mssql_virtual_machine" "sql_vm" {
-  for_each            = var.sql_vms
-  virtual_machine_id  = azurerm_virtual_machine.vm[each.value.vm_key].id
-  sql_license_type    = each.value.license_type # "PAYG" or "AHUB"
+NIS's
 
-  auto_patching {
-    day_of_week        = each.value.patch_day
-    maintenance_window = each.value.patch_window
-    patch_category     = each.value.patch_category
+resource "azurerm_network_interface" "nic" {
+  for_each            = var.nics
+  name                = each.value.name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  tags                = var.global_tags
+
+  ip_configuration {
+    name                          = coalesce(each.value.ip_config_name, "${each.value.name}-ipConfig")
+    primary                       = true
+    private_ip_address_allocation = each.value.allocation # "Dynamic" or "Static"
+    private_ip_address            = each.value.allocation == "Static" ? each.value.private_ip : null
+    private_ip_address_version    = "IPv4"
+    subnet_id                     = each.value.subnet_id
   }
 
-  auto_backup {
-    enable                 = each.value.enable_backup
-    backup_system_dbs      = each.value.backup_system_dbs
-    backup_schedule_type   = each.value.backup_schedule_type
-    full_backup_frequency  = each.value.full_backup_frequency
-    full_backup_start_hour = each.value.full_backup_start_hour
-    full_backup_window_in_hours = each.value.full_backup_window
-    retention_period_in_days    = each.value.retention_days
+  lifecycle {
+    ignore_changes = [
+      accelerated_networking_enabled,
+    ]
   }
 }
 
+===================================
+VM's
 
 
-==================================================
+
+resource "azurerm_virtual_machine" "vm" {
+  for_each              = var.vms
+  name                  = each.value.name
+  location              = var.location_name
+  resource_group_name   = var.rg_name
+  vm_size               = each.value.size
+  network_interface_ids = [azurerm_network_interface.nic[each.value.nic_key].id]
+  tags                  = var.global_tags
+
+  dynamic "boot_diagnostics" {
+    for_each = each.value.boot_diag_uri != "" ? [1] : []
+    content {
+      enabled     = true
+      storage_uri = each.value.boot_diag_uri
+    }
+  }
+
+  dynamic "identity" {
+    for_each = each.value.identity_type != "" ? [1] : []
+    content {
+      type = each.value.identity_type
+    }
+  }
 
 
-variable "sql_vms" {
-  description = "SQL VM configuration"
+  storage_os_disk {
+    name              = var.os_disks[each.value.os_disk_key].name
+    caching           = "ReadWrite"
+    create_option     = "Attach"
+    managed_disk_id   = azurerm_managed_disk.os[each.value.os_disk_key].id
+    managed_disk_type = var.os_disks[each.value.os_disk_key].storage_account_type != "" ? var.os_disks[each.value.os_disk_key].storage_account_type : null
+    os_type           = var.os_disks[each.value.os_disk_key].os_type != "" ? var.os_disks[each.value.os_disk_key].os_type : null
+    disk_size_gb      = var.os_disks[each.value.os_disk_key].disk_size_gb != 0 ? var.os_disks[each.value.os_disk_key].disk_size_gb : null
+
+  }
+
+  dynamic "storage_data_disk" {
+    for_each = lookup(var.data_disks, each.key, [])
+    content {
+      name              = storage_data_disk.value.name
+      lun               = storage_data_disk.value.lun
+      disk_size_gb      = storage_data_disk.value.disk_size_gb
+      managed_disk_type = storage_data_disk.value.storage_account_type
+      caching           = storage_data_disk.value.caching
+      create_option     = "Attach"
+      managed_disk_id   = azurerm_managed_disk.data["${each.key}-${storage_data_disk.value.lun}"].id
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      boot_diagnostics,
+      identity,
+      os_profile_windows_config,
+      os_profile_linux_config,
+      storage_image_reference,
+      storage_os_disk,
+      os_profile,
+
+    ]
+  }
+}
+
+# SQL Machines
+
+resource "azurerm_mssql_virtual_machine" "sql_vm" {
+  for_each           = var.sql_vms
+  tags               = var.global_tags
+  virtual_machine_id = azurerm_virtual_machine.vm[each.value.vm_key].id
+  sql_license_type   = each.value.license_type
+
+}
+
+===============================
+
+DISKs
+
+# OS DISKS (imported) 
+resource "azurerm_managed_disk" "os" {
+  for_each            = var.os_disks
+  name                = each.value.name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+
+  storage_account_type = each.value.storage_account_type
+  create_option        = "Restore"
+  disk_size_gb         = each.value.disk_size_gb
+  os_type              = each.value.os_type
+  hyper_v_generation   = each.value.hyper_v_generation
+
+  # We’re tracking existing OS disks; don’t mutate them
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+resource "azurerm_managed_disk" "data" {
+  for_each = {
+    for pair in flatten([
+      for vm, disks in var.data_disks : [
+        for index, disk in disks : {
+          key   = "${vm}-${index}"
+          value = disk
+        }
+      ]
+    ]) : pair.key => pair.value
+  }
+
+  name                 = each.value.name
+  location             = var.location_name
+  resource_group_name  = var.rg_name
+  storage_account_type = each.value.storage_account_type
+  create_option        = "Empty"
+  disk_size_gb         = each.value.disk_size_gb
+
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+=====================================
+
+#Global Var
+variable "global_tags" {}
+
+# Resource Group Variable
+variable "rg_name" {}
+
+# Locatoin Variable
+variable "location_name" {}
+
+# Main Networking Variables
+variable "main_vnet_name" {}
+variable "main_vnet_address_space" {}
+variable "main_dns_servers" {}
+
+# Subnet Variables
+variable "internal_snet_name" {}
+variable "internal_snet_address_prefix" {}
+variable "wvd_snet_name" {}
+variable "wvd_snet_address_prefix" {}
+variable "dmz_snet_name" {}
+variable "dmz_snet_address_prefix" {}
+variable "bot_wvd_snet_name" {}
+variable "bot_wvd_snet_address_prefix" {}
+
+# Network Security Group Variables
+variable "nsg_internal_name" {}
+variable "nsg_wvd_name" {}
+variable "nsg_dmz_name" {}
+variable "nsg_bot_wvd_name" {}
+
+# Temp Network Variables
+variable "temp_vnet_name" {}
+variable "temp_vnet_address_space" {}
+variable "temp_dns_servers" {}
+
+# Temp Subnet Varibales
+variable "Internal_snet_name" {}
+variable "Internal_snet_address_prefix" {}
+
+# Temp NSG Variables
+variable "nsg_Internal_name" {}
+
+
+# NICs Variables
+variable "nics" {
   type = map(object({
-    vm_key                 = string
-    license_type           = string
-    patch_day              = string
-    patch_window           = number
-    patch_category         = string
-    enable_backup          = bool
-    backup_system_dbs      = bool
-    backup_schedule_type   = string
-    full_backup_frequency  = string
-    full_backup_start_hour = number
-    full_backup_window     = number
-    retention_days         = number
+    name : string
+    subnet_id : string
+    allocation : string
+    private_ip : string
+    ip_config_name : optional(string)
+    acclerated_networking_enabled : optional(bool)
+
+  }))
+}
+
+variable "data_disks" {
+  type = map(list(object({
+    name                 = string
+    disk_size_gb         = number
+    storage_account_type = string
+    lun                  = number
+    caching              = string
+  })))
+  default = {}
+}
+
+# DISKs Variables
+variable "os_disks" {
+  type = map(object({
+    name                 = string
+    disk_size_gb         = string
+    storage_account_type = string
+    os_type              = string
+    hyper_v_generation   = string
+
+  }))
+}
+
+#VMs Variables
+variable "vms" {
+  type = map(object({
+    name          = string
+    size          = string
+    nic_key       = string
+    os_disk_key   = string
+    boot_diag_uri = string
+    identity_type = string
   }))
 }
 
 
-=======================================
-.tfvars
-
-sql_vms = {
-  "sql1" = {
-    vm_key                 = "dvkib2_app01"   # must match your VM key in var.vms
-    license_type           = "PAYG"
-    patch_day              = "Sunday"
-    patch_window           = 2
-    patch_category         = "WindowsMandatoryUpdates"
-    enable_backup          = true
-    backup_system_dbs      = true
-    backup_schedule_type   = "Manual"
-    full_backup_frequency  = "Weekly"
-    full_backup_start_hour = 2
-    full_backup_window     = 2
-    retention_days         = 30
-  }
-  # repeat for other 3 SQL VMs...
+# SQL VM Variables
+variable "sql_vms" {
+  type = map(object({
+    vm_key       = string
+    license_type = string
+  }))
 }
-
-
-========================================
-
-terraform import 'azurerm_mssql_virtual_machine.sql_vm["sql1"]' "/subscriptions/<sub-id>/resourceGroups/<rg-name>/providers/Microsoft.SqlVirtualMachine/sqlVirtualMachines/<sql-vm-name>"
-
-
-=================================
-
-
-# azurerm_mssql_virtual_machine.sql_vm["sql1"] must be replaced
--/+ resource "azurerm_mssql_virtual_machine" "sql_vm" {
-      ~ id                           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.SqlVirtualMachine/sqlVirtualMachines/dvkib2-rpa01" -> (known after apply)
-      + sql_connectivity_port        = 1433
-      + sql_connectivity_type        = "PRIVATE"
-      ~ tags                         = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-      ~ virtual_machine_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/dvkib2-rpa01" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-RPA01" # forces replacement
-        # (2 unchanged attributes hidden)
-    }
-
-  # azurerm_mssql_virtual_machine.sql_vm["sql2"] must be replaced
--/+ resource "azurerm_mssql_virtual_machine" "sql_vm" {
-      ~ id                           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.SqlVirtualMachine/sqlVirtualMachines/dvkib2-rpa02" -> (known after apply)
-      + sql_connectivity_port        = 1433
-      + sql_connectivity_type        = "PRIVATE"
-      ~ tags                         = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-      ~ virtual_machine_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/dvkib2-rpa02" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-RPA02" # forces replacement
-        # (2 unchanged attributes hidden)
-    }
-
-  # azurerm_network_interface.nic["buildcontroller_test"] will be updated in-place
-  ~ resource "azurerm_network_interface" "nic" {
-        id                             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-BUILDCONTROLLER-00-test"
-        name                           = "nic-BUILDCONTROLLER-00-test"
-      ~ tags                           = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (15 unchanged attributes hidden)
-
-        # (1 unchanged block hidden)
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

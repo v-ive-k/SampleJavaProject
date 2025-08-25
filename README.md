@@ -1,736 +1,274 @@
- # azurerm_virtual_machine.vm["dvkib2_9"] must be replaced
--/+ resource "azurerm_virtual_machine" "vm" {
-      + availability_set_id              = (known after apply)
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-      ~ id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/dvkib2-9" -> (known after apply)
-      + license_type                     = (known after apply)
-        name                             = "dvkib2-9"
-      ~ tags                             = {
-          - "Domain"             = "Keaisinc" -> null
-          - "Owner"              = "Greg Johnson" -> null
-          - "cm-resource-parent" = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.DesktopVirtualization/hostpools/MR8WVD-Dev-Automation-Bot-02" -> null
-          + "domain"             = "Keais"
-            "environment"        = "Development"
-          + "managed by"         = "terraform"
-          - "name"               = "Keaisinc" -> null
-          + "owner"              = "Greg Johnson"
-        }
-      - zones                            = [] -> null
-        # (4 unchanged attributes hidden)
-
-      - additional_capabilities {}
-
-      - boot_diagnostics {
-          - enabled     = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      - os_profile {
-          # At least one attribute in this block is (or was) sensitive,
-          # so its contents will not be displayed.
-        }
-
-      - os_profile_windows_config {
-          - enable_automatic_upgrades = true -> null
-          - provision_vm_agent        = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ storage_data_disk (known after apply)
-
-      ~ storage_image_reference (known after apply)
-      - storage_image_reference {
-          - id        = "/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/IT-Prod-RG/providers/Microsoft.Compute/galleries/Ont_Prod1_scus_scg/images/AVD-KI-MR8-Win11/versions/0.0.1" -> null
-            # (4 unchanged attributes hidden)
-        }
-
-      ~ storage_os_disk {
-          ~ create_option             = "FromImage" -> "Attach"
-          ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-DEV-RG/providers/Microsoft.Compute/disks/dvkib2-9_OsDisk_1_b8676dfef855414197a5c687543010ec" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/dvkib2-9_OsDisk_1_b8676dfef855414197a5c687543010ec" # forces replacement 
-          ~ managed_disk_type         = "StandardSSD_LRS" -> "Standard_LRS"
-            name                      = "dvkib2-9_OsDisk_1_b8676dfef855414197a5c687543010ec"
-            # (6 unchanged attributes hidden)
-        }
-    }
-
-  # azurerm_virtual_machine.vm["dvkib2_app01"] must be replaced
--/+ resource "azurerm_virtual_machine" "vm" {
-      + availability_set_id              = (known after apply)
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-      ~ id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-APP01" -> (known after apply)
-      + license_type                     = (known after apply)
-        name                             = "DVKIB2-APP01"
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          ~ "environment" = "development" -> "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-      - zones                            = [] -> null
-        # (4 unchanged attributes hidden)
-
-      - boot_diagnostics {
-          - enabled     = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      - os_profile {
-          # At least one attribute in this block is (or was) sensitive,
-          # so its contents will not be displayed.
-        }
-
-      - os_profile_windows_config {
-          - enable_automatic_upgrades = true -> null
-          - provision_vm_agent        = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ storage_data_disk (known after apply)
-
-      ~ storage_image_reference (known after apply)
-      - storage_image_reference {
-            id        = null
-          - offer     = "WindowsServer" -> null
-          - publisher = "MicrosoftWindowsServer" -> null
-          - sku       = "2019-Datacenter" -> null
-          - version   = "latest" -> null
-        }
-
-      ~ storage_os_disk {
-          ~ create_option             = "FromImage" -> "Attach"
-          ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-DEV-RG/providers/Microsoft.Compute/disks/DVKIB2-APP01_OsDisk_1_8e1525feb7b1478f9e4ceda5c8f4be3b" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DVKIB2-APP01_OsDisk_1_8e1525feb7b1478f9e4ceda5c8f4be3b" # forces replacement
-            name                      = "DVKIB2-APP01_OsDisk_1_8e1525feb7b1478f9e4ceda5c8f4be3b"
-            # (7 unchanged attributes hidden)
-        }
-    }
-
-  # azurerm_virtual_machine.vm["dvkib2_def01"] must be replaced
--/+ resource "azurerm_virtual_machine" "vm" {
-      + availability_set_id              = (known after apply)
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-      ~ id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-DEF01" -> (known after apply)
-      + license_type                     = (known after apply)
-        name                             = "DVKIB2-DEF01"
-      ~ tags                             = {
-          ~ "domain"      = "keaisinc" -> "Keais"
-          ~ "environment" = "development" -> "Development"
-          + "managed by"  = "terraform"
-          ~ "owner"       = "Jaspinder Singh" -> "Greg Johnson"
-        }
-      - zones                            = [] -> null
-        # (4 unchanged attributes hidden)
-
-      - boot_diagnostics {
-          - enabled     = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ identity {
-          - identity_ids = [] -> null
-          ~ principal_id = "fab5ba7d-6e4d-49b5-b182-c6ecb54b7ae6" -> (known after apply)
-          ~ tenant_id    = "e69ffd5c-8131-4a50-ac19-b4123a1e5502" -> (known after apply)
-            # (1 unchanged attribute hidden)
-        }
-
-      - os_profile {
-          # At least one attribute in this block is (or was) sensitive,
-          # so its contents will not be displayed.
-        }
-
-      - os_profile_windows_config {
-          - enable_automatic_upgrades = false -> null
-          - provision_vm_agent        = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ storage_data_disk (known after apply)
-
-      ~ storage_image_reference (known after apply)
-      - storage_image_reference {
-            id        = null
-          - offer     = "WindowsServer" -> null
-          - publisher = "MicrosoftWindowsServer" -> null
-          - sku       = "2019-datacenter-gensecond" -> null
-          - version   = "latest" -> null
-        }
-
-      ~ storage_os_disk {
-          ~ create_option             = "FromImage" -> "Attach"
-          ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-DEV-RG/providers/Microsoft.Compute/disks/DVKIB2-DEF01_osdisk1" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DVKIB2-DEF01_osdisk1" # forces replacement
-            name                      = "DVKIB2-DEF01_osdisk1"
-            # (7 unchanged attributes hidden)
-        }
-    }
-
-  # azurerm_virtual_machine.vm["dvkib2_rpa01"] will be updated in-place
-  ~ resource "azurerm_virtual_machine" "vm" {
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-RPA01"
-        name                             = "DVKIB2-RPA01"
-      ~ tags                             = {
-          - "Business Unit" = "Keais" -> null
-          ~ "domain"        = "keaisinc" -> "Keais"
-          ~ "environment"   = "development" -> "Development"
-          + "managed by"    = "terraform"
-            "owner"         = "Greg Johnson"
-        }
-        # (5 unchanged attributes hidden)
-
-      - boot_diagnostics {
-          - enabled     = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ storage_os_disk {
-          ~ create_option             = "FromImage" -> "Attach"
-            name                      = "DVKIB2-RPA01_OsDisk_1_742f1b371716444f8dc0caacaef8d917"
-            # (8 unchanged attributes hidden)
-        }
-
-        # (5 unchanged blocks hidden)
-    }
-
-  # azurerm_virtual_machine.vm["dvkib2_rpa02"] must be replaced
--/+ resource "azurerm_virtual_machine" "vm" {
-      + availability_set_id              = (known after apply)
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-      ~ id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-RPA02" -> (known after apply)
-      + license_type                     = (known after apply)
-        name                             = "DVKIB2-RPA02"
-      ~ tags                             = {
-          - "Business Unit" = "Keais" -> null
-          ~ "domain"        = "keaisinc" -> "Keais"
-          ~ "environment"   = "development" -> "Development"
-          + "managed by"    = "terraform"
-            "owner"         = "Greg Johnson"
-        }
-      - zones                            = [] -> null
-        # (4 unchanged attributes hidden)
-
-      - boot_diagnostics {
-          - enabled     = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ identity {
-          - identity_ids = [] -> null
-          ~ principal_id = "d7d174bb-1837-46a2-a066-98e390555b11" -> (known after apply)
-          ~ tenant_id    = "e69ffd5c-8131-4a50-ac19-b4123a1e5502" -> (known after apply)
-            # (1 unchanged attribute hidden)
-        }
-
-      - os_profile {
-          # At least one attribute in this block is (or was) sensitive,
-          # so its contents will not be displayed.
-        }
-
-      - os_profile_windows_config {
-          - enable_automatic_upgrades = true -> null
-          - provision_vm_agent        = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ storage_image_reference (known after apply)
-      - storage_image_reference {
-            id        = null
-          - offer     = "WindowsServer" -> null
-          - publisher = "MicrosoftWindowsServer" -> null
-          - sku       = "2019-datacenter-gensecond" -> null
-          - version   = "latest" -> null
-        }
-
-      ~ storage_os_disk {
-          ~ create_option             = "FromImage" -> "Attach"
-          ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-DEV-RG/providers/Microsoft.Compute/disks/DVKIB2-RPA02_OsDisk_1_b74846474fc644e7b0f2f0ba8ac0a700" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DVKIB2-RPA02_OsDisk_1_b74846474fc644e7b0f2f0ba8ac0a700" # forces replacement
-            name                      = "DVKIB2-RPA02_OsDisk_1_b74846474fc644e7b0f2f0ba8ac0a700"
-            # (7 unchanged attributes hidden)
-        }
-
-        # (1 unchanged block hidden)
-    }
-
-  # azurerm_virtual_machine.vm["dvkib2_web01"] must be replaced
--/+ resource "azurerm_virtual_machine" "vm" {
-      + availability_set_id              = (known after apply)
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-      ~ id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-WEB01" -> (known after apply)
-      + license_type                     = (known after apply)
-        name                             = "DVKIB2-WEB01"
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-      - zones                            = [] -> null
-        # (4 unchanged attributes hidden)
-
-      - boot_diagnostics {
-          - enabled     = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      - os_profile {
-          # At least one attribute in this block is (or was) sensitive,
-          # so its contents will not be displayed.
-        }
-
-      - os_profile_windows_config {
-          - enable_automatic_upgrades = true -> null
-          - provision_vm_agent        = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ storage_data_disk (known after apply)
-
-      ~ storage_image_reference (known after apply)
-      - storage_image_reference {
-            id        = null
-          - offer     = "WindowsServer" -> null
-          - publisher = "MicrosoftWindowsServer" -> null
-          - sku       = "2019-Datacenter" -> null
-          - version   = "latest" -> null
-        }
-
-      ~ storage_os_disk {
-          ~ create_option             = "FromImage" -> "Attach"
-          ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-DEV-RG/providers/Microsoft.Compute/disks/DVKIB2-WEB01_OsDisk_1_2983fb975b9d45bc806d054ea09c2dd7" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DVKIB2-WEB01_OsDisk_1_2983fb975b9d45bc806d054ea09c2dd7" # forces replacement
-            name                      = "DVKIB2-WEB01_OsDisk_1_2983fb975b9d45bc806d054ea09c2dd7"
-            # (7 unchanged attributes hidden)
-        }
-    }
-
-  # azurerm_virtual_machine.vm["dvkib2_web02"] must be replaced
--/+ resource "azurerm_virtual_machine" "vm" {
-      + availability_set_id              = (known after apply)
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-      ~ id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-WEB02" -> (known after apply)
-      + license_type                     = (known after apply)
-        name                             = "DVKIB2-WEB02"
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-      - zones                            = [] -> null
-        # (4 unchanged attributes hidden)
-
-      - boot_diagnostics {
-          - enabled     = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      - os_profile {
-          # At least one attribute in this block is (or was) sensitive,
-          # so its contents will not be displayed.
-        }
-
-      - os_profile_windows_config {
-          - enable_automatic_upgrades = true -> null
-          - provision_vm_agent        = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ storage_data_disk (known after apply)
-
-      ~ storage_image_reference (known after apply)
-      - storage_image_reference {
-            id        = null
-          - offer     = "WindowsServer" -> null
-          - publisher = "MicrosoftWindowsServer" -> null
-          - sku       = "2019-Datacenter" -> null
-          - version   = "latest" -> null
-        }
-
-      ~ storage_os_disk {
-          ~ create_option             = "FromImage" -> "Attach"
-          ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-DEV-RG/providers/Microsoft.Compute/disks/DVKIB2-WEB02_OsDisk_1_c3cb151d066246e88dee0e84a975e5f8" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DVKIB2-WEB02_OsDisk_1_c3cb151d066246e88dee0e84a975e5f8" # forces replacement
-            name                      = "DVKIB2-WEB02_OsDisk_1_c3cb151d066246e88dee0e84a975e5f8"
-            # (7 unchanged attributes hidden)
-        }
-    }
-
-  # azurerm_virtual_machine.vm["dvkic1_pm01_test"] will be updated in-place
-  ~ resource "azurerm_virtual_machine" "vm" {
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIC1-PM01-test"
-        name                             = "DVKIC1-PM01-test"
-      - primary_network_interface_id     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-DVKIC1-PM01-00-test" -> null
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (5 unchanged attributes hidden)
-
-        # (3 unchanged blocks hidden)
-    }
-
-  # azurerm_virtual_machine.vm["dvkic1_sql03_test"] will be updated in-place
-  ~ resource "azurerm_virtual_machine" "vm" {
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIC1-SQL03-test"
-        name                             = "DVKIC1-SQL03-test"
-      - primary_network_interface_id     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-DVKIC1-SQL03-00-test" -> null
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (5 unchanged attributes hidden)
-
-        # (5 unchanged blocks hidden)
-    }
-
-  # azurerm_virtual_machine.vm["dvwgb2_ftp01"] must be replaced
--/+ resource "azurerm_virtual_machine" "vm" {
-      + availability_set_id              = (known after apply)
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-      ~ id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVWGB2-FTP01" -> (known after apply)
-      + license_type                     = (known after apply)
-        name                             = "DVWGB2-FTP01"
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          ~ "environment" = "development" -> "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-      - zones                            = [] -> null
-        # (4 unchanged attributes hidden)
-
-      - boot_diagnostics {
-          - enabled     = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      - os_profile {
-          # At least one attribute in this block is (or was) sensitive,
-          # so its contents will not be displayed.
-        }
-
-      - os_profile_windows_config {
-          - enable_automatic_upgrades = true -> null
-          - provision_vm_agent        = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ storage_data_disk (known after apply)
-
-      ~ storage_image_reference (known after apply)
-      - storage_image_reference {
-            id        = null
-          - offer     = "WindowsServer" -> null
-          - publisher = "MicrosoftWindowsServer" -> null
-          - sku       = "2019-Datacenter" -> null
-          - version   = "latest" -> null
-        }
-
-      ~ storage_os_disk {
-          ~ create_option             = "FromImage" -> "Attach"
-          ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-DEV-RG/providers/Microsoft.Compute/disks/DVWGB2-FTP01_OsDisk_1_0c78f25d49004de5ab80fa6a95b15f2a" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DVWGB2-FTP01_OsDisk_1_0c78f25d49004de5ab80fa6a95b15f2a" # forces replacement
-            name                      = "DVWGB2-FTP01_OsDisk_1_0c78f25d49004de5ab80fa6a95b15f2a"
-            # (7 unchanged attributes hidden)
-        }
-    }
-
-  # azurerm_virtual_machine.vm["keais_dev_test"] will be updated in-place
-  ~ resource "azurerm_virtual_machine" "vm" {
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KEAIS-DEV-test"
-        name                             = "KEAIS-DEV-test"
-      - primary_network_interface_id     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-KEAIS-DEV-00-test" -> null
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (5 unchanged attributes hidden)
-
-        # (5 unchanged blocks hidden)
-    }
-
-  # azurerm_virtual_machine.vm["keais_ship_test"] will be updated in-place
-  ~ resource "azurerm_virtual_machine" "vm" {
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KEAIS-SHIP-test"
-        name                             = "KEAIS-SHIP-test"
-      - primary_network_interface_id     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-KEAIS-SHIP-00-test" -> null
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (5 unchanged attributes hidden)
-
-      ~ storage_os_disk {
-          ~ managed_disk_type         = "StandardSSD_LRS" -> "Standard_LRS"
-            name                      = "KEAIS-SHIP-OSdisk-00-test"
-            # (8 unchanged attributes hidden)
-        }
-
-        # (2 unchanged blocks hidden)
-    }
-
-  # azurerm_virtual_machine.vm["keais_winweb_test"] will be updated in-place
-  ~ resource "azurerm_virtual_machine" "vm" {
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KEAIS-WINWEB-test"
-        name                             = "KEAIS-WINWEB-test"
-      - primary_network_interface_id     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-KEAIS-WINWEB-00-test" -> null
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (5 unchanged attributes hidden)
-
-        # (3 unchanged blocks hidden)
-    }
-
-  # azurerm_virtual_machine.vm["kib2_nsb01"] must be replaced
--/+ resource "azurerm_virtual_machine" "vm" {
-      + availability_set_id              = (known after apply)
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-      ~ id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KIB2-NSB01" -> (known after apply)
-      + license_type                     = (known after apply)
-        name                             = "KIB2-NSB01"
-      ~ tags                             = {
-          ~ "domain"      = "keaisinc" -> "Keais"
-          ~ "environment" = "development" -> "Development"
-          + "managed by"  = "terraform"
-          ~ "owner"       = "Jaspinder Singh" -> "Greg Johnson"
-          - "service"     = "NServiceBus" -> null
-        }
-      - zones                            = [] -> null
-        # (4 unchanged attributes hidden)
-
-      - boot_diagnostics {
-          - enabled     = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ identity {
-          - identity_ids = [] -> null
-          ~ principal_id = "76b968bc-de0e-4bf1-8df5-b50b21c6cb40" -> (known after apply)
-          ~ tenant_id    = "e69ffd5c-8131-4a50-ac19-b4123a1e5502" -> (known after apply)
-            # (1 unchanged attribute hidden)
-        }
-
-      - os_profile {
-          # At least one attribute in this block is (or was) sensitive,
-          # so its contents will not be displayed.
-        }
-
-      - os_profile_windows_config {
-          - enable_automatic_upgrades = false -> null
-          - provision_vm_agent        = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ storage_data_disk (known after apply)
-
-      ~ storage_image_reference (known after apply)
-      - storage_image_reference {
-            id        = null
-          - offer     = "WindowsServer" -> null
-          - publisher = "MicrosoftWindowsServer" -> null
-          - sku       = "2019-datacenter-gensecond" -> null
-          - version   = "latest" -> null
-        }
-
-      ~ storage_os_disk {
-          ~ create_option             = "FromImage" -> "Attach"
-          ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-DEV-RG/providers/Microsoft.Compute/disks/KIB2-NSB01_osdisk1" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/KIB2-NSB01_osdisk1" # forces replacement
-            name                      = "KIB2-NSB01_osdisk1"
-            # (7 unchanged attributes hidden)
-        }
-    }
-
-  # azurerm_virtual_machine.vm["kic1_sec01_test"] will be updated in-place
-  ~ resource "azurerm_virtual_machine" "vm" {
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KIC1-SEC01-test"
-        name                             = "KIC1-SEC01-test"
-      - primary_network_interface_id     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-KIC1-SEC01-00-test" -> null
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (5 unchanged attributes hidden)
-
-        # (4 unchanged blocks hidden)
-    }
-
-  # azurerm_virtual_machine.vm["qa_mrfile_test"] will be updated in-place
-  ~ resource "azurerm_virtual_machine" "vm" {
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/QA-MRFILE-test"
-        name                             = "QA-MRFILE-test"
-      - primary_network_interface_id     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-QA-MRFILE-00-test" -> null
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (5 unchanged attributes hidden)
-
-      ~ storage_data_disk {
-          ~ managed_disk_type         = "StandardSSD_LRS" -> "Standard_LRS"
-            name                      = "QA-MRFILE-datadisk-01-test"
-            # (7 unchanged attributes hidden)
-        }
-      ~ storage_data_disk {
-          ~ managed_disk_type         = "StandardSSD_LRS" -> "Standard_LRS"
-            name                      = "QA-MRFILE-datadisk-02-test"
-            # (7 unchanged attributes hidden)
-        }
-
-      ~ storage_os_disk {
-          ~ managed_disk_type         = "StandardSSD_LRS" -> "Standard_LRS"
-            name                      = "QA-MRFILE-OSdisk-00-test"
-            # (8 unchanged attributes hidden)
-        }
-
-        # (2 unchanged blocks hidden)
-    }
-
-  # azurerm_virtual_machine.vm["qakib2_opg01"] must be replaced
--/+ resource "azurerm_virtual_machine" "vm" {
-      + availability_set_id              = (known after apply)
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-      ~ id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/QAKIB2-OPG01" -> (known after apply)
-      + license_type                     = (known after apply)
-        name                             = "QAKIB2-OPG01"
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          ~ "environment" = "development" -> "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-      - zones                            = [] -> null
-        # (4 unchanged attributes hidden)
-
-      - boot_diagnostics {
-          - enabled     = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      - os_profile {
-          # At least one attribute in this block is (or was) sensitive,
-          # so its contents will not be displayed.
-        }
-
-      - os_profile_windows_config {
-          - enable_automatic_upgrades = false -> null
-          - provision_vm_agent        = true -> null
-            # (1 unchanged attribute hidden)
-        }
-
-      ~ storage_data_disk (known after apply)
-
-      ~ storage_image_reference (known after apply)
-      - storage_image_reference {
-            id        = null
-          - offer     = "WindowsServer" -> null
-          - publisher = "MicrosoftWindowsServer" -> null
-          - sku       = "2019-Datacenter" -> null
-          - version   = "latest" -> null
-        }
-
-      ~ storage_os_disk {
-          ~ create_option             = "FromImage" -> "Attach"
-          ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-DEV-RG/providers/Microsoft.Compute/disks/QAKIB2-OPG01_OsDisk_1_2ee33f23ad8f46a3b8950669b134e049" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/QAKIB2-OPG01_OsDisk_1_2ee33f23ad8f46a3b8950669b134e049" # forces replacement
-            name                      = "QAKIB2-OPG01_OsDisk_1_2ee33f23ad8f46a3b8950669b134e049"
-            # (7 unchanged attributes hidden)
-        }
-    }
-
-  # azurerm_virtual_machine.vm["sca1_iisdev_test"] will be updated in-place
-  ~ resource "azurerm_virtual_machine" "vm" {
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/SCA1-IISDEV-test"
-        name                             = "SCA1-IISDEV-test"
-      - primary_network_interface_id     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-SCA1-IISDEV-00-test" -> null
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (5 unchanged attributes hidden)
-
-        # (3 unchanged blocks hidden)
-    }
-
-  # azurerm_virtual_machine.vm["wgkib1_web02_test"] will be updated in-place
-  ~ resource "azurerm_virtual_machine" "vm" {
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/WGKIB1-WEB02-test"
-        name                             = "WGKIB1-WEB02-test"
-      - primary_network_interface_id     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-WGKIB1-WEB02-00-test" -> null
-      ~ tags                             = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (5 unchanged attributes hidden)
-
-        # (3 unchanged blocks hidden)
-    }
-
-  # azurerm_virtual_network.main_vnet will be updated in-place
-  ~ resource "azurerm_virtual_network" "main_vnet" {
-        id                             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet"
-        name                           = "mr8-dev-scus-vnet"
-      ~ tags                           = {
-          + "domain"      = "Keais"
-            "environment" = "Development"
-          + "managed by"  = "terraform"
-          ~ "owner"       = "Jaspinder Singh" -> "Greg Johnson"
-        }
-        # (10 unchanged attributes hidden)
-    }
-
-  # azurerm_virtual_network.temp_vnet will be updated in-place
-  ~ resource "azurerm_virtual_network" "temp_vnet" {
-        id                             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/temp-dev-vnet-01"
-        name                           = "temp-dev-vnet-01"
-      ~ tags                           = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-        # (10 unchanged attributes hidden)
-    }
-
-Plan: 15 to add, 51 to change, 16 to destroy.
+ Error: Invalid value for input variable
+│
+│   on terraform.tfvars line 490:
+│  490: vms = {
+│  491:   "buildcontroller_test" = {
+│  492:     name                    = "BUILDCONTROLLER-test"
+│  493:     size                    = "Standard_D2as_v5"
+│  494:     nic_key                 = "buildcontroller_test"
+│  495:     os_disk_key             = "buildcontroller_test"
+│  496:     boot_diag_uri           = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  497:     identity_type           = "SystemAssigned"
+│  498:     os_disk_creation_option = "Attach"
+│  499:   },
+│  500:   "dev_mr8_test" = {
+│  501:     name                    = "DEV-MR8-test"
+│  502:     size                    = "Standard_F4s_v2"
+│  503:     nic_key                 = "dev_mr8_test"
+│  504:     os_disk_key             = "dev_mr8_test"
+│  505:     boot_diag_uri           = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  506:     identity_type           = "SystemAssigned"
+│  507:     os_disk_creation_option = "Attach"
+│  508:   },
+│  509:   "dev_mrfile_test" = {
+│  510:     name                    = "DEV-MRFILE-test"
+│  511:     size                    = "Standard_B1s"
+│  512:     nic_key                 = "dev_mrfile_test"
+│  513:     os_disk_key             = "dev_mrfile_test"
+│  514:     boot_diag_uri           = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  515:     identity_type           = "SystemAssigned"
+│  516:     os_disk_creation_option = "Attach"
+│  517:   },
+│  518:   "dev_web_2012r2_test" = {
+│  519:     name                    = "DEV-WEB-2012r2-test"
+│  520:     size                    = "Standard_B4as_v2"
+│  521:     nic_key                 = "dev_web_2012r2_test"
+│  522:     os_disk_key             = "dev_web_2012r2_test"
+│  523:     boot_diag_uri           = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  524:     identity_type           = "SystemAssigned"
+│  525:     os_disk_creation_option = "Attach"
+│  526:   },
+│  527:   "dockerbuild_test" = {
+│  528:     name                    = "DOCKERBUILD-test"
+│  529:     size                    = "Standard_D4s_v3"
+│  530:     nic_key                 = "dockerbuild_test"
+│  531:     os_disk_key             = "dockerbuild_test"
+│  532:     boot_diag_uri           = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  533:     identity_type           = "SystemAssigned"
+│  534:     os_disk_creation_option = "Attach"
+│  535:   },
+│  536:   "dvkib2_9" = {
+│  537:     name                    = "dvkib2-9"
+│  538:     size                    = "Standard_D4as_v5"
+│  539:     nic_key                 = "dvkib2_9"
+│  540:     os_disk_key             = "dvkib2_9"
+│  541:     boot_diag_uri           = ""
+│  542:     identity_type           = ""
+│  543:     os_disk_creation_option = "FromImage"
+│  544:     image_refernece = {
+│  545:       offer     = "WindowsServer"
+│  546:       publisher = "MicrosoftWindowsServer"
+│  547:       sku       = "2019-Datacenter"
+│  548:       version   = "latest"
+│  549:     }
+│  550:   },
+│  551:   "dvkib2_app01" = {
+│  552:     name                    = "DVKIB2-APP01"
+│  553:     size                    = "Standard_D2s_v4"
+│  554:     nic_key                 = "dvkib2_app01"
+│  555:     os_disk_key             = "dvkib2_app01"
+│  556:     boot_diag_uri           = ""
+│  557:     identity_type           = ""
+│  558:     os_disk_creation_option = "FromImage"
+│  559:     image_refernece = {
+│  560:       offer     = "WindowsServer"
+│  561:       publisher = "MicrosoftWindowsServer"
+│  562:       sku       = "2019-Datacenter"
+│  563:       version   = "latest"
+│  564:     }
+│  565:   },
+│  566:   "dvkib2_def01" = {
+│  567:     name                    = "DVKIB2-DEF01"
+│  568:     size                    = "Standard_B2s"
+│  569:     nic_key                 = "dvkib2_def01"
+│  570:     os_disk_key             = "dvkib2_def01"
+│  571:     boot_diag_uri           = ""
+│  572:     identity_type           = "SystemAssigned"
+│  573:     os_disk_creation_option = "FromImage"
+│  574:     image_refernece = {
+│  575:       offer     = "WindowsServer"
+│  576:       publisher = "MicrosoftWindowsServer"
+│  577:       sku       = "2019-Datacenter"
+│  578:       version   = "latest"
+│  579:     }
+│  580:   },
+│  581:   "dvkib2_rpa01" = {
+│  582:     name                    = "DVKIB2-RPA01"
+│  583:     size                    = "Standard_B8s_v2"
+│  584:     nic_key                 = "dvkib2_rpa01"
+│  585:     os_disk_key             = "dvkib2_rpa01"
+│  586:     boot_diag_uri           = ""
+│  587:     identity_type           = "SystemAssigned"
+│  588:     os_disk_creation_option = "FromImage"
+│  589:     image_refernece = {
+│  590:       offer     = "WindowsServer"
+│  591:       publisher = "MicrosoftWindowsServer"
+│  592:       sku       = "2019-Datacenter"
+│  593:       version   = "latest"
+│  594:     }
+│  595:   },
+│  596:   "dvkib2_rpa02" = {
+│  597:     name                    = "DVKIB2-RPA02"
+│  598:     size                    = "Standard_B16s_v2"
+│  599:     nic_key                 = "dvkib2_rpa02"
+│  600:     os_disk_key             = "dvkib2_rpa02"
+│  601:     boot_diag_uri           = ""
+│  602:     identity_type           = "SystemAssigned"
+│  603:     os_disk_creation_option = "FromImage"
+│  604:     image_refernece = {
+│  605:       offer     = "WindowsServer"
+│  606:       publisher = "MicrosoftWindowsServer"
+│  607:       sku       = "2019-Datacenter"
+│  608:       version   = "latest"
+│  609:     }
+│  610:   }
+│  611:   "dvkib2_web01" = {
+│  612:     name                    = "DVKIB2-WEB01"
+│  613:     size                    = "Standard_E2s_v4"
+│  614:     nic_key                 = "dvkib2_web01"
+│  615:     os_disk_key             = "dvkib2_web01"
+│  616:     boot_diag_uri           = ""
+│  617:     identity_type           = ""
+│  618:     os_disk_creation_option = "FromImage"
+│  619:     image_refernece = {
+│  620:       offer     = "WindowsServer"
+│  621:       publisher = "MicrosoftWindowsServer"
+│  622:       sku       = "2019-Datacenter"
+│  623:       version   = "latest"
+│  624:     }
+│  625:   }
+│  626:   "dvkib2_web02" = {
+│  627:     name                    = "DVKIB2-WEB02"
+│  628:     size                    = "Standard_E2s_v4"
+│  629:     nic_key                 = "dvkib2_web02"
+│  630:     os_disk_key             = "dvkib2_web02"
+│  631:     boot_diag_uri           = ""
+│  632:     identity_type           = ""
+│  633:     os_disk_creation_option = "FromImage"
+│  634:     image_refernece = {
+│  635:       offer     = "WindowsServer"
+│  636:       publisher = "MicrosoftWindowsServer"
+│  637:       sku       = "2019-Datacenter"
+│  638:       version   = "latest"
+│  639:     }
+│  640:   },
+│  641:   "dvkic1_pm01_test" = {
+│  642:     name          = "DVKIC1-PM01-test"
+│  643:     size          = "Standard_F2s_v2"
+│  644:     nic_key       = "dvkic1_pm01_test"
+│  645:     os_disk_key   = "dvkic1_pm01_test"
+│  646:     boot_diag_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  647:     identity_type = "SystemAssigned"
+│  648:   },
+│  649:   "dvkic1_sql03_test" = {
+│  650:     name          = "DVKIC1-SQL03-test"
+│  651:     size          = "Standard_E4s_v3"
+│  652:     nic_key       = "dvkic1_sql03_test"
+│  653:     os_disk_key   = "dvkic1_sql03_test"
+│  654:     boot_diag_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  655:     identity_type = "SystemAssigned"
+│  656:   },
+│  657:   "dvwgb2_ftp01" = {
+│  658:     name                    = "DVWGB2-FTP01"
+│  659:     size                    = "Standard_D2s_v4"
+│  660:     nic_key                 = "dvwgb2_ftp01"
+│  661:     os_disk_key             = "dvwgb2_ftp01"
+│  662:     boot_diag_uri           = ""
+│  663:     identity_type           = ""
+│  664:     os_disk_creation_option = "FromImage"
+│  665:     image_refernece = {
+│  666:       offer     = "WindowsServer"
+│  667:       publisher = "MicrosoftWindowsServer"
+│  668:       sku       = "2019-Datacenter"
+│  669:       version   = "latest"
+│  670:     }
+│  671:   },
+│  672:   "keais_dev_test" = {
+│  673:     name          = "KEAIS-DEV-test"
+│  674:     size          = "Standard_E4s_v3"
+│  675:     nic_key       = "keais_dev_test"
+│  676:     os_disk_key   = "keais_dev_test"
+│  677:     boot_diag_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  678:     identity_type = "SystemAssigned"
+│  679:   }
+│  680:   "keais_ship_test" = {
+│  681:     name          = "KEAIS-SHIP-test"
+│  682:     size          = "Standard_F4s_v2"
+│  683:     nic_key       = "keais_ship_test"
+│  684:     os_disk_key   = "keais_ship_test"
+│  685:     boot_diag_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  686:     identity_type = "SystemAssigned"
+│  687:   }
+│  688:   "keais_winweb_test" = {
+│  689:     name          = "KEAIS-WINWEB-test"
+│  690:     size          = "Standard_F2s_v2"
+│  691:     nic_key       = "keais_winweb_test"
+│  692:     os_disk_key   = "keais_winweb_test"
+│  693:     boot_diag_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  694:     identity_type = "SystemAssigned"
+│  695:   },
+│  696:   "kib2_nsb01" = {
+│  697:     name                    = "KIB2-NSB01"
+│  698:     size                    = "Standard_B4ms"
+│  699:     nic_key                 = "kib2_nsb01"
+│  700:     os_disk_key             = "kib2_nsb01"
+│  701:     boot_diag_uri           = ""
+│  702:     identity_type           = "SystemAssigned"
+│  703:     os_disk_creation_option = "FromImage"
+│  704:     image_refernece = {
+│  705:       offer     = "WindowsServer"
+│  706:       publisher = "MicrosoftWindowsServer"
+│  707:       sku       = "2019-Datacenter"
+│  708:       version   = "latest"
+│  709:     }
+│  710:   },
+│  711:   "kic1_sec01_test" = {
+│  712:     name          = "KIC1-SEC01-test"
+│  713:     size          = "Standard_B2ms"
+│  714:     nic_key       = "kic1_sec01_test"
+│  715:     os_disk_key   = "kic1_sec01_test"
+│  716:     boot_diag_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  717:     identity_type = "SystemAssigned"
+│  718:   },
+│  719:   "qa_mrfile_test" = {
+│  720:     name          = "QA-MRFILE-test"
+│  721:     size          = "Standard_D2ads_v5"
+│  722:     nic_key       = "qa_mrfile_test"
+│  723:     os_disk_key   = "qa_mrfile_test"
+│  724:     boot_diag_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  725:     identity_type = "SystemAssigned"
+│  726:   },
+│  727:   "qakib2_opg01" = {
+│  728:     name                    = "QAKIB2-OPG01"
+│  729:     size                    = "Standard_E2s_v4"
+│  730:     nic_key                 = "qakib2_opg01"
+│  731:     os_disk_key             = "qakib2_opg01"
+│  732:     boot_diag_uri           = ""
+│  733:     identity_type           = ""
+│  734:     os_disk_creation_option = "FromImage"
+│  735:     image_refernece = {
+│  736:       offer     = "WindowsServer"
+│  737:       publisher = "MicrosoftWindowsServer"
+│  738:       sku       = "2019-Datacenter"
+│  739:       version   = "latest"
+│  740:     }
+│  741:   },
+│  742:   "sca1_iisdev_test" = {
+│  743:     name          = "SCA1-IISDEV-test"
+│  744:     size          = "Standard_F2s_v2"
+│  745:     nic_key       = "sca1_iisdev_test"
+│  746:     os_disk_key   = "sca1_iisdev_test"
+│  747:     boot_diag_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  748:     identity_type = "SystemAssigned"
+│  749:   },
+│  750:   "wgkib1_web02_test" = {
+│  751:     name          = "WGKIB1-WEB02-test"
+│  752:     size          = "Standard_B2ms"
+│  753:     nic_key       = "wgkib1_web02_test"
+│  754:     os_disk_key   = "wgkib1_web02_test"
+│  755:     boot_diag_uri = "https://migrateffe5clsa87353.blob.core.windows.net"
+│  756:     identity_type = "SystemAssigned"
+│  757:   }
+│  758: }
+│
+│ The given value is not suitable for var.vms declared at variables.tf:81,1-15: element "sca1_iisdev_test": attribute "os_disk_creation_option" is required.

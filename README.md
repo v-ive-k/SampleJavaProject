@@ -521,197 +521,221 @@ resource "azurerm_mssql_virtual_machine" "vm-sql" {
 
 
 
-Error: Unsupported attribute
-│
-│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "server_name".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "server_name".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "server_name".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "server_name".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "server_name".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "server_name".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  172:   lun                = each.value.disk.lun
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  172:   lun                = each.value.disk.lun
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  172:   lun                = each.value.disk.lun
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  172:   lun                = each.value.disk.lun
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  172:   lun                = each.value.disk.lun
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  172:   lun                = each.value.disk.lun
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  173:   caching            = each.value.disk.caching
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  173:   caching            = each.value.disk.caching
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  173:   caching            = each.value.disk.caching
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  173:   caching            = each.value.disk.caching
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  173:   caching            = each.value.disk.caching
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Unsupported attribute
-│
-│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  173:   caching            = each.value.disk.caching
-│     ├────────────────
-│     │ each.value is object with 37 attributes
-│
-│ This object does not have an attribute named "disk".
-╵
-╷
-│ Error: Invalid index
-│
-│   on servers.tf line 180, in resource "azurerm_mssql_virtual_machine" "vm-sql":
-│  180:   virtual_machine_id    = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-│     ├────────────────
-│     │ azurerm_windows_virtual_machine.vms is object with 6 attributes
-│     │ each.value.server_name is ""
-│
-│ The given key does not identify an element in this collection value.
+ # azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["data"] will be destroyed
+  # (because key ["data"] is not in for_each map)
+  - resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+      - caching                   = "ReadOnly" -> null
+      - create_option             = "Attach" -> null
+      - id                        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01/dataDisks/STKIB2-SQL01-disk-SQLVMDATA01" -> null
+      - lun                       = 1 -> null
+      - managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/disks/STKIB2-SQL01-disk-SQLVMDATA01" -> null        
+      - virtual_machine_id        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01" -> null
+      - write_accelerator_enabled = false -> null
+    }
 
+  # azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["logs"] will be destroyed
+  # (because key ["logs"] is not in for_each map)
+  - resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+      - caching                   = "None" -> null
+      - create_option             = "Attach" -> null
+      - id                        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01/dataDisks/STKIB2-SQL01-disk-SQLVMLOGS" -> null
+      - lun                       = 2 -> null
+      - managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/disks/STKIB2-SQL01-disk-SQLVMLOGS" -> null
+      - virtual_machine_id        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01" -> null
+      - write_accelerator_enabled = false -> null
+    }
 
+  # azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-data"] will be created
+  + resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+      + caching                   = "ReadOnly"
+      + create_option             = "Attach"
+      + id                        = (known after apply)
+      + lun                       = 1
+      + managed_disk_id           = (known after apply)
+      + virtual_machine_id        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01"
+      + write_accelerator_enabled = false
+    }
+
+  # azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-logs"] will be created
+  + resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+      + caching                   = "None"
+      + create_option             = "Attach"
+      + id                        = (known after apply)
+      + lun                       = 2
+      + managed_disk_id           = (known after apply)
+      + virtual_machine_id        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01"
+      + write_accelerator_enabled = false
+    }
+
+  # azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-tempdb"] will be created
+  + resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+      + caching                   = "ReadOnly"
+      + create_option             = "Attach"
+      + id                        = (known after apply)
+      + lun                       = 0
+      + managed_disk_id           = (known after apply)
+      + virtual_machine_id        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01"
+      + write_accelerator_enabled = false
+    }
+
+  # azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["tempdb"] will be destroyed
+  # (because key ["tempdb"] is not in for_each map)
+  - resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+      - caching                   = "ReadOnly" -> null
+      - create_option             = "Attach" -> null
+      - id                        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01/dataDisks/STKIB2-SQL01-disk-SQLVMTEMPDB" -> null
+      - lun                       = 0 -> null
+      - managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/disks/STKIB2-SQL01-disk-SQLVMTEMPDB" -> null        
+      - virtual_machine_id        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01" -> null
+      - write_accelerator_enabled = false -> null
+    }
+
+  # azurerm_virtual_machine_extension.hostpool01_vmext_dsc[0] will be updated in-place
+  ~ resource "azurerm_virtual_machine_extension" "hostpool01_vmext_dsc" {
+        id                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKI-AVD-SHR-1/extensions/STKI-AVD-SHR1-avd_dsc"
+        name                        = "STKI-AVD-SHR1-avd_dsc"
+      ~ protected_settings          = (sensitive value)
+        tags                        = {}
+        # (9 unchanged attributes hidden)
+    }
+
+  # azurerm_virtual_machine_extension.vms-domain-join["STKIB2-SQL02"] will be created
+  + resource "azurerm_virtual_machine_extension" "vms-domain-join" {
+      + auto_upgrade_minor_version  = true
+      + failure_suppression_enabled = false
+      + id                          = (known after apply)
+      + name                        = "STKIB2-SQL02-domain-join"
+      + protected_settings          = (sensitive value)
+      + publisher                   = "Microsoft.Compute"
+      + settings                    = <<-EOT
+            {
+                  "Name": "keaisinc.com",
+                  "OUPath": "OU=Staging,OU=Servers,OU=Azure,DC=keaisinc,DC=com",
+                  "User": "svc-keaisjoin@keaisinc.com",
+                  "Restart": "true",
+                  "Options": "3"
+                }
+        EOT
+      + type                        = "JsonADDomainExtension"
+      + type_handler_version        = "1.3"
+      + virtual_machine_id          = (known after apply)
+    }
+
+  # azurerm_windows_virtual_machine.vms["STKIB2-SQL02"] will be created
+  + resource "azurerm_windows_virtual_machine" "vms" {
+      + admin_password                                         = (sensitive value)
+      + admin_username                                         = "ONTAdmin"
+      + allow_extension_operations                             = true
+      + bypass_platform_safety_checks_on_user_schedule_enabled = false
+      + computer_name                                          = (known after apply)
+      + disk_controller_type                                   = (known after apply)
+      + enable_automatic_updates                               = false
+      + extensions_time_budget                                 = "PT1H30M"
+      + hotpatching_enabled                                    = false
+      + id                                                     = (known after apply)
+      + location                                               = "southcentralus"
+      + max_bid_price                                          = -1
+      + name                                                   = "STKIB2-SQL02"
+      + network_interface_ids                                  = (known after apply)
+      + patch_assessment_mode                                  = "ImageDefault"
+      + patch_mode                                             = "Manual"
+      + platform_fault_domain                                  = -1
+      + priority                                               = "Regular"
+      + private_ip_address                                     = (known after apply)
+      + private_ip_addresses                                   = (known after apply)
+      + provision_vm_agent                                     = true
+      + public_ip_address                                      = (known after apply)
+      + public_ip_addresses                                    = (known after apply)
+      + resource_group_name                                    = "mr8-staging-rg"
+      + size                                                   = "Standard_B8ms"
+      + tags                                                   = {
+          + "domain"      = "keaisinc"
+          + "environment" = "staging"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+      + timezone                                               = "Central Standard Time"
+      + virtual_machine_id                                     = (known after apply)
+      + vm_agent_platform_updates_enabled                      = (known after apply)
+
+      + boot_diagnostics {}
+
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = 128
+          + id                        = (known after apply)
+          + name                      = "STKIB2-SQL02-disk-os"
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+
+      + source_image_reference {
+          + offer     = "sql2022-ws2022"
+          + publisher = "microsoftsqlserver"
+          + sku       = "sqldev-gen2"
+          + version   = "latest"
+        }
+
+      + termination_notification (known after apply)
+    }
+
+  # azurerm_windows_virtual_machine.vms["STWGKIB2-WEB02"] will be created
+  + resource "azurerm_windows_virtual_machine" "vms" {
+      + admin_password                                         = (sensitive value)
+      + admin_username                                         = "ONTAdmin"
+      + allow_extension_operations                             = true
+      + bypass_platform_safety_checks_on_user_schedule_enabled = false
+      + computer_name                                          = (known after apply)
+      + disk_controller_type                                   = (known after apply)
+      + enable_automatic_updates                               = false
+      + extensions_time_budget                                 = "PT1H30M"
+      + hotpatching_enabled                                    = false
+      + id                                                     = (known after apply)
+      + location                                               = "southcentralus"
+      + max_bid_price                                          = -1
+      + name                                                   = "STWGKIB2-WEB02"
+      + network_interface_ids                                  = (known after apply)
+      + patch_assessment_mode                                  = "ImageDefault"
+      + patch_mode                                             = "Manual"
+      + platform_fault_domain                                  = -1
+      + priority                                               = "Regular"
+      + private_ip_address                                     = (known after apply)
+      + private_ip_addresses                                   = (known after apply)
+      + provision_vm_agent                                     = true
+      + public_ip_address                                      = (known after apply)
+      + public_ip_addresses                                    = (known after apply)
+      + resource_group_name                                    = "mr8-staging-rg"
+      + size                                                   = "Standard_B2ms"
+      + tags                                                   = {
+          + "domain"      = "keaisinc"
+          + "environment" = "staging"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+      + timezone                                               = "Central Standard Time"
+      + virtual_machine_id                                     = (known after apply)
+      + vm_agent_platform_updates_enabled                      = (known after apply)
+
+      + boot_diagnostics {}
+
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = 128
+          + id                        = (known after apply)
+          + name                      = "STWGKIB2-WEB02-disk-os"
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+
+      + source_image_reference {
+          + offer     = "WindowsServer"
+          + publisher = "MicrosoftWindowsServer"
+          + sku       = "2022-Datacenter"
+          + version   = "latest"
+        }
+
+      + termination_notification (known after apply)
+    }
 
 
 

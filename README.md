@@ -532,6 +532,26 @@ terraform state mv 'azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-at
 
 
 
+# azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-data"] must be replaced
+-/+ resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+      ~ id                        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01/dataDisks/STKIB2-SQL01-disk-SQLVMDATA01" -> (known after apply)
+      ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/disks/STKIB2-SQL01-disk-SQLVMDATA01" # forces replacement -> (known after apply) # forces replacement
+        # (5 unchanged attributes hidden)
+    }
+
+  # azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-logs"] must be replaced
+-/+ resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+      ~ id                        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01/dataDisks/STKIB2-SQL01-disk-SQLVMLOGS" -> (known after apply)
+      ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/disks/STKIB2-SQL01-disk-SQLVMLOGS" # forces replacement -> (known after apply) # forces replacement
+        # (5 unchanged attributes hidden)
+    }
+
+  # azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-tempdb"] must be replaced
+-/+ resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+      ~ id                        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKIB2-SQL01/dataDisks/STKIB2-SQL01-disk-SQLVMTEMPDB" -> (known after apply)
+      ~ managed_disk_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/disks/STKIB2-SQL01-disk-SQLVMTEMPDB" # forces replacement -> (known after apply) # forces replacement
+        # (5 unchanged attributes hidden)
+    }
 
 
 

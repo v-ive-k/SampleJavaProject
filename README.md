@@ -306,7 +306,120 @@ resource "azurerm_managed_disk" "data" {
 }
    
 
+==============================================================================================
 
+
+
+
+# azurerm_managed_disk.os["buildcontroller_test"] must be replaced
+-/+ resource "azurerm_managed_disk" "os" {
+      ~ disk_iops_read_only               = 0 -> (known after apply)
+      ~ disk_iops_read_write              = 500 -> (known after apply)
+      ~ disk_mbps_read_only               = 0 -> (known after apply)
+      ~ disk_mbps_read_write              = 100 -> (known after apply)
+      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/BUILDCONTROLLER-OSdisk-00-test" -> (known after apply)
+      + logical_sector_size               = (known after apply)
+      ~ max_shares                        = 0 -> (known after apply)
+        name                              = "BUILDCONTROLLER-OSdisk-00-test"
+      - on_demand_bursting_enabled        = false -> null
+      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-BUILDCON-BuildCon-6a158948-864b-47cb-841a-0e40f85e7658/bookmark/25ee4005-6918-496e-9206-d5b50b1eb4e8" -> null # forces replacement
+      + source_uri                        = (known after apply)
+      - tags                              = {
+          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
+        } -> null
+      ~ tier                              = "P10" -> (known after apply)
+      - trusted_launch_enabled            = false -> null
+      - upload_size_bytes                 = 0 -> null
+        # (20 unchanged attributes hidden)
+    }
+
+  # azurerm_managed_disk.os["dev_mr8_test"] must be replaced
+-/+ resource "azurerm_managed_disk" "os" {
+      ~ disk_iops_read_only               = 0 -> (known after apply)
+      ~ disk_iops_read_write              = 500 -> (known after apply)
+      ~ disk_mbps_read_only               = 0 -> (known after apply)
+      ~ disk_mbps_read_write              = 100 -> (known after apply)
+      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DEV-MR8-OSdisk-00-test" -> (known after apply)
+      + logical_sector_size               = (known after apply)
+      ~ max_shares                        = 0 -> (known after apply)
+        name                              = "DEV-MR8-OSdisk-00-test"
+      - on_demand_bursting_enabled        = false -> null
+      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-DEV_MR8-DEV_MR8_-c9b456a9-b56c-462d-a11d-6f55e61f3185/bookmark/31935e8c-7ad6-40a5-bba1-b489b3c7dbf5" -> null # forces replacement
+      + source_uri                        = (known after apply)
+      - tags                              = {
+          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
+        } -> null
+      + tier                              = (known after apply)
+      - trusted_launch_enabled            = false -> null
+      - upload_size_bytes                 = 0 -> null
+        # (20 unchanged attributes hidden)
+    }
+
+  # azurerm_managed_disk.os["dev_mrfile_test"] must be replaced
+-/+ resource "azurerm_managed_disk" "os" {
+      ~ disk_iops_read_only               = 0 -> (known after apply)
+      ~ disk_iops_read_write              = 240 -> (known after apply)
+      ~ disk_mbps_read_only               = 0 -> (known after apply)
+      ~ disk_mbps_read_write              = 50 -> (known after apply)
+      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DEV-MRFILE-OSdisk-00-test" -> (known after apply)
+      + logical_sector_size               = (known after apply)
+      ~ max_shares                        = 0 -> (known after apply)
+        name                              = "DEV-MRFILE-OSdisk-00-test"
+      - on_demand_bursting_enabled        = false -> null
+      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-DEV_MRFI-DEV_MRFI-7739ff6d-d599-4ad7-97b2-7dbd87e7800c/bookmark/3f28c5c4-1ea4-4456-9e2b-a5e7d598202d" -> null # forces replacement
+      + source_uri                        = (known after apply)
+      - tags                              = {
+          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
+        } -> null
+      ~ tier                              = "P6" -> (known after apply)
+      - trusted_launch_enabled            = false -> null
+      - upload_size_bytes                 = 0 -> null
+        # (20 unchanged attributes hidden)
+    }
+
+  # azurerm_managed_disk.os["dev_web_2012r2_test"] must be replaced
+-/+ resource "azurerm_managed_disk" "os" {
+      ~ disk_iops_read_only               = 0 -> (known after apply)
+      ~ disk_iops_read_write              = 500 -> (known after apply)
+      ~ disk_mbps_read_only               = 0 -> (known after apply)
+      ~ disk_mbps_read_write              = 100 -> (known after apply)
+      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DEV-WEB-2012r2-OSdisk-00-test" -> (known after apply)
+      + logical_sector_size               = (known after apply)
+      ~ max_shares                        = 0 -> (known after apply)
+        name                              = "DEV-WEB-2012r2-OSdisk-00-test"
+      - on_demand_bursting_enabled        = false -> null
+      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-DEV_WEB_-DEV_WEB_-4a44cc59-6f14-42dd-b21d-1148188d90a9/bookmark/3b853025-1e04-4b4f-a15c-2fc9bd401938" -> null # forces replacement
+      + source_uri                        = (known after apply)
+      - tags                              = {
+          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
+        } -> null
+      ~ tier                              = "P10" -> (known after apply)
+      - trusted_launch_enabled            = false -> null
+      - upload_size_bytes                 = 0 -> null
+        # (20 unchanged attributes hidden)
+    }
+
+  # azurerm_managed_disk.os["dockerbuild_test"] must be replaced
+-/+ resource "azurerm_managed_disk" "os" {
+      ~ disk_iops_read_only               = 0 -> (known after apply)
+      ~ disk_iops_read_write              = 1100 -> (known after apply)
+      ~ disk_mbps_read_only               = 0 -> (known after apply)
+      ~ disk_mbps_read_write              = 125 -> (known after apply)
+      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DOCKERBUILD-OSdisk-00-test" -> (known after apply)
+      + logical_sector_size               = (known after apply)
+      ~ max_shares                        = 0 -> (known after apply)
+        name                              = "DOCKERBUILD-OSdisk-00-test"
+      - on_demand_bursting_enabled        = false -> null
+      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-DOCKERBU-DOCKERBU-bf4e3354-c4e3-4f7d-ab48-d85054ff6f0b/bookmark/5a56e035-95a6-44ac-acd3-0d4dfdc3d7c1" -> null # forces replacement
+      + source_uri                        = (known after apply)
+      - tags                              = {
+          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
+        } -> null
+      ~ tier                              = "P15" -> (known after apply)
+      - trusted_launch_enabled            = false -> null
+      - upload_size_bytes                 = 0 -> null
+        # (20 unchanged attributes hidden)
+    }
 
 
 

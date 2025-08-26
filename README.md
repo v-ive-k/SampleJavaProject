@@ -433,10 +433,368 @@ for_each = {
 
 
 
+============================================================================
+
+server.tf
+
+# This is where MR8 servers are created.  There is additional VMs for AVD pools in the avd.tf
+
+# Proximity Placement Group
+resource "azurerm_proximity_placement_group" "mr8_staging_ppg" {
+  name                = var.mr8_staging_ppg_name
+  resource_group_name = azurerm_resource_group.main_rg.name
+  location            = azurerm_resource_group.main_rg.location
+  allowed_vm_sizes    = ["Standard_B2ms", "Standard_B8ms"]
+
+  tags = var.global_tags
+}
+
+# Network interfaces
+resource "azurerm_network_interface" "vm-nics" {
+  for_each = { for virtual_machine in var.virtual_machines : virtual_machine.name => virtual_machine }
+
+  name                = "${each.value.name}-nic"
+  resource_group_name = azurerm_resource_group.main_rg.name
+  location            = azurerm_resource_group.main_rg.location
+
+  ip_configuration {
+    name = "${each.value.name}-nic-ip"
+    subnet_id                     = each.value.dmz == true ? azurerm_subnet.dmz_subnet.id : azurerm_subnet.internal_subnet.id
+    private_ip_address_allocation = each.value.private_ip_suffix != null ? "Static" : "Dynamic"
+    private_ip_address = each.value.private_ip_suffix != null ? cidrhost(each.value.dmz == true ? var.dmz_snet_address_prefix : var.internal_snet_address_prefix, each.value.private_ip_suffix) : null
+  }
+
+  dynamic "ip_configuration" {
+    iterator = additional_ip
+    for_each = {
+      for ip_suffix in each.value.additional_private_ip_suffix : index(each.value.additional_private_ip_suffix, ip_suffix) + 1 => ip_suffix
+      if ip_suffix != 0
+    }
+    content {
+      name = "${each.value.name}-additional-ip-${additional_ip.key}"
+      subnet_id = each.value.dmz == true ? azurerm_subnet.dmz_subnet.id : azurerm_subnet.internal_subnet.id
+      private_ip_address_allocation = "Static"
+      private_ip_address = cidrhost(each.value.dmz == true ? var.dmz_snet_address_prefix : var.internal_snet_address_prefix, additional_ip.value)
+    }
+  }
+  tags = var.global_tags
+}
+
+# Virtual machines
+resource "azurerm_windows_virtual_machine" "vms" {
+  lifecycle {
+    ignore_changes = [
+      admin_password,
+      identity
+    ]
+  }
+  for_each = { for virtual_machine in var.virtual_machines : virtual_machine.name => virtual_machine }
+
+  name                         = each.value.name
+  resource_group_name          = azurerm_resource_group.main_rg.name
+  location                     = azurerm_resource_group.main_rg.location
+  size                         = each.value.size
+  admin_username               = "ONTAdmin"
+  admin_password               = data.azurerm_key_vault_secret.ontadmin.value
+  patch_mode                   = each.value.patch_mode
+  enable_automatic_updates     = each.value.enable_automatic_updates
+  timezone                     = each.value.timezone
+  #proximity_placement_group_id = azurerm_proximity_placement_group.mr8-staging-ppg.id
+
+  network_interface_ids = [
+    azurerm_network_interface.vm-nics[each.value.name].id
+  ]
+
+  os_disk {
+    name                 = "${each.value.name}-disk-os"
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+    disk_size_gb = 128
+  }
+
+  
+  boot_diagnostics {}
+  
+  source_image_reference {
+    publisher = each.value.source_image.publisher
+    offer     = each.value.source_image.offer
+    sku       = each.value.source_image.sku
+    version   = each.value.source_image.version
+  }
+  tags = var.global_tags
+}
+
+resource "azurerm_virtual_machine_extension" "vms-domain-join" {
+  for_each = { for virtual_machine in var.virtual_machines : virtual_machine.name => virtual_machine if virtual_machine.dmz  != true }
+  name                       = "${each.value.name}-domain-join"
+  virtual_machine_id         = azurerm_windows_virtual_machine.vms[each.value.name].id
+  publisher                  = "Microsoft.Compute"
+  type                       = "JsonADDomainExtension"
+  type_handler_version       = "1.3"
+  auto_upgrade_minor_version = true
+
+  settings = <<SETTINGS
+    {
+      "Name": "${var.domain_name}",
+      "OUPath": "${each.value.ou_path}",
+      "User": "${var.domain_user_upn}@${var.domain_name}",
+      "Restart": "true",
+      "Options": "3"
+    }
+  SETTINGS
+
+  protected_settings = <<PROTECTED_SETTINGS
+    {
+      "Password": "${data.azurerm_key_vault_secret.svc-keaisjoin.value}"
+    }
+  PROTECTED_SETTINGS
+
+  lifecycle {
+    ignore_changes = [settings, protected_settings]
+  }
+
+  depends_on = [
+    azurerm_windows_virtual_machine.vms
+  ]
+}
+
+resource "azurerm_managed_disk" "vm_extra_disk" {
+  for_each = var.extra_disk.data_disks
+  name                 = "${var.extra_disk.server_name}-${each.value.name}"
+  location             = azurerm_resource_group.main_rg.location
+  resource_group_name  = azurerm_resource_group.main_rg.name
+  storage_account_type = each.value.storage_account_type
+  create_option        = each.value.create_option
+  disk_size_gb         = each.value.disk_size_gb
+   tags = var.global_tags
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "extra_disk_attach" {
+  for_each = var.extra_disk.data_disks
+  managed_disk_id    = azurerm_managed_disk.vm_extra_disk[each.key].id
+  virtual_machine_id = azurerm_windows_virtual_machine.vms[var.extra_disk.server_name].id
+  lun                = each.value.lun
+  caching            = each.value.caching
+}
+
+# Create disks for SQL and attach to VM
+resource "azurerm_managed_disk" "vm-sql-disks" {
+  for_each = var.sql_settings.data_disks
+
+  name                 = "${var.sql_settings.server_name}-disk-${each.value.name}"
+  resource_group_name  = azurerm_resource_group.main_rg.name
+  location             = azurerm_resource_group.main_rg.location
+  storage_account_type = each.value.storage_account_type
+  create_option        = each.value.create_option
+  disk_size_gb         = each.value.disk_size_gb
+
+  tags = var.global_tags
+}
 
 
+resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+  for_each = var.sql_settings.data_disks
+
+  managed_disk_id    = azurerm_managed_disk.vm-sql-disks[each.key].id
+  virtual_machine_id = azurerm_windows_virtual_machine.vms[var.sql_settings.server_name].id
+  lun                = each.value.lun
+  caching            = each.value.caching
+}
+
+# SQL server VM
+resource "azurerm_mssql_virtual_machine" "vm-sql" {
+  depends_on = [azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach]
+
+  virtual_machine_id    = azurerm_windows_virtual_machine.vms[var.sql_settings.server_name].id
+  sql_license_type      = var.sql_settings.sql_license_type
+  sql_connectivity_port = var.sql_settings.sql_connectivity_port
+  sql_connectivity_type = var.sql_settings.sql_connectivity_type
+
+  storage_configuration {
+    disk_type             = var.sql_settings.storage_disk_type
+    storage_workload_type = var.sql_settings.storage_workload_type
+    data_settings {
+      default_file_path = var.sql_settings.data_disks.data.default_file_path
+      luns              = [var.sql_settings.data_disks.data.lun]
+    }
+    dynamic "log_settings" {
+  for_each = contains(keys(each.value.data_disks), "logs") ? [1] : []
+  content {
+    default_file_path = each.value.data_disks.logs.default_file_path
+    luns              = [each.value.data_disks.logs.lun]
+  }
+}
+    temp_db_settings {
+      default_file_path = var.sql_settings.data_disks.tempdb.default_file_path
+      luns              = [var.sql_settings.data_disks.tempdb.lun]
+    }
+  }
+}
 
 
+======================================
+
+sql_settings = {
+  server_name = "STKIB2-SQL01"
+  data_disks = {
+    "data" = {
+      name                 = "SQLVMDATA01",
+      storage_account_type = "Premium_LRS",
+      create_option        = "Empty",
+      disk_size_gb         = 1024,
+      lun                  = 1,
+      default_file_path    = "F:\\SQLDATA",
+      caching              = "ReadOnly",
+    }
+    "logs" = {
+      name                 = "SQLVMLOGS",
+      storage_account_type = "Standard_LRS",
+      create_option        = "Empty",
+      disk_size_gb         = 128,
+      lun                  = 2,
+      default_file_path    = "G:\\SQLLOG",
+      caching              = "None",
+    }
+    "tempdb" = {
+      name                 = "SQLVMTEMPDB",
+      storage_account_type = "Premium_LRS",
+      create_option        = "Empty",
+      disk_size_gb         = 128,
+      lun                  = 0,
+      default_file_path    = "H:\\SQLTEMP",
+      caching              = "ReadOnly",
+    }
+  }
+  
+  
+}
+
+===================================
+
+# Global variables
+variable "location_name" {}
+variable "global_tags" {}
+
+# Resource Group Variables
+variable "rg_name" {}
+
+# Networking Variables
+variable "main_vnet_name" {}
+variable "main_vnet_address_space" {}
+variable "avd_snet_address_prefix" {}
+variable "avd_snet_name" {}
+variable "internal_snet_address_prefix" {}
+variable "internal_snet_name" {}
+variable "dmz_snet_address_prefix" {}
+variable "dmz_snet_name" {}
+variable "main_dns_servers" {}
+variable "infra_snet_name" {}
+variable "infra_snet_address_prefix" {}
+
+#Network Security Group Variables
+variable "avd_nsg_name" {}
+variable "internal_nsg_name" {}
+variable "dmz_nsg_name" {}
+
+# AVD workspace variables
+variable "ws_friendly_name" {}
+variable "ws_name" {}
+
+# Start networking-nsg-rules.tf variables
+variable "server_names" {
+  description = "Names assigned to servers. These may need to be changed between environments (dev, staging, prod, etc)"
+  type        = map(string)
+}
+variable "net_services" {
+  description = "Map of network services associated with port numbers. Protocol is to help user determine how to set up rule. It is not used otherwise yet."
+  type = map(object({
+    protocol = string
+    port     = list(string)
+  }))
+}
+
+#Pool01 variables
+variable "hostpool01_count" {}
+variable "hostpool01_name" {}
+variable "hostpool01_friendly" {}
+variable "hostpool01_description" {}
+variable "hostpool01_MaxSessions" {}
+variable "hostpool01_RDPProperties" {}
+variable "hostpool01_prefix" {}
+variable "hostpool01_host_size" {}
+variable "hostpool01_timezone" {}
+
+# Domain join variables
+variable "domain_name" {}
+variable "domain_user_upn" {}
+variable "domain_ou_path" {}
+
+# Proximity Placement Group
+variable "mr8_staging_ppg_name" {}
+variable "allowed_vm_sizes" {}
+
+# virtual machines
+variable "virtual_machines" {
+  type = list(object({
+    name = string,
+    size = string,
+    source_image = optional(object({
+      publisher = string,
+      offer     = string,
+      sku       = string,
+      version   = string,
+      }), {
+      publisher = "MicrosoftWindowsServer",
+      offer     = "WindowsServer",
+      sku       = "2022-Datacenter",
+      version   = "latest",
+    })
+    timezone                     = optional(string, "Central Standard Time"),
+    patch_mode                   = optional(string, "Manual"),
+    enable_automatic_updates     = optional(bool, false),
+    auto_shutdown_enabled        = optional(bool, false),
+    auto_shutdown_time           = optional(number),
+    dmz                          = optional(bool, false),
+    private_ip_suffix            = optional(number, null),
+    additional_private_ip_suffix = optional(list(number), [0]),
+    ou_path                      = optional(string),
+
+  }))
+}
+
+variable "extra_disk" {
+  type = object({
+    server_name           = string,
+    data_disks = map(object({
+    name                 = string,
+    storage_account_type = string,
+    create_option = string,
+    disk_size_gb         = number,
+      lun                  = number,
+      caching              = string,
+     })),
+  })
+}
+  
+variable "sql_settings" {
+  type = map(object({
+    server_name           = string,
+    sql_license_type      = optional(string, "PAYG"),
+    sql_connectivity_port = optional(number, 1433),
+    sql_connectivity_type = optional(string, "PRIVATE"),
+    storage_disk_type     = optional(string, "NEW"),
+    storage_workload_type = optional(string, "GENERAL"),
+    data_disks = map(object({
+      name                 = string,
+      storage_account_type = string,
+      create_option        = string,
+      disk_size_gb         = number,
+      lun                  = number,
+      default_file_path    = string,
+      caching              = string,
+    })),
+  }))
+}
 
 
 

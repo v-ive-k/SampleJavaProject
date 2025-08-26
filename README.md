@@ -513,7 +513,95 @@ resource "azurerm_mssql_virtual_machine" "vm-sql" {
 
 
 
+====
 
+
+Error: Missing required argument
+│ 
+│   on servers.tf line 144, in resource "azurerm_managed_disk" "vm-sql-disks":
+│  144: resource "azurerm_managed_disk" "vm-sql-disks" {
+│ 
+│ The argument "name" is required, but no definition was found.
+╵
+╷
+│ Error: Missing required argument
+│
+│   on servers.tf line 144, in resource "azurerm_managed_disk" "vm-sql-disks":
+│  144: resource "azurerm_managed_disk" "vm-sql-disks" {
+│
+│ The argument "resource_group_name" is required, but no definition was found.
+╵
+╷
+│ Error: Missing required argument
+│
+│   on servers.tf line 144, in resource "azurerm_managed_disk" "vm-sql-disks":
+│  144: resource "azurerm_managed_disk" "vm-sql-disks" {
+│
+│ The argument "storage_account_type" is required, but no definition was found.
+╵
+╷
+│ Error: Missing required argument
+│
+│   on servers.tf line 144, in resource "azurerm_managed_disk" "vm-sql-disks":
+│  144: resource "azurerm_managed_disk" "vm-sql-disks" {
+│
+│ The argument "create_option" is required, but no definition was found.
+╵
+╷
+│ Error: Missing required argument
+│
+│   on servers.tf line 144, in resource "azurerm_managed_disk" "vm-sql-disks":
+│  144: resource "azurerm_managed_disk" "vm-sql-disks" {
+│
+│ The argument "location" is required, but no definition was found.
+╵
+╷
+│ Error: Unsupported block type
+│
+│   on servers.tf line 154, in resource "azurerm_managed_disk" "vm-sql-disks":
+│  154:   dynamic "disk" {
+│
+│ Blocks of type "disk" are not expected here.
+╵
+╷
+│ Error: Missing required argument
+│
+│   on servers.tf line 170, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  170: resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+│
+│ The argument "caching" is required, but no definition was found.
+╵
+╷
+│ Error: Missing required argument
+│
+│   on servers.tf line 170, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  170: resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+│
+│ The argument "lun" is required, but no definition was found.
+╵
+╷
+│ Error: Missing required argument
+│
+│   on servers.tf line 170, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  170: resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+│
+│ The argument "managed_disk_id" is required, but no definition was found.
+╵
+╷
+│ Error: Missing required argument
+│
+│   on servers.tf line 170, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  170: resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+│
+│ The argument "virtual_machine_id" is required, but no definition was found.
+╵
+╷
+│ Error: Unsupported block type
+│
+│   on servers.tf line 176, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  176:   dynamic "attach" {
+│
+│ Blocks of type "attach" are not expected here.
 
 
 

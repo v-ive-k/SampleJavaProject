@@ -521,92 +521,195 @@ resource "azurerm_mssql_virtual_machine" "vm-sql" {
 
 
 
-
-
-
-
-
-resource "azurerm_managed_disk" "vm-sql-disks" {
-  for_each = {
-    for sql_key, sql in var.sql_settings :
-    # flatten into sub-keys per disk
-    # key will look like "sql01-data", "sql01-logs", "sql02-tempdb"
-    for disk_key, disk in sql.data_disks :
-    "${sql_key}-${disk_key}" => {
-      server_name = sql.server_name
-      disk        = disk
-    }
-  }
-
-  name                 = "${each.value.server_name}-disk-${each.value.disk.name}"
-  resource_group_name  = azurerm_resource_group.main_rg.name
-  location             = azurerm_resource_group.main_rg.location
-  storage_account_type = each.value.disk.storage_account_type
-  create_option        = each.value.disk.create_option
-  disk_size_gb         = each.value.disk.disk_size_gb
-  tags                 = var.global_tags
-}
-
-
-
-====================
-
-
-
-
-resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
-  for_each = {
-    for sql_key, sql in var.sql_settings :
-    for disk_key, disk in sql.data_disks :
-    "${sql_key}-${disk_key}" => {
-      server_name = sql.server_name
-      disk        = disk
-    }
-  }
-
-  managed_disk_id    = azurerm_managed_disk.vm-sql-disks[each.key].id
-  virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-  lun                = each.value.disk.lun
-  caching            = each.value.disk.caching
-}
-
-
-===================
-
-
-resource "azurerm_mssql_virtual_machine" "vm-sql" {
-  for_each = var.sql_settings
-
-  virtual_machine_id    = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-  sql_license_type      = each.value.sql_license_type
-  sql_connectivity_port = each.value.sql_connectivity_port
-  sql_connectivity_type = each.value.sql_connectivity_type
-
-  storage_configuration {
-    disk_type             = each.value.storage_disk_type
-    storage_workload_type = each.value.storage_workload_type
-
-    data_settings {
-      default_file_path = each.value.data_disks.data.default_file_path
-      luns              = [each.value.data_disks.data.lun]
-    }
-    log_settings {
-      default_file_path = each.value.data_disks.logs.default_file_path
-      luns              = [each.value.data_disks.logs.lun]
-    }
-    temp_db_settings {
-      default_file_path = each.value.data_disks.tempdb.default_file_path
-      luns              = [each.value.data_disks.tempdb.lun]
-    }
-  }
-}
-
-
-
-
-
-
-
+Error: Unsupported attribute
+│
+│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "server_name".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "server_name".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "server_name".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "server_name".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "server_name".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 171, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  171:   virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "server_name".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  172:   lun                = each.value.disk.lun
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  172:   lun                = each.value.disk.lun
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  172:   lun                = each.value.disk.lun
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  172:   lun                = each.value.disk.lun
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  172:   lun                = each.value.disk.lun
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 172, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  172:   lun                = each.value.disk.lun
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  173:   caching            = each.value.disk.caching
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  173:   caching            = each.value.disk.caching
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  173:   caching            = each.value.disk.caching
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  173:   caching            = each.value.disk.caching
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  173:   caching            = each.value.disk.caching
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Unsupported attribute
+│
+│   on servers.tf line 173, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
+│  173:   caching            = each.value.disk.caching
+│     ├────────────────
+│     │ each.value is object with 37 attributes
+│
+│ This object does not have an attribute named "disk".
+╵
+╷
+│ Error: Invalid index
+│
+│   on servers.tf line 180, in resource "azurerm_mssql_virtual_machine" "vm-sql":
+│  180:   virtual_machine_id    = azurerm_windows_virtual_machine.vms[each.value.server_name].id
+│     ├────────────────
+│     │ azurerm_windows_virtual_machine.vms is object with 6 attributes
+│     │ each.value.server_name is ""
+│
+│ The given key does not identify an element in this collection value.
 
 
 

@@ -516,92 +516,111 @@ resource "azurerm_mssql_virtual_machine" "vm-sql" {
 ====
 
 
-Error: Missing required argument
-│ 
-│   on servers.tf line 144, in resource "azurerm_managed_disk" "vm-sql-disks":
-│  144: resource "azurerm_managed_disk" "vm-sql-disks" {
-│ 
-│ The argument "name" is required, but no definition was found.
-╵
-╷
-│ Error: Missing required argument
-│
-│   on servers.tf line 144, in resource "azurerm_managed_disk" "vm-sql-disks":
-│  144: resource "azurerm_managed_disk" "vm-sql-disks" {
-│
-│ The argument "resource_group_name" is required, but no definition was found.
-╵
-╷
-│ Error: Missing required argument
-│
-│   on servers.tf line 144, in resource "azurerm_managed_disk" "vm-sql-disks":
-│  144: resource "azurerm_managed_disk" "vm-sql-disks" {
-│
-│ The argument "storage_account_type" is required, but no definition was found.
-╵
-╷
-│ Error: Missing required argument
-│
-│   on servers.tf line 144, in resource "azurerm_managed_disk" "vm-sql-disks":
-│  144: resource "azurerm_managed_disk" "vm-sql-disks" {
-│
-│ The argument "create_option" is required, but no definition was found.
-╵
-╷
-│ Error: Missing required argument
-│
-│   on servers.tf line 144, in resource "azurerm_managed_disk" "vm-sql-disks":
-│  144: resource "azurerm_managed_disk" "vm-sql-disks" {
-│
-│ The argument "location" is required, but no definition was found.
-╵
-╷
-│ Error: Unsupported block type
-│
-│   on servers.tf line 154, in resource "azurerm_managed_disk" "vm-sql-disks":
-│  154:   dynamic "disk" {
-│
-│ Blocks of type "disk" are not expected here.
-╵
-╷
-│ Error: Missing required argument
-│
-│   on servers.tf line 170, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  170: resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
-│
-│ The argument "caching" is required, but no definition was found.
-╵
-╷
-│ Error: Missing required argument
-│
-│   on servers.tf line 170, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  170: resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
-│
-│ The argument "lun" is required, but no definition was found.
-╵
-╷
-│ Error: Missing required argument
-│
-│   on servers.tf line 170, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  170: resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
-│
-│ The argument "managed_disk_id" is required, but no definition was found.
-╵
-╷
-│ Error: Missing required argument
-│
-│   on servers.tf line 170, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  170: resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
-│
-│ The argument "virtual_machine_id" is required, but no definition was found.
-╵
-╷
-│ Error: Unsupported block type
-│
-│   on servers.tf line 176, in resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach":
-│  176:   dynamic "attach" {
-│
-│ Blocks of type "attach" are not expected here.
+========
+
+
+
+
+
+
+
+
+
+resource "azurerm_managed_disk" "vm-sql-disks" {
+  for_each = {
+    for sql_key, sql in var.sql_settings :
+    # flatten into sub-keys per disk
+    # key will look like "sql01-data", "sql01-logs", "sql02-tempdb"
+    for disk_key, disk in sql.data_disks :
+    "${sql_key}-${disk_key}" => {
+      server_name = sql.server_name
+      disk        = disk
+    }
+  }
+
+  name                 = "${each.value.server_name}-disk-${each.value.disk.name}"
+  resource_group_name  = azurerm_resource_group.main_rg.name
+  location             = azurerm_resource_group.main_rg.location
+  storage_account_type = each.value.disk.storage_account_type
+  create_option        = each.value.disk.create_option
+  disk_size_gb         = each.value.disk.disk_size_gb
+  tags                 = var.global_tags
+}
+
+
+
+====================
+
+
+
+
+resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+  for_each = {
+    for sql_key, sql in var.sql_settings :
+    for disk_key, disk in sql.data_disks :
+    "${sql_key}-${disk_key}" => {
+      server_name = sql.server_name
+      disk        = disk
+    }
+  }
+
+  managed_disk_id    = azurerm_managed_disk.vm-sql-disks[each.key].id
+  virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
+  lun                = each.value.disk.lun
+  caching            = each.value.disk.caching
+}
+
+
+===================
+
+
+resource "azurerm_mssql_virtual_machine" "vm-sql" {
+  for_each = var.sql_settings
+
+  virtual_machine_id    = azurerm_windows_virtual_machine.vms[each.value.server_name].id
+  sql_license_type      = each.value.sql_license_type
+  sql_connectivity_port = each.value.sql_connectivity_port
+  sql_connectivity_type = each.value.sql_connectivity_type
+
+  storage_configuration {
+    disk_type             = each.value.storage_disk_type
+    storage_workload_type = each.value.storage_workload_type
+
+    data_settings {
+      default_file_path = each.value.data_disks.data.default_file_path
+      luns              = [each.value.data_disks.data.lun]
+    }
+    log_settings {
+      default_file_path = each.value.data_disks.logs.default_file_path
+      luns              = [each.value.data_disks.logs.lun]
+    }
+    temp_db_settings {
+      default_file_path = each.value.data_disks.tempdb.default_file_path
+      luns              = [each.value.data_disks.tempdb.lun]
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

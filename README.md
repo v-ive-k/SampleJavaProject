@@ -422,6 +422,32 @@ resource "azurerm_managed_disk" "data" {
     }
 
 
+---------------------------------------------------------------
+
+
+for_each = {
+    for k, v in var.os_disks : k => v
+    if lookup(var.vms[k], "os_disk_creation_option", "Attach") == "Attach"
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

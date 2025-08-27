@@ -93,38 +93,6 @@ resource "azurerm_subnet_network_security_group_association" "assoc_bot_wvd" {
   network_security_group_id = azurerm_network_security_group.nsg_bot_wvd.id
 }
 
-# Create Temp Virtual Network
-resource "azurerm_virtual_network" "temp_vnet" {
-  name                = var.temp_vnet_name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-  address_space       = var.temp_vnet_address_space
-  dns_servers         = var.temp_dns_servers
-  tags                = var.global_tags
-}
-
-# Create Temp Subnets
-resource "azurerm_subnet" "Internal" {
-  name                 = var.Internal_snet_name
-  resource_group_name  = var.rg_name
-  virtual_network_name = var.temp_vnet_name
-  address_prefixes     = [var.Internal_snet_address_prefix]
-}
-
-# Create Temp Network Security Group
-resource "azurerm_network_security_group" "nsg_Internal" {
-  name                = var.nsg_Internal_name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-  tags                = var.global_tags
-}
-
-# Association temp NSG's to subnets
-resource "azurerm_subnet_network_security_group_association" "assoc_Internal" {
-  subnet_id                 = azurerm_subnet.Internal.id
-  network_security_group_id = azurerm_network_security_group.nsg_Internal.id
-}
-
 
 ============================================
 
@@ -153,7 +121,6 @@ resource "azurerm_network_interface" "nic" {
     ]
   }
 }
-
 
 
 
@@ -209,6 +176,7 @@ resource "azurerm_managed_disk" "data" {
   }
 }
    
+   
 ================================
 variables.tf
 
@@ -242,18 +210,6 @@ variable "nsg_wvd_name" {}
 variable "nsg_dmz_name" {}
 variable "nsg_bot_wvd_name" {}
 
-# Temp Network Variables
-variable "temp_vnet_name" {}
-variable "temp_vnet_address_space" {}
-variable "temp_dns_servers" {}
-
-# Temp Subnet Varibales
-variable "Internal_snet_name" {}
-variable "Internal_snet_address_prefix" {}
-
-# Temp NSG Variables
-variable "nsg_Internal_name" {}
-
 
 # NICs Variables
 variable "nics" {
@@ -283,7 +239,7 @@ variable "data_disks" {
 variable "os_disks" {
   type = map(object({
     name                 = string
-    disk_size_gb         = string
+    disk_size_gb         = number
     storage_account_type = string
     os_type              = string
     hyper_v_generation   = string
@@ -338,9 +294,11 @@ variable "sql_vms" {
 }
 
 
+
 =======================
 
 vms.tf
+
 
 
 resource "azurerm_virtual_machine" "vm" {
@@ -441,7 +399,6 @@ resource "azurerm_mssql_virtual_machine" "sql_vm" {
   sql_license_type   = each.value.license_type
 
 }
-
 
 
 

@@ -1,420 +1,241 @@
-Networking.tf
-
-# Create Virtual Network -1
-resource "azurerm_virtual_network" "main_vnet" {
-  name                = var.main_vnet_name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-  address_space       = var.main_vnet_address_space
-  dns_servers         = var.main_dns_servers
-  tags                = var.global_tags
-}
-
-# Creating Subnets
-resource "azurerm_subnet" "internal" {
-  name                 = var.internal_snet_name
-  resource_group_name  = var.rg_name
-  virtual_network_name = var.main_vnet_name
-  address_prefixes     = [var.internal_snet_address_prefix]
-}
-
-resource "azurerm_subnet" "wvd" {
-  name                              = var.wvd_snet_name
-  resource_group_name               = var.rg_name
-  virtual_network_name              = var.main_vnet_name
-  address_prefixes                  = [var.wvd_snet_address_prefix]
-  private_endpoint_network_policies = "Enabled"
-  service_endpoints                 = ["Microsoft.KeyVault, Microsoft.Storage"]
-}
-
-resource "azurerm_subnet" "dmz" {
-  name                              = var.dmz_snet_name
-  resource_group_name               = var.rg_name
-  virtual_network_name              = var.main_vnet_name
-  address_prefixes                  = [var.dmz_snet_address_prefix]
-  private_endpoint_network_policies = "Enabled"
-  service_endpoints                 = ["Microsoft.KeyVault, Microsoft.Storage"]
-}
-
-resource "azurerm_subnet" "bot_wvd" {
-  name                 = var.bot_wvd_snet_name
-  resource_group_name  = var.rg_name
-  virtual_network_name = var.main_vnet_name
-  address_prefixes     = [var.bot_wvd_snet_address_prefix]
-}
-
-# Network Security Groups
-resource "azurerm_network_security_group" "nsg_internal" {
-  name                = var.nsg_internal_name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-  tags                = var.global_tags
-}
-
-resource "azurerm_network_security_group" "nsg_wvd" {
-  name                = var.nsg_wvd_name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-  tags                = var.global_tags
-}
-
-resource "azurerm_network_security_group" "nsg_dmz" {
-  name                = var.nsg_dmz_name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-  tags                = var.global_tags
-}
-
-resource "azurerm_network_security_group" "nsg_bot_wvd" {
-  name                = var.nsg_bot_wvd_name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-  tags                = var.global_tags
-}
-
-# Association NSG's to subnets
-resource "azurerm_subnet_network_security_group_association" "assoc_internal" {
-  subnet_id                 = azurerm_subnet.internal.id
-  network_security_group_id = azurerm_network_security_group.nsg_internal.id
-}
-
-resource "azurerm_subnet_network_security_group_association" "assoc_wvd" {
-  subnet_id                 = azurerm_subnet.wvd.id
-  network_security_group_id = azurerm_network_security_group.nsg_wvd.id
-}
-
-resource "azurerm_subnet_network_security_group_association" "assoc_dmz" {
-  subnet_id                 = azurerm_subnet.dmz.id
-  network_security_group_id = azurerm_network_security_group.nsg_dmz.id
-}
-
-resource "azurerm_subnet_network_security_group_association" "assoc_bot_wvd" {
-  subnet_id                 = azurerm_subnet.bot_wvd.id
-  network_security_group_id = azurerm_network_security_group.nsg_bot_wvd.id
-}
-
-
-============================================
-
-
-Nics.tf
-
-resource "azurerm_network_interface" "nic" {
-  for_each            = var.nics
-  name                = each.value.name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-  tags                = var.global_tags
-
-  ip_configuration {
-    name                          = coalesce(each.value.ip_config_name, "${each.value.name}-ipConfig")
-    primary                       = true
-    private_ip_address_allocation = each.value.allocation # "Dynamic" or "Static"
-    private_ip_address            = each.value.allocation == "Static" ? each.value.private_ip : null
-    private_ip_address_version    = "IPv4"
-    subnet_id                     = each.value.subnet_id
-  }
-
-  lifecycle {
-    ignore_changes = [
-      accelerated_networking_enabled,
-    ]
-  }
-}
-
-
-
-===================================
-
-disks.tf
-
-# OS DISKS (imported) 
-resource "azurerm_managed_disk" "os" {
-  for_each = {
-    for k, v in var.os_disks : k => v
-    if lookup(var.vms[k], "os_disk_creation_option", "Attach") == "Attach"
-  }
-
-  name                = each.value.name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-  storage_account_type = each.value.storage_account_type
-  create_option        = "Restore"
-  disk_size_gb         = each.value.disk_size_gb
-  os_type              = each.value.os_type
-  hyper_v_generation   = each.value.hyper_v_generation
- 
- lifecycle {
-  prevent_destroy =  true
-    ignore_changes = all 
-  } 
-
-}
-
-resource "azurerm_managed_disk" "data" {
-  for_each = {
-    for pair in flatten([
-      for vm, disks in var.data_disks : [
-        for index, disk in disks : {
-          key   = "${vm}-${index}"
-          value = disk
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+  ~ update in-place
+-/+ destroy and then create replacement
+Terraform will perform the following actions:
+  # azurerm_network_interface.vm-nics["STKIB2-SQL02"] will be created
+  + resource "azurerm_network_interface" "vm-nics" {
+      + accelerated_networking_enabled = false
+      + applied_dns_servers            = (known after apply)
+      + id                             = (known after apply)
+      + internal_domain_name_suffix    = (known after apply)
+      + ip_forwarding_enabled          = false
+      + location                       = "southcentralus"
+      + mac_address                    = (known after apply)
+      + name                           = "STKIB2-SQL02-nic"
+      + private_ip_address             = (known after apply)
+      + private_ip_addresses           = (known after apply)
+      + resource_group_name            = "mr8-staging-rg"
+      + tags                           = {
+          + "domain"      = "keaisinc"
+          + "environment" = "staging"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
         }
-      ]
-    ]) : pair.key => pair.value
-  }
-
-  name                 = each.value.name
-  location             = var.location_name
-  resource_group_name  = var.rg_name
-  storage_account_type = each.value.storage_account_type
-  create_option        = "Empty"
-  disk_size_gb         = each.value.disk_size_gb
-
-  lifecycle {
-    ignore_changes = all 
-    prevent_destroy = true
-  }
-}
-   
-   
-================================
-variables.tf
-
-#Global Var
-variable "global_tags" {}
-
-# Resource Group Variable
-variable "rg_name" {}
-
-# Locatoin Variable
-variable "location_name" {}
-
-# Main Networking Variables
-variable "main_vnet_name" {}
-variable "main_vnet_address_space" {}
-variable "main_dns_servers" {}
-
-# Subnet Variables
-variable "internal_snet_name" {}
-variable "internal_snet_address_prefix" {}
-variable "wvd_snet_name" {}
-variable "wvd_snet_address_prefix" {}
-variable "dmz_snet_name" {}
-variable "dmz_snet_address_prefix" {}
-variable "bot_wvd_snet_name" {}
-variable "bot_wvd_snet_address_prefix" {}
-
-# Network Security Group Variables
-variable "nsg_internal_name" {}
-variable "nsg_wvd_name" {}
-variable "nsg_dmz_name" {}
-variable "nsg_bot_wvd_name" {}
-
-
-# NICs Variables
-variable "nics" {
-  type = map(object({
-    name : string
-    subnet_id : string
-    allocation : string
-    private_ip : string
-    ip_config_name : optional(string)
-    acclerated_networking_enabled : optional(bool)
-
-  }))
-}
-
-variable "data_disks" {
-  type = map(list(object({
-    name                 = string
-    disk_size_gb         = number
-    storage_account_type = string
-    lun                  = number
-    caching              = string
-  })))
-  default = {}
-}
-
-# DISKs Variables
-variable "os_disks" {
-  type = map(object({
-    name                 = string
-    disk_size_gb         = number
-    storage_account_type = string
-    os_type              = string
-    hyper_v_generation   = string
-
-  }))
-}
-
-#VMs Variables
-variable "vms" {
-  type = map(object({
-    name                    = string
-    size                    = string
-    nic_key                 = string
-    os_disk_key             = string
-    boot_diag_uri           = string
-    identity_type           = string
-    os_disk_creation_option = string
-    managed_disk_id         = optional(string)
-
-    #for image-based VM's
-    image_reference = optional(object({
-      id        = optional(string)
-      offer     = optional(string)
-      publisher = optional(string)
-      sku       = optional(string)
-      version   = optional(string)
-    }))
-
-    # Os Profiles
-    os_profiles = optional(object({
-      admin_username = string
-      admin_password = optional(string)
-      computer_name  = optional(string)
-    }))
-
-    # Windows config
-
-    windows_config = optional(object({
-      provision_vm_agent        = bool
-      enable_automatic_upgrades = bool
-    }))
-  }))
-}
-
-
-# SQL VM Variables
-variable "sql_vms" {
-  type = map(object({
-    vm_key       = string
-    license_type = string
-  }))
-}
-
-
-
-=======================
-
-vms.tf
-
-
-
-resource "azurerm_virtual_machine" "vm" {
-  for_each              = var.vms
-  name                  = each.value.name
-  location              = var.location_name
-  resource_group_name   = var.rg_name
-  vm_size               = each.value.size
-  network_interface_ids = [azurerm_network_interface.nic[each.value.nic_key].id]
-  tags                  = var.global_tags
-
-  dynamic "boot_diagnostics" {
-    for_each = each.value.boot_diag_uri != "" ? [1] : []
-    content {
-      enabled     = true
-      storage_uri = each.value.boot_diag_uri
+      + virtual_machine_id             = (known after apply)
+      + ip_configuration {
+          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+          + name                                               = "STKIB2-SQL02-nic-ip"
+          + primary                                            = (known after apply)
+          + private_ip_address                                 = "10.239.56.52"
+          + private_ip_address_allocation                      = "Static"
+          + private_ip_address_version                         = "IPv4"
+          + subnet_id                                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Network/virtualNetworks/mr8-staging-scus-vnet/subnets/mr8-staging-scus-internal-snet"
+        }
     }
-  }
-
-  dynamic "identity" {
-    for_each = each.value.identity_type != "" ? [1] : []
-    content {
-      type = each.value.identity_type
+  # azurerm_network_interface.vm-nics["STWGKIB2-WEB02"] will be created
+  + resource "azurerm_network_interface" "vm-nics" {
+      + accelerated_networking_enabled = false
+      + applied_dns_servers            = (known after apply)
+      + id                             = (known after apply)
+      + internal_domain_name_suffix    = (known after apply)
+      + ip_forwarding_enabled          = false
+      + location                       = "southcentralus"
+      + mac_address                    = (known after apply)
+      + name                           = "STWGKIB2-WEB02-nic"
+      + private_ip_address             = (known after apply)
+      + private_ip_addresses           = (known after apply)
+      + resource_group_name            = "mr8-staging-rg"
+      + tags                           = {
+          + "domain"      = "keaisinc"
+          + "environment" = "staging"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+      + virtual_machine_id             = (known after apply)
+      + ip_configuration {
+          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+          + name                                               = "STWGKIB2-WEB02-nic-ip"
+          + primary                                            = (known after apply)
+          + private_ip_address                                 = "10.239.57.5"
+          + private_ip_address_allocation                      = "Static"
+          + private_ip_address_version                         = "IPv4"
+          + subnet_id                                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Network/virtualNetworks/mr8-staging-scus-vnet/subnets/mr8-staging-scus-dmz-snet"
+        }
     }
-  }
-
-
-  storage_os_disk {
-    name              = var.os_disks[each.value.os_disk_key].name
-    caching           = "ReadWrite"
-    create_option     = each.value.os_disk_creation_option
-    managed_disk_id   = each.value.os_disk_creation_option == "Attach" ? coalesce(each.value.managed_disk_id, azurerm_managed_disk.os[each.value.os_disk_key].id) : null
-    managed_disk_type = var.os_disks[each.value.os_disk_key].storage_account_type
-    os_type           = var.os_disks[each.value.os_disk_key].os_type
-    disk_size_gb      = var.os_disks[each.value.os_disk_key].disk_size_gb
-
-  }
-
-  dynamic "storage_image_reference" {
-    for_each = each.value.os_disk_creation_option == "FromImage" ? [1] : []
-    content {
-      id        = lookup(each.value.image_reference, "id", null)
-      publisher = lookup(each.value.image_reference, "publisher", null)
-      offer     = lookup(each.value.image_reference, "offer", null)
-      sku       = lookup(each.value.image_reference, "sku", null)
-      version   = lookup(each.value.image_reference, "version", null)
+  # azurerm_subnet_route_table_association.avd_snet_rt_association must be replaced
+-/+ resource "azurerm_subnet_route_table_association" "avd_snet_rt_association" {
+      ~ id             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Network/virtualNetworks/mr8-staging-scus-vnet/subnets/mr8-staging-scus-avd-snet" -> (known after apply)
+      ~ route_table_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/NetworkServices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" # forces replacement
+        # (1 unchanged attribute hidden)
     }
-  }
-
-  dynamic "os_profile" {
-    for_each = try(each.value.os_profiles, null) != null ? [each.value.os_profiles] : []
-    content {
-      computer_name  = lookup(os_profile.value, "computer_name", null)
-      admin_username = os_profile.value.admin_username
-      admin_password = lookup(os_profile.value, "admin_password", null)
+  # azurerm_subnet_route_table_association.dmz_snet_rt_association must be replaced
+-/+ resource "azurerm_subnet_route_table_association" "dmz_snet_rt_association" {
+      ~ id             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Network/virtualNetworks/mr8-staging-scus-vnet/subnets/mr8-staging-scus-dmz-snet" -> (known after apply)
+      ~ route_table_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/NetworkServices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" # forces replacement
+        # (1 unchanged attribute hidden)
     }
-  }
-
-  dynamic "os_profile_windows_config" {
-    for_each = try(each.value.windows_config, null) != null ? [each.value.windows_config] : []
-    content {
-      provision_vm_agent        = os_profile_windows_config.value.provision_vm_agent
-      enable_automatic_upgrades = os_profile_windows_config.value.enable_automatic_upgrades
+  # azurerm_subnet_route_table_association.internal_snet_rt_association must be replaced
+-/+ resource "azurerm_subnet_route_table_association" "internal_snet_rt_association" {
+      ~ id             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Network/virtualNetworks/mr8-staging-scus-vnet/subnets/mr8-staging-scus-internal-snet" -> (known after apply)
+      ~ route_table_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/NetworkServices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" # forces replacement
+        # (1 unchanged attribute hidden)
     }
-  }
-
-  dynamic "storage_data_disk" {
-    for_each = lookup(var.data_disks, each.key, [])
-    content {
-      name              = storage_data_disk.value.name
-      lun               = storage_data_disk.value.lun
-      disk_size_gb      = storage_data_disk.value.disk_size_gb
-      managed_disk_type = storage_data_disk.value.storage_account_type
-      caching           = storage_data_disk.value.caching
-      create_option     = "Attach"
-      managed_disk_id   = azurerm_managed_disk.data["${each.key}-${storage_data_disk.value.lun}"].id
+  # azurerm_virtual_desktop_host_pool.hostpool01 will be updated in-place
+  ~ resource "azurerm_virtual_desktop_host_pool" "hostpool01" {
+      ~ custom_rdp_properties            = "drivestoredirect:s:;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:0;redirectprinters:i:0;devicestoredirect:s:*;redirectcomports:i:1;redirectsmartcards:i:1;usbdevicestoredirect:s:*;enablecredsspsupport:i:1;redirectwebauthn:i:1;use multimon:i:1;" -> "drivestoredirect:s:;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:0;redirectprinters:i:0;devicestoredirect:s:*;redirectcomports:i:1;redirectsmartcards:i:1;usbdevicestoredirect:s:*;enablecredsspsupport:i:1;redirectwebauthn:i:1;use multimon:i:1"
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STKI-AVD-SHR"
+        name                             = "STKI-AVD-SHR"
+        tags                             = {
+            "domain"      = "keaisinc"
+            "environment" = "staging"
+            "managed by"  = "terraform"
+            "owner"       = "Greg Johnson"
+        }
+        # (13 unchanged attributes hidden)
     }
-  }
-
-
-
-
-  lifecycle {
-    ignore_changes = [
-      boot_diagnostics,
-      primary_network_interface_id,
-
-    ]
-  }
-}
-
-# SQL Machines
-
-resource "azurerm_mssql_virtual_machine" "sql_vm" {
-  for_each           = var.sql_vms
-  tags               = var.global_tags
-  virtual_machine_id = azurerm_virtual_machine.vm[each.value.vm_key].id
-  sql_license_type   = each.value.license_type
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  # azurerm_virtual_desktop_host_pool_registration_info.hostpool01_registrationinfo will be updated in-place
+  ~ resource "azurerm_virtual_desktop_host_pool_registration_info" "hostpool01_registrationinfo" {
+      ~ expiration_date = "2025-09-12T14:15:58Z" -> (known after apply)
+        id              = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STKI-AVD-SHR/registrationInfo/default"
+      ~ token           = (sensitive value)
+        # (1 unchanged attribute hidden)
+    }
+  # azurerm_virtual_machine_extension.hostpool01_vmext_dsc[0] will be updated in-place
+  ~ resource "azurerm_virtual_machine_extension" "hostpool01_vmext_dsc" {
+        id                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-staging-rg/providers/Microsoft.Compute/virtualMachines/STKI-AVD-SHR-1/extensions/STKI-AVD-SHR1-avd_dsc"
+        name                        = "STKI-AVD-SHR1-avd_dsc"
+      ~ protected_settings          = (sensitive value)
+        tags                        = {}
+        # (9 unchanged attributes hidden)
+    }
+  # azurerm_virtual_machine_extension.vms-domain-join["STKIB2-SQL02"] will be created
+  + resource "azurerm_virtual_machine_extension" "vms-domain-join" {
+      + auto_upgrade_minor_version  = true
+      + failure_suppression_enabled = false
+      + id                          = (known after apply)
+      + name                        = "STKIB2-SQL02-domain-join"
+      + protected_settings          = (sensitive value)
+      + publisher                   = "Microsoft.Compute"
+      + settings                    = <<-EOT
+            {
+                  "Name": "keaisinc.com",
+                  "OUPath": "OU=Staging,OU=Servers,OU=Azure,DC=keaisinc,DC=com",
+                  "User": "svc-keaisjoin@keaisinc.com",
+                  "Restart": "true",
+                  "Options": "3"
+                }
+        EOT
+      + type                        = "JsonADDomainExtension"
+      + type_handler_version        = "1.3"
+      + virtual_machine_id          = (known after apply)
+    }
+  # azurerm_windows_virtual_machine.vms["STKIB2-SQL02"] will be created
+  + resource "azurerm_windows_virtual_machine" "vms" {
+      + admin_password                                         = (sensitive value)
+      + admin_username                                         = "ONTAdmin"
+      + allow_extension_operations                             = true
+      + bypass_platform_safety_checks_on_user_schedule_enabled = false
+      + computer_name                                          = (known after apply)
+      + disk_controller_type                                   = (known after apply)
+      + enable_automatic_updates                               = false
+      + extensions_time_budget                                 = "PT1H30M"
+      + hotpatching_enabled                                    = false
+      + id                                                     = (known after apply)
+      + location                                               = "southcentralus"
+      + max_bid_price                                          = -1
+      + name                                                   = "STKIB2-SQL02"
+      + network_interface_ids                                  = (known after apply)
+      + patch_assessment_mode                                  = "ImageDefault"
+      + patch_mode                                             = "Manual"
+      + platform_fault_domain                                  = -1
+      + priority                                               = "Regular"
+      + private_ip_address                                     = (known after apply)
+      + private_ip_addresses                                   = (known after apply)
+      + provision_vm_agent                                     = true
+      + public_ip_address                                      = (known after apply)
+      + public_ip_addresses                                    = (known after apply)
+      + resource_group_name                                    = "mr8-staging-rg"
+      + size                                                   = "Standard_B8ms"
+      + tags                                                   = {
+          + "domain"      = "keaisinc"
+          + "environment" = "staging"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+      + timezone                                               = "Central Standard Time"
+      + virtual_machine_id                                     = (known after apply)
+      + vm_agent_platform_updates_enabled                      = (known after apply)
+      + boot_diagnostics {}
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = 128
+          + id                        = (known after apply)
+          + name                      = "STKIB2-SQL02-disk-os"
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+      + source_image_reference {
+          + offer     = "sql2022-ws2022"
+          + publisher = "microsoftsqlserver"
+          + sku       = "sqldev-gen2"
+          + version   = "latest"
+        }
+      + termination_notification (known after apply)
+    }
+  # azurerm_windows_virtual_machine.vms["STWGKIB2-WEB02"] will be created
+  + resource "azurerm_windows_virtual_machine" "vms" {
+      + admin_password                                         = (sensitive value)
+      + admin_username                                         = "ONTAdmin"
+      + allow_extension_operations                             = true
+      + bypass_platform_safety_checks_on_user_schedule_enabled = false
+      + computer_name                                          = (known after apply)
+      + disk_controller_type                                   = (known after apply)
+      + enable_automatic_updates                               = false
+      + extensions_time_budget                                 = "PT1H30M"
+      + hotpatching_enabled                                    = false
+      + id                                                     = (known after apply)
+      + location                                               = "southcentralus"
+      + max_bid_price                                          = -1
+      + name                                                   = "STWGKIB2-WEB02"
+      + network_interface_ids                                  = (known after apply)
+      + patch_assessment_mode                                  = "ImageDefault"
+      + patch_mode                                             = "Manual"
+      + platform_fault_domain                                  = -1
+      + priority                                               = "Regular"
+      + private_ip_address                                     = (known after apply)
+      + private_ip_addresses                                   = (known after apply)
+      + provision_vm_agent                                     = true
+      + public_ip_address                                      = (known after apply)
+      + public_ip_addresses                                    = (known after apply)
+      + resource_group_name                                    = "mr8-staging-rg"
+      + size                                                   = "Standard_B2ms"
+      + tags                                                   = {
+          + "domain"      = "keaisinc"
+          + "environment" = "staging"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+      + timezone                                               = "Central Standard Time"
+      + virtual_machine_id                                     = (known after apply)
+      + vm_agent_platform_updates_enabled                      = (known after apply)
+      + boot_diagnostics {}
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = 128
+          + id                        = (known after apply)
+          + name                      = "STWGKIB2-WEB02-disk-os"
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+      + source_image_reference {
+          + offer     = "WindowsServer"
+          + publisher = "MicrosoftWindowsServer"
+          + sku       = "2022-Datacenter"
+          + version   = "latest"
+        }
+      + termination_notification (known after apply)
+    }
+Plan: 8 to add, 3 to change, 3 to destroy.
+─────────────────────────────────────────────────────────────────────────────

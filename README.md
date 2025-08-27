@@ -1,74 +1,10 @@
-data.azurerm_key_vault.ONT-IT-KeyVault
-data.azurerm_key_vault_secret.ontadmin
-data.azurerm_key_vault_secret.svc-keaisjoin
-data.azurerm_route_table.dev-scus-rt
-data.azurerm_shared_image.AVD-KI-MR8-Win11
-data.azurerm_subscription.primary
-data.azurerm_virtual_network.IT-Prod-SCUS-VNet
-data.azurerm_virtual_network.infra-avd-scus-vnet
-data.azurerm_virtual_network.mr8-dev-scus-vnet
-data.azurerm_virtual_network.mr8-staging-scus-vnet
-data.azurerm_virtual_network.network-dev-scus-vnet
-azurerm_managed_disk.vm-sql-disks["sql01-data"]
-azurerm_managed_disk.vm-sql-disks["sql01-logs"]
-azurerm_managed_disk.vm-sql-disks["sql01-tempdb"]
-azurerm_managed_disk.vm-sql-disks["sql02-data"]
-azurerm_managed_disk.vm-sql-disks["sql02-logs"]
-azurerm_managed_disk.vm-sql-disks["sql02-tempdb"]
-azurerm_managed_disk.vm_extra_disk["file"]
-azurerm_mssql_virtual_machine.vm-sql["sql01"]
-azurerm_network_interface.hostpool01_vm_nic[0]
-azurerm_network_interface.vm-nics["STKIB2-APP01"]
-azurerm_network_interface.vm-nics["STKIB2-MRF01"]
-azurerm_network_interface.vm-nics["STKIB2-SQL01"]
-azurerm_network_interface.vm-nics["STKIB2-SQL02"]
-azurerm_network_interface.vm-nics["STWGKIB2-WEB01"]
-azurerm_network_interface.vm-nics["STWGKIB2-WEB02"]
-azurerm_network_security_group.avd_nsg
-azurerm_network_security_group.dmz_nsg
-azurerm_network_security_group.internal_nsg
-azurerm_network_security_rule.nsg_rules["mr8-staging-scus-avd-nsg_INBOUND_IMPLICIT_DENY"]
-azurerm_network_security_rule.nsg_rules["mr8-staging-scus-avd-nsg_Infra_AVDs_to_ALL"]
-azurerm_proximity_placement_group.mr8_staging_ppg
-azurerm_resource_group.main_rg
-azurerm_subnet.avd_subnet
-azurerm_subnet.dmz_subnet
-azurerm_subnet.internal_subnet
-azurerm_subnet_network_security_group_association.avd_nsg_association
-azurerm_subnet_network_security_group_association.dmz_nsg_association
-azurerm_subnet_network_security_group_association.internal_nsg_association
-azurerm_subnet_route_table_association.avd_snet_rt_association
-azurerm_subnet_route_table_association.dmz_snet_rt_association
-azurerm_subnet_route_table_association.internal_snet_rt_association
-azurerm_virtual_desktop_application_group.hostpool01_dag
-azurerm_virtual_desktop_host_pool.hostpool01
-azurerm_virtual_desktop_host_pool_registration_info.hostpool01_registrationinfo
-azurerm_virtual_desktop_workspace.workspace01
-azurerm_virtual_desktop_workspace_application_group_association.hostpool01_ws-dag
-azurerm_virtual_machine_data_disk_attachment.extra_disk_attach["file"]
-azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-data"]
-azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-logs"]
-azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-tempdb"]
-azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql02-data"]
-azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql02-logs"]
-azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql02-tempdb"]
-azurerm_virtual_machine_extension.hostpool01_domain_join[0]
-azurerm_virtual_machine_extension.hostpool01_vmext_dsc[0]
-azurerm_virtual_machine_extension.vms-domain-join["STKIB2-APP01"]
-azurerm_virtual_machine_extension.vms-domain-join["STKIB2-MRF01"]
-azurerm_virtual_machine_extension.vms-domain-join["STKIB2-SQL01"]
-azurerm_virtual_machine_extension.vms-domain-join["STKIB2-SQL02"]
-azurerm_virtual_network.main_vnet
-azurerm_virtual_network_peering.it_vnet_main_vnet
-azurerm_virtual_network_peering.main_vnet_it_vnet
-azurerm_virtual_network_peering.main_vnet_network-dev-scus-vnet
-azurerm_virtual_network_peering.network-dev-scus-vnet_main_vnet_network
-azurerm_windows_virtual_machine.hostpool01_vm[0]
-azurerm_windows_virtual_machine.vms["STKIB2-APP01"]
-azurerm_windows_virtual_machine.vms["STKIB2-MRF01"]
-azurerm_windows_virtual_machine.vms["STKIB2-SQL01"]
-azurerm_windows_virtual_machine.vms["STKIB2-SQL02"]
-azurerm_windows_virtual_machine.vms["STWGKIB2-WEB01"]
-azurerm_windows_virtual_machine.vms["STWGKIB2-WEB02"]
-
-
+terraform state rm azurerm_windows_virtual_machine.vms["STKIB2-SQL02"]
+terraform state rm azurerm_network_interface.vm-nics["STKIB2-SQL02"]
+terraform state rm azurerm_mssql_virtual_machine.vm-sql["sql02"]
+terraform state rm azurerm_managed_disk.vm-sql-disks["sql02-data"]
+terraform state rm azurerm_managed_disk.vm-sql-disks["sql02-logs"]
+terraform state rm azurerm_managed_disk.vm-sql-disks["sql02-tempdb"]
+terraform state rm azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql02-data"]
+terraform state rm azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql02-logs"]
+terraform state rm azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql02-tempdb"]
+terraform state rm azurerm_virtual_machine_extension.vms-domain-join["STKIB2-SQL02"]

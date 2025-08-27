@@ -545,31 +545,328 @@ terraform state mv 'azurerm_managed_disk.vm-sql-disks["tempdb"]' 'azurerm_manage
 
 
 
+Vms.tf
+
+
+resource "azurerm_virtual_machine" "vm" {
+  for_each              = var.vms
+  name                  = each.value.name
+  location              = var.location_name
+  resource_group_name   = var.rg_name
+  vm_size               = each.value.size
+  network_interface_ids = [azurerm_network_interface.nic[each.value.nic_key].id]
+  tags                  = var.global_tags
+
+  dynamic "boot_diagnostics" {
+    for_each = each.value.boot_diag_uri != "" ? [1] : []
+    content {
+      enabled     = true
+      storage_uri = each.value.boot_diag_uri
+    }
+  }
+
+  dynamic "identity" {
+    for_each = each.value.identity_type != "" ? [1] : []
+    content {
+      type = each.value.identity_type
+    }
+  }
+
+
+  storage_os_disk {
+    name              = var.os_disks[each.value.os_disk_key].name
+    caching           = "ReadWrite"
+    create_option     = each.value.os_disk_creation_option
+    managed_disk_id   = each.value.os_disk_creation_option == "Attach" ? coalesce(each.value.managed_disk_id, azurerm_managed_disk.os[each.value.os_disk_key].id) : null
+    managed_disk_type = var.os_disks[each.value.os_disk_key].storage_account_type
+    os_type           = var.os_disks[each.value.os_disk_key].os_type
+    disk_size_gb      = var.os_disks[each.value.os_disk_key].disk_size_gb
+
+  }
+
+  dynamic "storage_image_reference" {
+    for_each = each.value.os_disk_creation_option == "FromImage" ? [1] : []
+    content {
+      id        = lookup(each.value.image_reference, "id", null)
+      publisher = lookup(each.value.image_reference, "publisher", null)
+      offer     = lookup(each.value.image_reference, "offer", null)
+      sku       = lookup(each.value.image_reference, "sku", null)
+      version   = lookup(each.value.image_reference, "version", null)
+    }
+  }
+
+  dynamic "os_profile" {
+    for_each = try(each.value.os_profiles, null) != null ? [each.value.os_profiles] : []
+    content {
+      computer_name  = lookup(os_profile.value, "computer_name", null)
+      admin_username = os_profile.value.admin_username
+      admin_password = lookup(os_profile.value, "admin_password", null)
+    }
+  }
+
+  dynamic "os_profile_windows_config" {
+    for_each = try(each.value.windows_config, null) != null ? [each.value.windows_config] : []
+    content {
+      provision_vm_agent        = os_profile_windows_config.value.provision_vm_agent
+      enable_automatic_upgrades = os_profile_windows_config.value.enable_automatic_upgrades
+    }
+  }
+
+  dynamic "storage_data_disk" {
+    for_each = lookup(var.data_disks, each.key, [])
+    content {
+      name              = storage_data_disk.value.name
+      lun               = storage_data_disk.value.lun
+      disk_size_gb      = storage_data_disk.value.disk_size_gb
+      managed_disk_type = storage_data_disk.value.storage_account_type
+      caching           = storage_data_disk.value.caching
+      create_option     = "Attach"
+      managed_disk_id   = azurerm_managed_disk.data["${each.key}-${storage_data_disk.value.lun}"].id
+    }
+  }
+
+
+
+
+  lifecycle {
+    ignore_changes = [
+      boot_diagnostics,
+      primary_network_interface_id,
+
+    ]
+  }
+}
+
+# SQL Machines
+
+resource "azurerm_mssql_virtual_machine" "sql_vm" {
+  for_each           = var.sql_vms
+  tags               = var.global_tags
+  virtual_machine_id = azurerm_virtual_machine.vm[each.value.vm_key].id
+  sql_license_type   = each.value.license_type
+
+}
+
+
+nics.tf
+
+
+resource "azurerm_network_interface" "nic" {
+  for_each            = var.nics
+  name                = each.value.name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  tags                = var.global_tags
+
+  ip_configuration {
+    name                          = coalesce(each.value.ip_config_name, "${each.value.name}-ipConfig")
+    primary                       = true
+    private_ip_address_allocation = each.value.allocation # "Dynamic" or "Static"
+    private_ip_address            = each.value.allocation == "Static" ? each.value.private_ip : null
+    private_ip_address_version    = "IPv4"
+    subnet_id                     = each.value.subnet_id
+  }
+
+  lifecycle {
+    ignore_changes = [
+      accelerated_networking_enabled,
+    ]
+  }
+}
+
+
+disks.tf
+
+# OS DISKS (imported) 
+resource "azurerm_managed_disk" "os" {
+  for_each = {
+    for k, v in var.os_disks : k => v
+    if lookup(var.vms[k], "os_disk_creation_option", "Attach") == "Attach"
+  }
+  
+  name                = each.value.name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  storage_account_type = each.value.storage_account_type
+  create_option        = "Restore"
+  disk_size_gb         = each.value.disk_size_gb
+  os_type              = each.value.os_type
+  hyper_v_generation   = each.value.hyper_v_generation
+ 
+ lifecycle {
+    ignore_changes = all 
+  } 
+
+}
+
+resource "azurerm_managed_disk" "data" {
+  for_each = {
+    for pair in flatten([
+      for vm, disks in var.data_disks : [
+        for index, disk in disks : {
+          key   = "${vm}-${index}"
+          value = disk
+        }
+      ]
+    ]) : pair.key => pair.value
+  }
+
+  name                 = each.value.name
+  location             = var.location_name
+  resource_group_name  = var.rg_name
+  storage_account_type = each.value.storage_account_type
+  create_option        = "Empty"
+  disk_size_gb         = each.value.disk_size_gb
+
+  lifecycle {
+    ignore_changes = all 
+  }
+}
+   
+
+variables.tf
+
+#Global Var
+variable "global_tags" {}
+
+# Resource Group Variable
+variable "rg_name" {}
+
+# Locatoin Variable
+variable "location_name" {}
+
+# Main Networking Variables
+variable "main_vnet_name" {}
+variable "main_vnet_address_space" {}
+variable "main_dns_servers" {}
+
+# Subnet Variables
+variable "internal_snet_name" {}
+variable "internal_snet_address_prefix" {}
+variable "wvd_snet_name" {}
+variable "wvd_snet_address_prefix" {}
+variable "dmz_snet_name" {}
+variable "dmz_snet_address_prefix" {}
+variable "bot_wvd_snet_name" {}
+variable "bot_wvd_snet_address_prefix" {}
+
+# Network Security Group Variables
+variable "nsg_internal_name" {}
+variable "nsg_wvd_name" {}
+variable "nsg_dmz_name" {}
+variable "nsg_bot_wvd_name" {}
+
+# Temp Network Variables
+variable "temp_vnet_name" {}
+variable "temp_vnet_address_space" {}
+variable "temp_dns_servers" {}
+
+# Temp Subnet Varibales
+variable "Internal_snet_name" {}
+variable "Internal_snet_address_prefix" {}
+
+# Temp NSG Variables
+variable "nsg_Internal_name" {}
+
+
+# NICs Variables
+variable "nics" {
+  type = map(object({
+    name : string
+    subnet_id : string
+    allocation : string
+    private_ip : string
+    ip_config_name : optional(string)
+    acclerated_networking_enabled : optional(bool)
+
+  }))
+}
+
+variable "data_disks" {
+  type = map(list(object({
+    name                 = string
+    disk_size_gb         = number
+    storage_account_type = string
+    lun                  = number
+    caching              = string
+  })))
+  default = {}
+}
+
+# DISKs Variables
+variable "os_disks" {
+  type = map(object({
+    name                 = string
+    disk_size_gb         = string
+    storage_account_type = string
+    os_type              = string
+    hyper_v_generation   = string
+
+  }))
+}
+
+#VMs Variables
+variable "vms" {
+  type = map(object({
+    name                    = string
+    size                    = string
+    nic_key                 = string
+    os_disk_key             = string
+    boot_diag_uri           = string
+    identity_type           = string
+    os_disk_creation_option = string
+    managed_disk_id         = optional(string)
+
+    #for image-based VM's
+    image_reference = optional(object({
+      id        = optional(string)
+      offer     = optional(string)
+      publisher = optional(string)
+      sku       = optional(string)
+      version   = optional(string)
+    }))
+
+    # Os Profiles
+    os_profiles = optional(object({
+      admin_username = string
+      admin_password = optional(string)
+      computer_name  = optional(string)
+    }))
+
+    # Windows config
+
+    windows_config = optional(object({
+      provision_vm_agent        = bool
+      enable_automatic_upgrades = bool
+    }))
+  }))
+}
+
+
+# SQL VM Variables
+variable "sql_vms" {
+  type = map(object({
+    vm_key       = string
+    license_type = string
+  }))
+}
+
+
++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+  - destroy
+-/+ destroy and then create replacement
 
 Terraform will perform the following actions:
-
-  # azurerm_managed_disk.data["demo_vm01-0"] will be created
-  + resource "azurerm_managed_disk" "data" {
-      + create_option                     = "Empty"
-      + disk_iops_read_only               = (known after apply)
-      + disk_iops_read_write              = (known after apply)
-      + disk_mbps_read_only               = (known after apply)
-      + disk_mbps_read_write              = (known after apply)
-      + disk_size_gb                      = 150
-      + id                                = (known after apply)
-      + location                          = "southcentralus"
-      + logical_sector_size               = (known after apply)
-      + max_shares                        = (known after apply)
-      + name                              = "demo-vm01_DataDisk01"
-      + network_access_policy             = "AllowAll"
-      + optimized_frequent_attach_enabled = false
-      + performance_plus_enabled          = false
-      + public_network_access_enabled     = true
-      + resource_group_name               = "mr8-dev-rg"
-      + source_uri                        = (known after apply)
-      + storage_account_type              = "StandardSSD_LRS"
-      + tier                              = (known after apply)
-    }
 
   # azurerm_managed_disk.os["dvkib2_9"] will be destroyed
   # (because key ["dvkib2_9"] is not in for_each map)
@@ -892,6 +1189,36 @@ Terraform will perform the following actions:
         # (10 unchanged attributes hidden)
     }
 
+  # azurerm_mssql_virtual_machine.sql_vm["sql1"] must be replaced
+-/+ resource "azurerm_mssql_virtual_machine" "sql_vm" {
+      ~ id                           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.SqlVirtualMachine/sqlVirtualMachines/DVKIB2-RPA01" -> (known after apply)
+      + sql_connectivity_port        = 1433
+      + sql_connectivity_type        = "PRIVATE"
+      ~ tags                         = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+      ~ virtual_machine_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/dvkib2-rpa01" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-RPA01" # forces replacement
+        # (2 unchanged attributes hidden)
+    }
+
+  # azurerm_mssql_virtual_machine.sql_vm["sql2"] must be replaced
+-/+ resource "azurerm_mssql_virtual_machine" "sql_vm" {
+      ~ id                           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.SqlVirtualMachine/sqlVirtualMachines/DVKIB2-RPA02" -> (known after apply)
+      + sql_connectivity_port        = 1433
+      + sql_connectivity_type        = "PRIVATE"
+      ~ tags                         = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+      ~ virtual_machine_id           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/dvkib2-rpa02" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-RPA02" # forces replacement
+        # (2 unchanged attributes hidden)
+    }
+
   # azurerm_network_interface.nic["buildcontroller_test"] will be updated in-place
   ~ resource "azurerm_network_interface" "nic" {
         id                             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkInterfaces/nic-BUILDCONTROLLER-00-test"
@@ -905,38 +1232,6 @@ Terraform will perform the following actions:
         # (15 unchanged attributes hidden)
 
         # (1 unchanged block hidden)
-    }
-
-  # azurerm_network_interface.nic["demo_vm01"] will be created
-  + resource "azurerm_network_interface" "nic" {
-      + accelerated_networking_enabled = false
-      + applied_dns_servers            = (known after apply)
-      + id                             = (known after apply)
-      + internal_domain_name_suffix    = (known after apply)
-      + ip_forwarding_enabled          = false
-      + location                       = "southcentralus"
-      + mac_address                    = (known after apply)
-      + name                           = "nic-demo-vm01"
-      + private_ip_address             = (known after apply)
-      + private_ip_addresses           = (known after apply)
-      + resource_group_name            = "mr8-dev-rg"
-      + tags                           = {
-          + "domain"      = "Keais"
-          + "environment" = "Development"
-          + "managed by"  = "terraform"
-          + "owner"       = "Greg Johnson"
-        }
-      + virtual_machine_id             = (known after apply)
-
-      + ip_configuration {
-          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
-          + name                                               = "nic-demo-vm01-ipConfig"
-          + primary                                            = true
-          + private_ip_address                                 = (known after apply)
-          + private_ip_address_allocation                      = "Dynamic"
-          + private_ip_address_version                         = "IPv4"
-          + subnet_id                                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet"
-        }
     }
 
   # azurerm_network_interface.nic["dev_mr8_test"] will be updated in-place
@@ -1291,86 +1586,601 @@ Terraform will perform the following actions:
         # (1 unchanged block hidden)
     }
 
-  # azurerm_virtual_machine.vm["demo_vm01"] will be created
-  + resource "azurerm_virtual_machine" "vm" {
-      + availability_set_id              = (known after apply)
-      + delete_data_disks_on_termination = false
-      + delete_os_disk_on_termination    = false
-      + id                               = (known after apply)
-      + license_type                     = (known after apply)
-      + location                         = "southcentralus"
-      + name                             = "demo-vm01"
-      + network_interface_ids            = (known after apply)
-      + resource_group_name              = "mr8-dev-rg"
-      + tags                             = {
+  # azurerm_network_security_group.nsg_Internal will be updated in-place
+  ~ resource "azurerm_network_security_group" "nsg_Internal" {
+        id                  = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/temp-dev-vnet-01-NSG"
+        name                = "temp-dev-vnet-01-NSG"
+      ~ tags                = {
           + "domain"      = "Keais"
           + "environment" = "Development"
           + "managed by"  = "terraform"
           + "owner"       = "Greg Johnson"
         }
-      + vm_size                          = "Standard_D2s_v4"
-
-      + identity {
-          + principal_id = (known after apply)
-          + tenant_id    = (known after apply)
-          + type         = "SystemAssigned"
-        }
-
-      + os_profile {
-          # At least one attribute in this block is (or was) sensitive,
-          # so its contents will not be displayed.
-        }
-
-      + os_profile_windows_config {
-          + enable_automatic_upgrades = true
-          + provision_vm_agent        = true
-            # (1 unchanged attribute hidden)
-        }
-
-      + storage_data_disk {
-          + caching                   = "None"
-          + create_option             = "Attach"
-          + disk_size_gb              = 150
-          + lun                       = 0
-          + managed_disk_id           = (known after apply)
-          + managed_disk_type         = "StandardSSD_LRS"
-          + name                      = "demo-vm01_DataDisk01"
-          + write_accelerator_enabled = false
-        }
-
-      + storage_image_reference {
-            id        = null
-          + offer     = "WindowsServer"
-          + publisher = "MicrosoftWindowsServer"
-          + sku       = "2019-Datacenter"
-          + version   = "latest"
-        }
-
-      + storage_os_disk {
-          + caching                   = "ReadWrite"
-          + create_option             = "FromImage"
-          + disk_size_gb              = 100
-          + managed_disk_id           = (known after apply)
-          + managed_disk_type         = "Premium_LRS"
-          + name                      = "demo-vm01-OsDisk"
-          + os_type                   = "Windows"
-          + write_accelerator_enabled = false
-        }
+        # (3 unchanged attributes hidden)
     }
 
+  # azurerm_network_security_group.nsg_bot_wvd will be updated in-place
+  ~ resource "azurerm_network_security_group" "nsg_bot_wvd" {
+        id                  = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-bot-scus-WVD-nsg"
+        name                = "mr8-dev-bot-scus-WVD-nsg"
+      ~ tags                = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (3 unchanged attributes hidden)
+    }
 
+  # azurerm_network_security_group.nsg_dmz will be updated in-place
+  ~ resource "azurerm_network_security_group" "nsg_dmz" {
+        id                  = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-dmz-nsg"
+        name                = "mr8-dev-scus-dmz-nsg"
+      ~ tags                = {
+          + "domain"      = "Keais"
+          ~ "environment" = "development" -> "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (3 unchanged attributes hidden)
+    }
 
+  # azurerm_network_security_group.nsg_internal will be updated in-place
+  ~ resource "azurerm_network_security_group" "nsg_internal" {
+        id                  = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-internal-nsg"
+        name                = "mr8-dev-scus-internal-nsg"
+      ~ tags                = {
+          + "domain"      = "Keais"
+          ~ "environment" = "development" -> "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (3 unchanged attributes hidden)
+    }
 
+  # azurerm_network_security_group.nsg_wvd will be updated in-place
+  ~ resource "azurerm_network_security_group" "nsg_wvd" {
+        id                  = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-wvd-nsg"
+        name                = "mr8-dev-scus-wvd-nsg"
+      ~ tags                = {
+          - "Workload"    = "WVD Dev" -> null
+          + "domain"      = "Keais"
+          ~ "environment" = "development" -> "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (3 unchanged attributes hidden)
+    }
 
+  # azurerm_resource_group.rg will be updated in-place
+  ~ resource "azurerm_resource_group" "rg" {
+        id         = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg"
+        name       = "mr8-dev-rg"
+      ~ tags       = {
+          - "Business Unit" = "Keais" -> null
+          + "domain"        = "Keais"
+            "environment"   = "Development"
+          + "managed by"    = "terraform"
+          + "owner"         = "Greg Johnson"
+        }
+        # (2 unchanged attributes hidden)
+    }
 
+  # azurerm_subnet.bot_wvd will be updated in-place
+  ~ resource "azurerm_subnet" "bot_wvd" {
+        id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet"
+        name                                          = "mr8-dev-bot-scus-WVD-snet"
+      ~ service_endpoints                             = [
+          - "Microsoft.Storage",
+        ]
+        # (7 unchanged attributes hidden)
+    }
 
+  # azurerm_subnet.dmz will be updated in-place
+  ~ resource "azurerm_subnet" "dmz" {
+        id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet"
+        name                                          = "mr8-dev-scus-dmz-snet"
+      ~ service_endpoints                             = [
+          + "Microsoft.KeyVault, Microsoft.Storage",
+        ]
+        # (7 unchanged attributes hidden)
+    }
 
+  # azurerm_subnet.internal will be updated in-place
+  ~ resource "azurerm_subnet" "internal" {
+        id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet"
+        name                                          = "mr8-dev-scus-internal-snet"
+      ~ service_endpoints                             = [
+          - "Microsoft.KeyVault",
+          - "Microsoft.Storage",
+        ]
+        # (7 unchanged attributes hidden)
+    }
 
+  # azurerm_subnet.wvd will be updated in-place
+  ~ resource "azurerm_subnet" "wvd" {
+        id                                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet"
+        name                                          = "mr8-dev-scus-WVD-snet"
+      ~ service_endpoints                             = [
+          - "Microsoft.KeyVault",
+          - "Microsoft.Storage",
+          + "Microsoft.KeyVault, Microsoft.Storage",
+        ]
+        # (7 unchanged attributes hidden)
+    }
 
+  # azurerm_subnet_network_security_group_association.assoc_bot_wvd must be replaced
+-/+ resource "azurerm_subnet_network_security_group_association" "assoc_bot_wvd" {
+      ~ id                        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet" -> (known after apply)
+      ~ subnet_id                 = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-Dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet" # forces replacement
+        # (1 unchanged attribute hidden)
+    }
 
+  # azurerm_subnet_network_security_group_association.assoc_dmz must be replaced
+-/+ resource "azurerm_subnet_network_security_group_association" "assoc_dmz" {
+      ~ id                        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet" -> (known after apply)
+      ~ subnet_id                 = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-Dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet" # forces replacement
+        # (1 unchanged attribute hidden)
+    }
 
+  # azurerm_subnet_network_security_group_association.assoc_internal must be replaced
+-/+ resource "azurerm_subnet_network_security_group_association" "assoc_internal" {
+      ~ id                        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet" -> (known after apply)
+      ~ subnet_id                 = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-Dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet" # forces replacement
+        # (1 unchanged attribute hidden)
+    }
 
+  # azurerm_subnet_network_security_group_association.assoc_wvd must be replaced
+-/+ resource "azurerm_subnet_network_security_group_association" "assoc_wvd" {
+      ~ id                        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet" -> (known after apply)
+      ~ subnet_id                 = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/MR8-Dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet" # forces replacement
+        # (1 unchanged attribute hidden)
+    }
 
+  # azurerm_virtual_machine.vm["buildcontroller_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/BUILDCONTROLLER-test"
+        name                             = "BUILDCONTROLLER-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dev_mr8_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DEV-MR8-test"
+        name                             = "DEV-MR8-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dev_mrfile_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DEV-MRFILE-test"
+        name                             = "DEV-MRFILE-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dev_web_2012r2_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DEV-WEB-2012r2-test"
+        name                             = "DEV-WEB-2012r2-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (4 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dockerbuild_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DOCKERBUILD-test"
+        name                             = "DOCKERBUILD-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dvkib2_9"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/dvkib2-9"
+        name                             = "dvkib2-9"
+      ~ tags                             = {
+          - "Domain"             = "Keaisinc" -> null
+          - "Owner"              = "Greg Johnson" -> null
+          - "cm-resource-parent" = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.DesktopVirtualization/hostpools/MR8WVD-Dev-Automation-Bot-02" -> null
+          + "domain"             = "Keais"
+            "environment"        = "Development"
+          + "managed by"         = "terraform"
+          - "name"               = "Keaisinc" -> null
+          + "owner"              = "Greg Johnson"
+        }
+        # (5 unchanged attributes hidden)
+
+      - additional_capabilities {}
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dvkib2_app01"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-APP01"
+        name                             = "DVKIB2-APP01"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          ~ "environment" = "development" -> "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (5 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dvkib2_def01"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-DEF01"
+        name                             = "DVKIB2-DEF01"
+      ~ tags                             = {
+          ~ "domain"      = "keaisinc" -> "Keais"
+          ~ "environment" = "development" -> "Development"
+          + "managed by"  = "terraform"
+          ~ "owner"       = "Jaspinder Singh" -> "Greg Johnson"
+        }
+        # (5 unchanged attributes hidden)
+
+        # (6 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dvkib2_rpa01"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-RPA01"
+        name                             = "DVKIB2-RPA01"
+      ~ tags                             = {
+          - "Business Unit" = "Keais" -> null
+          ~ "domain"        = "keaisinc" -> "Keais"
+          ~ "environment"   = "development" -> "Development"
+          + "managed by"    = "terraform"
+            "owner"         = "Greg Johnson"
+        }
+        # (5 unchanged attributes hidden)
+
+        # (7 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dvkib2_rpa02"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-RPA02"
+        name                             = "DVKIB2-RPA02"
+      ~ tags                             = {
+          - "Business Unit" = "Keais" -> null
+          ~ "domain"        = "keaisinc" -> "Keais"
+          ~ "environment"   = "development" -> "Development"
+          + "managed by"    = "terraform"
+            "owner"         = "Greg Johnson"
+        }
+        # (5 unchanged attributes hidden)
+
+        # (7 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dvkib2_web01"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-WEB01"
+        name                             = "DVKIB2-WEB01"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (5 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dvkib2_web02"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-WEB02"
+        name                             = "DVKIB2-WEB02"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (5 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dvkic1_pm01_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIC1-PM01-test"
+        name                             = "DVKIC1-PM01-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dvkic1_sql03_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIC1-SQL03-test"
+        name                             = "DVKIC1-SQL03-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["dvwgb2_ftp01"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVWGB2-FTP01"
+        name                             = "DVWGB2-FTP01"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          ~ "environment" = "development" -> "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (5 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["keais_dev_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KEAIS-DEV-test"
+        name                             = "KEAIS-DEV-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["keais_ship_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KEAIS-SHIP-test"
+        name                             = "KEAIS-SHIP-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["keais_winweb_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KEAIS-WINWEB-test"
+        name                             = "KEAIS-WINWEB-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["kib2_nsb01"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KIB2-NSB01"
+        name                             = "KIB2-NSB01"
+      ~ tags                             = {
+          ~ "domain"      = "keaisinc" -> "Keais"
+          ~ "environment" = "development" -> "Development"
+          + "managed by"  = "terraform"
+          ~ "owner"       = "Jaspinder Singh" -> "Greg Johnson"
+          - "service"     = "NServiceBus" -> null
+        }
+        # (5 unchanged attributes hidden)
+
+        # (6 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["kic1_sec01_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KIC1-SEC01-test"
+        name                             = "KIC1-SEC01-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (4 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["qa_mrfile_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/QA-MRFILE-test"
+        name                             = "QA-MRFILE-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["qakib2_opg01"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/QAKIB2-OPG01"
+        name                             = "QAKIB2-OPG01"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          ~ "environment" = "development" -> "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (5 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["sca1_iisdev_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/SCA1-IISDEV-test"
+        name                             = "SCA1-IISDEV-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine.vm["wgkib1_web02_test"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "vm" {
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/WGKIB1-WEB02-test"
+        name                             = "WGKIB1-WEB02-test"
+      ~ tags                             = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (6 unchanged attributes hidden)
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_network.main_vnet will be updated in-place
+  ~ resource "azurerm_virtual_network" "main_vnet" {
+        id                             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet"
+        name                           = "mr8-dev-scus-vnet"
+      ~ tags                           = {
+          + "domain"      = "Keais"
+            "environment" = "Development"
+          + "managed by"  = "terraform"
+          ~ "owner"       = "Jaspinder Singh" -> "Greg Johnson"
+        }
+        # (10 unchanged attributes hidden)
+    }
+
+  # azurerm_virtual_network.temp_vnet will be updated in-place
+  ~ resource "azurerm_virtual_network" "temp_vnet" {
+        id                             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/temp-dev-vnet-01"
+        name                           = "temp-dev-vnet-01"
+      ~ tags                           = {
+          + "domain"      = "Keais"
+          + "environment" = "Development"
+          + "managed by"  = "terraform"
+          + "owner"       = "Greg Johnson"
+        }
+        # (10 unchanged attributes hidden)
+    }
+
+Plan: 6 to add, 60 to change, 16 to destroy.
 
 
 

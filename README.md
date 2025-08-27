@@ -1,4 +1,216 @@
-Variables.tf 
+Networking.tf
+
+# Create Virtual Network -1
+resource "azurerm_virtual_network" "main_vnet" {
+  name                = var.main_vnet_name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  address_space       = var.main_vnet_address_space
+  dns_servers         = var.main_dns_servers
+  tags                = var.global_tags
+}
+
+# Creating Subnets
+resource "azurerm_subnet" "internal" {
+  name                 = var.internal_snet_name
+  resource_group_name  = var.rg_name
+  virtual_network_name = var.main_vnet_name
+  address_prefixes     = [var.internal_snet_address_prefix]
+}
+
+resource "azurerm_subnet" "wvd" {
+  name                              = var.wvd_snet_name
+  resource_group_name               = var.rg_name
+  virtual_network_name              = var.main_vnet_name
+  address_prefixes                  = [var.wvd_snet_address_prefix]
+  private_endpoint_network_policies = "Enabled"
+  service_endpoints                 = ["Microsoft.KeyVault, Microsoft.Storage"]
+}
+
+resource "azurerm_subnet" "dmz" {
+  name                              = var.dmz_snet_name
+  resource_group_name               = var.rg_name
+  virtual_network_name              = var.main_vnet_name
+  address_prefixes                  = [var.dmz_snet_address_prefix]
+  private_endpoint_network_policies = "Enabled"
+  service_endpoints                 = ["Microsoft.KeyVault, Microsoft.Storage"]
+}
+
+resource "azurerm_subnet" "bot_wvd" {
+  name                 = var.bot_wvd_snet_name
+  resource_group_name  = var.rg_name
+  virtual_network_name = var.main_vnet_name
+  address_prefixes     = [var.bot_wvd_snet_address_prefix]
+}
+
+# Network Security Groups
+resource "azurerm_network_security_group" "nsg_internal" {
+  name                = var.nsg_internal_name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  tags                = var.global_tags
+}
+
+resource "azurerm_network_security_group" "nsg_wvd" {
+  name                = var.nsg_wvd_name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  tags                = var.global_tags
+}
+
+resource "azurerm_network_security_group" "nsg_dmz" {
+  name                = var.nsg_dmz_name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  tags                = var.global_tags
+}
+
+resource "azurerm_network_security_group" "nsg_bot_wvd" {
+  name                = var.nsg_bot_wvd_name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  tags                = var.global_tags
+}
+
+# Association NSG's to subnets
+resource "azurerm_subnet_network_security_group_association" "assoc_internal" {
+  subnet_id                 = azurerm_subnet.internal.id
+  network_security_group_id = azurerm_network_security_group.nsg_internal.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "assoc_wvd" {
+  subnet_id                 = azurerm_subnet.wvd.id
+  network_security_group_id = azurerm_network_security_group.nsg_wvd.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "assoc_dmz" {
+  subnet_id                 = azurerm_subnet.dmz.id
+  network_security_group_id = azurerm_network_security_group.nsg_dmz.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "assoc_bot_wvd" {
+  subnet_id                 = azurerm_subnet.bot_wvd.id
+  network_security_group_id = azurerm_network_security_group.nsg_bot_wvd.id
+}
+
+# Create Temp Virtual Network
+resource "azurerm_virtual_network" "temp_vnet" {
+  name                = var.temp_vnet_name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  address_space       = var.temp_vnet_address_space
+  dns_servers         = var.temp_dns_servers
+  tags                = var.global_tags
+}
+
+# Create Temp Subnets
+resource "azurerm_subnet" "Internal" {
+  name                 = var.Internal_snet_name
+  resource_group_name  = var.rg_name
+  virtual_network_name = var.temp_vnet_name
+  address_prefixes     = [var.Internal_snet_address_prefix]
+}
+
+# Create Temp Network Security Group
+resource "azurerm_network_security_group" "nsg_Internal" {
+  name                = var.nsg_Internal_name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  tags                = var.global_tags
+}
+
+# Association temp NSG's to subnets
+resource "azurerm_subnet_network_security_group_association" "assoc_Internal" {
+  subnet_id                 = azurerm_subnet.Internal.id
+  network_security_group_id = azurerm_network_security_group.nsg_Internal.id
+}
+
+
+============================================
+
+
+Nics.tf
+
+resource "azurerm_network_interface" "nic" {
+  for_each            = var.nics
+  name                = each.value.name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  tags                = var.global_tags
+
+  ip_configuration {
+    name                          = coalesce(each.value.ip_config_name, "${each.value.name}-ipConfig")
+    primary                       = true
+    private_ip_address_allocation = each.value.allocation # "Dynamic" or "Static"
+    private_ip_address            = each.value.allocation == "Static" ? each.value.private_ip : null
+    private_ip_address_version    = "IPv4"
+    subnet_id                     = each.value.subnet_id
+  }
+
+  lifecycle {
+    ignore_changes = [
+      accelerated_networking_enabled,
+    ]
+  }
+}
+
+
+
+
+===================================
+
+disks.tf
+
+# OS DISKS (imported) 
+resource "azurerm_managed_disk" "os" {
+  for_each = {
+    for k, v in var.os_disks : k => v
+    if lookup(var.vms[k], "os_disk_creation_option", "Attach") == "Attach"
+  }
+
+  name                = each.value.name
+  location            = var.location_name
+  resource_group_name = var.rg_name
+  storage_account_type = each.value.storage_account_type
+  create_option        = "Restore"
+  disk_size_gb         = each.value.disk_size_gb
+  os_type              = each.value.os_type
+  hyper_v_generation   = each.value.hyper_v_generation
+ 
+ lifecycle {
+  prevent_destroy =  true
+    ignore_changes = all 
+  } 
+
+}
+
+resource "azurerm_managed_disk" "data" {
+  for_each = {
+    for pair in flatten([
+      for vm, disks in var.data_disks : [
+        for index, disk in disks : {
+          key   = "${vm}-${index}"
+          value = disk
+        }
+      ]
+    ]) : pair.key => pair.value
+  }
+
+  name                 = each.value.name
+  location             = var.location_name
+  resource_group_name  = var.rg_name
+  storage_account_type = each.value.storage_account_type
+  create_option        = "Empty"
+  disk_size_gb         = each.value.disk_size_gb
+
+  lifecycle {
+    ignore_changes = all 
+    prevent_destroy = true
+  }
+}
+   
+================================
+variables.tf
 
 #Global Var
 variable "global_tags" {}
@@ -89,6 +301,7 @@ variable "vms" {
     boot_diag_uri           = string
     identity_type           = string
     os_disk_creation_option = string
+    managed_disk_id         = optional(string)
 
     #for image-based VM's
     image_reference = optional(object({
@@ -124,8 +337,11 @@ variable "sql_vms" {
   }))
 }
 
-==================================
-VMs.tf
+
+=======================
+
+vms.tf
+
 
 resource "azurerm_virtual_machine" "vm" {
   for_each              = var.vms
@@ -156,7 +372,7 @@ resource "azurerm_virtual_machine" "vm" {
     name              = var.os_disks[each.value.os_disk_key].name
     caching           = "ReadWrite"
     create_option     = each.value.os_disk_creation_option
-    managed_disk_id   = each.value.os_disk_creation_option == "Attach" ? azurerm_managed_disk.os[each.value.os_disk_key].id : null
+    managed_disk_id   = each.value.os_disk_creation_option == "Attach" ? coalesce(each.value.managed_disk_id, azurerm_managed_disk.os[each.value.os_disk_key].id) : null
     managed_disk_type = var.os_disks[each.value.os_disk_key].storage_account_type
     os_type           = var.os_disks[each.value.os_disk_key].os_type
     disk_size_gb      = var.os_disks[each.value.os_disk_key].disk_size_gb
@@ -228,324 +444,8 @@ resource "azurerm_mssql_virtual_machine" "sql_vm" {
 
 
 
-=========================================
 
-nics.tf
 
-resource "azurerm_network_interface" "nic" {
-  for_each            = var.nics
-  name                = each.value.name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-  tags                = var.global_tags
-
-  ip_configuration {
-    name                          = coalesce(each.value.ip_config_name, "${each.value.name}-ipConfig")
-    primary                       = true
-    private_ip_address_allocation = each.value.allocation # "Dynamic" or "Static"
-    private_ip_address            = each.value.allocation == "Static" ? each.value.private_ip : null
-    private_ip_address_version    = "IPv4"
-    subnet_id                     = each.value.subnet_id
-  }
-
-  lifecycle {
-    ignore_changes = [
-      accelerated_networking_enabled,
-    ]
-  }
-}
-
-
-
-=====================================
-
-
-disks.tf
-
-# OS DISKS (imported) 
-resource "azurerm_managed_disk" "os" {
-  for_each            = var.os_disks
-  name                = each.value.name
-  location            = var.location_name
-  resource_group_name = var.rg_name
-
-  storage_account_type = each.value.storage_account_type
-  create_option        = "Restore"
-  disk_size_gb         = each.value.disk_size_gb
-  os_type              = each.value.os_type
-  hyper_v_generation   = each.value.hyper_v_generation
-
-  # We’re tracking existing OS disks; don’t mutate them
-  lifecycle {
-    ignore_changes = all
-  }
-}
-
-resource "azurerm_managed_disk" "data" {
-  for_each = {
-    for pair in flatten([
-      for vm, disks in var.data_disks : [
-        for index, disk in disks : {
-          key   = "${vm}-${index}"
-          value = disk
-        }
-      ]
-    ]) : pair.key => pair.value
-  }
-
-  name                 = each.value.name
-  location             = var.location_name
-  resource_group_name  = var.rg_name
-  storage_account_type = each.value.storage_account_type
-  create_option        = "Empty"
-  disk_size_gb         = each.value.disk_size_gb
-
-  lifecycle {
-    ignore_changes = all
-  }
-}
-   
-
-==============================================================================================
-
-
-
-
-# azurerm_managed_disk.os["buildcontroller_test"] must be replaced
--/+ resource "azurerm_managed_disk" "os" {
-      ~ disk_iops_read_only               = 0 -> (known after apply)
-      ~ disk_iops_read_write              = 500 -> (known after apply)
-      ~ disk_mbps_read_only               = 0 -> (known after apply)
-      ~ disk_mbps_read_write              = 100 -> (known after apply)
-      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/BUILDCONTROLLER-OSdisk-00-test" -> (known after apply)
-      + logical_sector_size               = (known after apply)
-      ~ max_shares                        = 0 -> (known after apply)
-        name                              = "BUILDCONTROLLER-OSdisk-00-test"
-      - on_demand_bursting_enabled        = false -> null
-      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-BUILDCON-BuildCon-6a158948-864b-47cb-841a-0e40f85e7658/bookmark/25ee4005-6918-496e-9206-d5b50b1eb4e8" -> null # forces replacement
-      + source_uri                        = (known after apply)
-      - tags                              = {
-          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
-        } -> null
-      ~ tier                              = "P10" -> (known after apply)
-      - trusted_launch_enabled            = false -> null
-      - upload_size_bytes                 = 0 -> null
-        # (20 unchanged attributes hidden)
-    }
-
-  # azurerm_managed_disk.os["dev_mr8_test"] must be replaced
--/+ resource "azurerm_managed_disk" "os" {
-      ~ disk_iops_read_only               = 0 -> (known after apply)
-      ~ disk_iops_read_write              = 500 -> (known after apply)
-      ~ disk_mbps_read_only               = 0 -> (known after apply)
-      ~ disk_mbps_read_write              = 100 -> (known after apply)
-      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DEV-MR8-OSdisk-00-test" -> (known after apply)
-      + logical_sector_size               = (known after apply)
-      ~ max_shares                        = 0 -> (known after apply)
-        name                              = "DEV-MR8-OSdisk-00-test"
-      - on_demand_bursting_enabled        = false -> null
-      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-DEV_MR8-DEV_MR8_-c9b456a9-b56c-462d-a11d-6f55e61f3185/bookmark/31935e8c-7ad6-40a5-bba1-b489b3c7dbf5" -> null # forces replacement
-      + source_uri                        = (known after apply)
-      - tags                              = {
-          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
-        } -> null
-      + tier                              = (known after apply)
-      - trusted_launch_enabled            = false -> null
-      - upload_size_bytes                 = 0 -> null
-        # (20 unchanged attributes hidden)
-    }
-
-  # azurerm_managed_disk.os["dev_mrfile_test"] must be replaced
--/+ resource "azurerm_managed_disk" "os" {
-      ~ disk_iops_read_only               = 0 -> (known after apply)
-      ~ disk_iops_read_write              = 240 -> (known after apply)
-      ~ disk_mbps_read_only               = 0 -> (known after apply)
-      ~ disk_mbps_read_write              = 50 -> (known after apply)
-      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DEV-MRFILE-OSdisk-00-test" -> (known after apply)
-      + logical_sector_size               = (known after apply)
-      ~ max_shares                        = 0 -> (known after apply)
-        name                              = "DEV-MRFILE-OSdisk-00-test"
-      - on_demand_bursting_enabled        = false -> null
-      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-DEV_MRFI-DEV_MRFI-7739ff6d-d599-4ad7-97b2-7dbd87e7800c/bookmark/3f28c5c4-1ea4-4456-9e2b-a5e7d598202d" -> null # forces replacement
-      + source_uri                        = (known after apply)
-      - tags                              = {
-          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
-        } -> null
-      ~ tier                              = "P6" -> (known after apply)
-      - trusted_launch_enabled            = false -> null
-      - upload_size_bytes                 = 0 -> null
-        # (20 unchanged attributes hidden)
-    }
-
-  # azurerm_managed_disk.os["dev_web_2012r2_test"] must be replaced
--/+ resource "azurerm_managed_disk" "os" {
-      ~ disk_iops_read_only               = 0 -> (known after apply)
-      ~ disk_iops_read_write              = 500 -> (known after apply)
-      ~ disk_mbps_read_only               = 0 -> (known after apply)
-      ~ disk_mbps_read_write              = 100 -> (known after apply)
-      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DEV-WEB-2012r2-OSdisk-00-test" -> (known after apply)
-      + logical_sector_size               = (known after apply)
-      ~ max_shares                        = 0 -> (known after apply)
-        name                              = "DEV-WEB-2012r2-OSdisk-00-test"
-      - on_demand_bursting_enabled        = false -> null
-      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-DEV_WEB_-DEV_WEB_-4a44cc59-6f14-42dd-b21d-1148188d90a9/bookmark/3b853025-1e04-4b4f-a15c-2fc9bd401938" -> null # forces replacement
-      + source_uri                        = (known after apply)
-      - tags                              = {
-          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
-        } -> null
-      ~ tier                              = "P10" -> (known after apply)
-      - trusted_launch_enabled            = false -> null
-      - upload_size_bytes                 = 0 -> null
-        # (20 unchanged attributes hidden)
-    }
-
-  # azurerm_managed_disk.os["dockerbuild_test"] must be replaced
--/+ resource "azurerm_managed_disk" "os" {
-      ~ disk_iops_read_only               = 0 -> (known after apply)
-      ~ disk_iops_read_write              = 1100 -> (known after apply)
-      ~ disk_mbps_read_only               = 0 -> (known after apply)
-      ~ disk_mbps_read_write              = 125 -> (known after apply)
-      ~ id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/DOCKERBUILD-OSdisk-00-test" -> (known after apply)
-      + logical_sector_size               = (known after apply)
-      ~ max_shares                        = 0 -> (known after apply)
-        name                              = "DOCKERBUILD-OSdisk-00-test"
-      - on_demand_bursting_enabled        = false -> null
-      - source_resource_id                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/asrseeddisk-DOCKERBU-DOCKERBU-bf4e3354-c4e3-4f7d-ab48-d85054ff6f0b/bookmark/5a56e035-95a6-44ac-acd3-0d4dfdc3d7c1" -> null # forces replacement
-      + source_uri                        = (known after apply)
-      - tags                              = {
-          - "AzHydration-ManagedDisk-CreatedBy" = "Azure Site Recovery"
-        } -> null
-      ~ tier                              = "P15" -> (known after apply)
-      - trusted_launch_enabled            = false -> null
-      - upload_size_bytes                 = 0 -> null
-        # (20 unchanged attributes hidden)
-    }
-
-
----------------------------------------------------------------
-
-
-for_each = {
-    for k, v in var.os_disks : k => v
-    if lookup(var.vms[k], "os_disk_creation_option", "Attach") == "Attach"
-  }
-
-
-
-
-============================================================================
-
-# Create disks for SQL and attach to VM
-resource "azurerm_managed_disk" "vm-sql-disks" {
-  for_each = {
-    for sql_key, sql in var.sql_settings :
-    sql_key => {
-      server_name = sql.server_name
-      data_disks  = sql.data_disks
-    }
-  }
-
-  # Now create one managed disk per data_disk
-  dynamic "disk" {
-    for_each = each.value.data_disks
-    content {
-      name                 = "${each.value.server_name}-disk-${disk.value.name}"
-      resource_group_name  = azurerm_resource_group.main_rg.name
-      location             = azurerm_resource_group.main_rg.location
-      storage_account_type = disk.value.storage_account_type
-      create_option        = disk.value.create_option
-      disk_size_gb         = disk.value.disk_size_gb
-      tags                 = var.global_tags
-    }
-  }
-}
-
-# Attach SQL disks to VMs
-resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
-  for_each = {
-    for sql_key, sql in var.sql_settings :
-    sql_key => sql
-  }
-
-  dynamic "attach" {
-    for_each = each.value.data_disks
-    content {
-      managed_disk_id    = azurerm_managed_disk.vm-sql-disks["${each.key}-${attach.key}"].id
-      virtual_machine_id = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-      lun                = attach.value.lun
-      caching            = attach.value.caching
-    }
-  }
-}
-
-# SQL server VM extension
-resource "azurerm_mssql_virtual_machine" "vm-sql" {
-  for_each = var.sql_settings
-
-  depends_on = [azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach]
-
-  virtual_machine_id    = azurerm_windows_virtual_machine.vms[each.value.server_name].id
-  sql_license_type      = each.value.sql_license_type
-  sql_connectivity_port = each.value.sql_connectivity_port
-  sql_connectivity_type = each.value.sql_connectivity_type
-
-  storage_configuration {
-    disk_type             = each.value.storage_disk_type
-    storage_workload_type = each.value.storage_workload_type
-
-    data_settings {
-      default_file_path = each.value.data_disks.data.default_file_path
-      luns              = [each.value.data_disks.data.lun]
-    }
-
-    log_settings {
-      default_file_path = each.value.data_disks.logs.default_file_path
-      luns              = [each.value.data_disks.logs.lun]
-    }
-
-    temp_db_settings {
-      default_file_path = each.value.data_disks.tempdb.default_file_path
-      luns              = [each.value.data_disks.tempdb.lun]
-    }
-  }
-}
-
-
-
-
-====
-
-
-========
-
-
-
-
- terraform state mv 'azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["data"]'   'azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-data"]'
-
-terraform state mv 'azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["logs"]'   'azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-logs"]'
-
-terraform state mv 'azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["tempdb"]' 'azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["sql01-tempdb"]'
-
-
-
-
-
-
-terraform state mv 'azurerm_managed_disk.vm-sql-disks["data"]'   'azurerm_managed_disk.vm-sql-disks["sql01-data"]'
-terraform state mv 'azurerm_managed_disk.vm-sql-disks["logs"]'   'azurerm_managed_disk.vm-sql-disks["sql01-logs"]'
-terraform state mv 'azurerm_managed_disk.vm-sql-disks["tempdb"]' 'azurerm_managed_disk.vm-sql-disks["sql01-tempdb"]'
-
-
-
-
-
-
-==================================================
-
-
-
-https://us05web.zoom.us/j/4637877232?pwd=pbMjiAb5WRwBuTJbm33JZCF304pCXD.1
 
 
 

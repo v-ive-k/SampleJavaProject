@@ -1,3 +1,6 @@
+###############################
+# EXISTING / IMPORTED VMs
+###############################
 resource "azurerm_virtual_machine" "vm" {
   for_each              = var.vms
   name                  = each.value.name
@@ -6,6 +9,10 @@ resource "azurerm_virtual_machine" "vm" {
   vm_size               = each.value.size
   network_interface_ids = [azurerm_network_interface.nic[each.value.nic_key].id]
   tags                  = var.global_tags
+
+  # keep disks if someone deletes the VM by mistake
+  delete_os_disk_on_termination    = false
+  delete_data_disks_on_termination = false
 
   dynamic "boot_diagnostics" {
     for_each = each.value.boot_diag_uri != "" ? [1] : []
@@ -27,7 +34,9 @@ resource "azurerm_virtual_machine" "vm" {
     name              = var.os_disks[each.value.os_disk_key].name
     caching           = "ReadWrite"
     create_option     = each.value.os_disk_creation_option
-    managed_disk_id   = each.value.os_disk_creation_option == "Attach"  ? coalesce(lookup(each.value, "managed_disk_id", null), azurerm_managed_disk.os[each.value.os_disk_key].id) : null
+    managed_disk_id   = each.value.os_disk_creation_option == "Attach"
+      ? coalesce(lookup(each.value, "managed_disk_id", null), azurerm_managed_disk.os[each.value.os_disk_key].id)
+      : null
     managed_disk_type = var.os_disks[each.value.os_disk_key].storage_account_type
     os_type           = var.os_disks[each.value.os_disk_key].os_type
     disk_size_gb      = var.os_disks[each.value.os_disk_key].disk_size_gb
@@ -86,7 +95,9 @@ resource "azurerm_virtual_machine" "vm" {
   }
 }
 
-
+###############################
+# NEW WINDOWS VMs (GREENFIELD)
+###############################
 resource "azurerm_windows_virtual_machine" "vm_new_win" {
   for_each = var.new_vms
 
@@ -95,12 +106,23 @@ resource "azurerm_windows_virtual_machine" "vm_new_win" {
   resource_group_name   = var.rg_name
   size                  = each.value.size
   network_interface_ids = [azurerm_network_interface.nic[each.value.nic_key].id]
-  admin_username        = each.value.os_profiles.admin_username
-  admin_password        = each.value.os_profiles.admin_password
   tags                  = var.global_tags
 
-  # Choose one: image by ID or by reference fields
+  # Local admin
+  admin_username = each.value.os_profiles.admin_username
+  admin_password = each.value.os_profiles.admin_password
+
+  # Use either image ID or reference — whichever is provided
   source_image_id = lookup(each.value.image_reference, "id", null)
+  dynamic "source_image_reference" {
+    for_each = lookup(each.value.image_reference, "id", null) == null ? [1] : []
+    content {
+      publisher = try(each.value.image_reference.publisher, null)
+      offer     = try(each.value.image_reference.offer, null)
+      sku       = try(each.value.image_reference.sku, null)
+      version   = try(each.value.image_reference.version, null)
+    }
+  }
 
   os_disk {
     name                 = "${each.value.name}-OsDisk"
@@ -141,13 +163,34 @@ resource "azurerm_virtual_machine_data_disk_attachment" "win_attach" {
   create_option      = "Attach"
 }
 
+###############################
+# SQL VMs (works for both VM types)
+###############################
+locals {
+  vm_ids = merge(
+    { for k, v in azurerm_windows_virtual_machine.vm_new_win : k => v.id },
+    { for k, v in azurerm_virtual_machine.vm                  : k => v.id }
+  )
 
-# SQL Machines
+  sql_targets = {
+    for k, v in var.sql_vms :
+    k => v if contains(keys(local.vm_ids), v.vm_key)
+  }
+}
 
 resource "azurerm_mssql_virtual_machine" "sql_vm" {
-  for_each           = var.sql_vms
+  for_each           = local.sql_targets
   tags               = var.global_tags
-  virtual_machine_id = azurerm_virtual_machine.vm[each.value.vm_key].id
+  virtual_machine_id = local.vm_ids[each.value.vm_key]
   sql_license_type   = each.value.license_type
 
+  # recommended defaults
+  sql_connectivity_type = "PRIVATE"
+  sql_connectivity_port = 1433
+  r_services_enabled    = false
+
+  # prevent replacement on harmless VM ID casing changes
+  lifecycle {
+    ignore_changes = [ virtual_machine_id ]
+  }
 }

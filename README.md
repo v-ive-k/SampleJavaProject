@@ -1,1 +1,1 @@
-https://us06web.zoom.us/j/3478514167?pwd=z1sOvduCbTTjb6xbtS3LxQWcVykLnE.1
+https://us05web.zoom.us/j/2220272374?pwd=whsJb1XzWJAXHTbKaBXdS4mGpJQBDn.1

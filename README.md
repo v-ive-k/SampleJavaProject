@@ -46,7 +46,29 @@ terraform import 'azurerm_network_interface.nic["qakib2_opg01"]' \
 
 
 
-
+azurerm_network_interface.nic["dvkib2_9"]
+azurerm_network_security_group.nsg_bot_wvd
+azurerm_network_security_group.nsg_dmz
+azurerm_network_security_group.nsg_internal
+azurerm_network_security_group.nsg_wvd
+azurerm_subnet.bot_wvd
+azurerm_subnet.dmz
+azurerm_subnet.internal
+azurerm_subnet.wvd
+azurerm_subnet_network_security_group_association.assoc_bot_wvd
+azurerm_subnet_network_security_group_association.assoc_dmz
+azurerm_subnet_network_security_group_association.assoc_internal
+azurerm_subnet_network_security_group_association.assoc_wvd
+azurerm_virtual_machine.vm["dvkib2_9"]
+azurerm_virtual_machine.vm["dvkib2_app01"]
+azurerm_virtual_machine.vm["dvkib2_def01"]
+azurerm_virtual_machine.vm["dvkib2_rpa01"]
+azurerm_virtual_machine.vm["dvkib2_rpa02"]
+azurerm_virtual_machine.vm["dvkib2_web01"]
+azurerm_virtual_machine.vm["dvkib2_web02"]
+azurerm_virtual_machine.vm["dvwgb2_ftp01"]
+azurerm_virtual_machine.vm["kib2_nsb01"]
+azurerm_virtual_network.main_vnet
 
 
 

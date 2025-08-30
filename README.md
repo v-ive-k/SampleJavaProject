@@ -1,45 +1,43 @@
-https://us06web.zoom.us/j/3478514167?pwd=z1sOvduCbTTjb6xbtS3LxQWcVykLnE.1
+# ===== VNET =====
+terraform import azurerm_virtual_network.main_vnet \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet
 
+# ===== SUBNETS =====
+terraform import azurerm_subnet.internal \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet
 
-terraform import 'azurerm_managed_disk.os["dvkib2_9"]' /subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/disks/dvkib2-9_OsDisk_1_b8676dfef855414197a5c687543010ec
+terraform import azurerm_subnet.wvd \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet
 
+terraform import azurerm_subnet.dmz \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet
 
-# dvkib2-9
-terraform import 'azurerm_virtual_machine.vm["dvkib2_9"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/dvkib2-9
+terraform import azurerm_subnet.bot_wvd \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet
 
-# DVKIB2-APP01
-terraform import 'azurerm_virtual_machine.vm["dvkib2_app01"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-APP01
+# ===== NSGs =====
+terraform import azurerm_network_security_group.nsg_internal \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-internal-nsg
 
-# DVKIB2-DEF01
-terraform import 'azurerm_virtual_machine.vm["dvkib2_def01"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-DEF01
+terraform import azurerm_network_security_group.nsg_wvd \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-wvd-nsg
 
-# DVKIB2-RPA01
-terraform import 'azurerm_virtual_machine.vm["dvkib2_rpa01"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-RPA01
+terraform import azurerm_network_security_group.nsg_dmz \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-scus-dmz-nsg
 
-# DVKIB2-RPA02
-terraform import 'azurerm_virtual_machine.vm["dvkib2_rpa02"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-RPA02
+terraform import azurerm_network_security_group.nsg_bot_wvd \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/networkSecurityGroups/mr8-dev-bot-scus-WVD-nsg
 
-# DVKIB2-WEB01
-terraform import 'azurerm_virtual_machine.vm["dvkib2_web01"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-WEB01
+# ===== SUBNET ↔ NSG ASSOCIATIONS =====
+# (Import by the SUBNET ID)
+terraform import azurerm_subnet_network_security_group_association.assoc_internal \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet
 
-# DVKIB2-WEB02
-terraform import 'azurerm_virtual_machine.vm["dvkib2_web02"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVKIB2-WEB02
+terraform import azurerm_subnet_network_security_group_association.assoc_wvd \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet
 
-# DVWGB2-FTP01
-terraform import 'azurerm_virtual_machine.vm["dvwgb2_ftp01"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/DVWGB2-FTP01
+terraform import azurerm_subnet_network_security_group_association.assoc_dmz \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet
 
-# KIB2-NSB01
-terraform import 'azurerm_virtual_machine.vm["kib2_nsb01"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/KIB2-NSB01
-
-# QAKIB2-OPG01
-terraform import 'azurerm_virtual_machine.vm["qakib2_opg01"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Compute/virtualMachines/QAKIB2-OPG01
+terraform import azurerm_subnet_network_security_group_association.assoc_bot_wvd \
+/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet

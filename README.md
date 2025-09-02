@@ -1039,7 +1039,112 @@ resource "azurerm_virtual_machine" "vm" {
 
 
 
+=======================================
+======================================
+=======================================
 
+data "azurerm_subscription" "primary" {}
+
+# Get the IT Key Vault for passwords
+data "azurerm_key_vault" "ONT-IT-KeyVault" {
+  provider            = azurerm.prod
+  name                = "ONT-IT-KeyVault"
+  resource_group_name = "IT-Prod-RG"
+}
+
+#Get the ontadmin password to use for vm deployment
+data "azurerm_key_vault_secret" "ontadmin" {
+  provider     = azurerm.prod
+  name         = "ontadmin"
+  key_vault_id = data.azurerm_key_vault.ONT-IT-KeyVault.id
+}
+
+#Get the keais domain join account
+data "azurerm_key_vault_secret" "svc-keaisjoin" {
+  provider     = azurerm.prod
+  name         = "svc-keaisjoin"
+  key_vault_id = data.azurerm_key_vault.ONT-IT-KeyVault.id
+}   
+
+================================
+
+# Virtual machines
+resource "azurerm_windows_virtual_machine" "vms" {
+  lifecycle {
+    ignore_changes = [
+      admin_password,
+      identity
+    ]
+  }
+  for_each = { for virtual_machine in var.virtual_machines : virtual_machine.name => virtual_machine }
+
+  name                     = each.value.name
+  resource_group_name      = azurerm_resource_group.main_rg.name
+  location                 = azurerm_resource_group.main_rg.location
+  size                     = each.value.size
+  admin_username           = "ONTAdmin"
+  admin_password           = data.azurerm_key_vault_secret.ontadmin.value
+  patch_mode               = each.value.patch_mode
+  enable_automatic_updates = each.value.enable_automatic_updates
+  timezone                 = each.value.timezone
+  #proximity_placement_group_id = azurerm_proximity_placement_group.mr8-staging-ppg.id
+
+  network_interface_ids = [
+    azurerm_network_interface.vm-nics[each.value.name].id
+  ]
+
+  os_disk {
+    name                 = "${each.value.name}-disk-os"
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+    disk_size_gb         = 128
+  }
+
+
+  boot_diagnostics {}
+
+  source_image_reference {
+    publisher = each.value.source_image.publisher
+    offer     = each.value.source_image.offer
+    sku       = each.value.source_image.sku
+    version   = each.value.source_image.version
+  }
+  tags = var.global_tags
+}
+
+resource "azurerm_virtual_machine_extension" "vms-domain-join" {
+  for_each                   = { for virtual_machine in var.virtual_machines : virtual_machine.name => virtual_machine if virtual_machine.dmz != true }
+  name                       = "${each.value.name}-domain-join"
+  virtual_machine_id         = azurerm_windows_virtual_machine.vms[each.value.name].id
+  publisher                  = "Microsoft.Compute"
+  type                       = "JsonADDomainExtension"
+  type_handler_version       = "1.3"
+  auto_upgrade_minor_version = true
+
+  settings = <<SETTINGS
+    {
+      "Name": "${var.domain_name}",
+      "OUPath": "${each.value.ou_path}",
+      "User": "${var.domain_user_upn}@${var.domain_name}",
+      "Restart": "true",
+      "Options": "3"
+    }
+  SETTINGS
+
+  protected_settings = <<PROTECTED_SETTINGS
+    {
+      "Password": "${data.azurerm_key_vault_secret.svc-keaisjoin.value}"
+    }
+  PROTECTED_SETTINGS
+
+  lifecycle {
+    ignore_changes = [settings, protected_settings]
+  }
+
+  depends_on = [
+    azurerm_windows_virtual_machine.vms
+  ]
+}
 
 
 

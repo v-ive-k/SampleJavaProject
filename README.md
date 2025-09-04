@@ -178,11 +178,14 @@
 =====================================
 
 
- Error: creating/updating Virtual Machine (Subscription: "ffe5c17f-a5cd-46d5-8137-b8c02ee481af"
+Error: creating/updating Virtual Machine (Subscription: "ffe5c17f-a5cd-46d5-8137-b8c02ee481af"
 │ Resource Group Name: "mr8-dev-rg"
-│ Virtual Machine Name: "dvkib2-mrf01"): performing CreateOrUpdate: unexpected status 409 (409 Conflict) with error: OperationNotAllowed: The specified disk size 128 GB is smaller than the size of the corresponding disk in the VM image: 256 GB. This is not allowed. Please choose equal or greater size or do not specify an explicit size.
+│ Virtual Machine Name: "dvkib2-mrf01"): performing CreateOrUpdate: unexpected status 400 (400 Bad Request) with error: BadRequest: The provided gallery image only supports creation of VMs and VM Scale Sets with 'TrustedLaunch' security type.
 │
 │   with azurerm_virtual_machine.vm["dvkib2_mrf01"],
 │   on vms.tf line 2, in resource "azurerm_virtual_machine" "vm":
 │    2: resource "azurerm_virtual_machine" "vm" {
+│
+╵
+Releasing state lock. This may take a few moments...
 

@@ -178,19 +178,11 @@
 =====================================
 
 
-terraform import 'azurerm_subnet_route_table_association.route_table["internal"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-internal-snet
-
-terraform import 'azurerm_subnet_route_table_association.route_table["wvd"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-WVD-snet
-
-terraform import 'azurerm_subnet_route_table_association.route_table["bot_wvd"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet
-
-terraform import 'azurerm_subnet_route_table_association.route_table["dmz"]' \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-scus-dmz-snet
-
-
-terraform import azurerm_subnet_network_security_group_association.assoc_bot_wvd \
-/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/mr8-dev-rg/providers/Microsoft.Network/virtualNetworks/mr8-dev-scus-vnet/subnets/mr8-dev-bot-scus-WVD-snet
+ Error: creating/updating Virtual Machine (Subscription: "ffe5c17f-a5cd-46d5-8137-b8c02ee481af"
+│ Resource Group Name: "mr8-dev-rg"
+│ Virtual Machine Name: "dvkib2-mrf01"): performing CreateOrUpdate: unexpected status 409 (409 Conflict) with error: OperationNotAllowed: The specified disk size 128 GB is smaller than the size of the corresponding disk in the VM image: 256 GB. This is not allowed. Please choose equal or greater size or do not specify an explicit size.
+│
+│   with azurerm_virtual_machine.vm["dvkib2_mrf01"],
+│   on vms.tf line 2, in resource "azurerm_virtual_machine" "vm":
+│    2: resource "azurerm_virtual_machine" "vm" {
 

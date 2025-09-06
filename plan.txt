@@ -1,0 +1,1334 @@
+az-admin@ONT-Infra-23:/mnt/c/Users/VKovi/azure-infra/subscriptions/Ont-Dev1/int-staging-rg$ terraform plan
+data.azurerm_virtual_network.IT-Prod-SCUS-VNet: Reading...
+data.azurerm_virtual_network.intertel-prod-scus-vnet: Reading...
+data.azurerm_subnet.subnet-prod-mgmt: Reading...
+data.azurerm_shared_image.AVD-INT-Win10-img: Reading...
+data.azurerm_virtual_network.MR8-Prod-SCUS-VNet: Reading...
+data.azurerm_shared_image.AVD-INT-Mgmt-Win10-img: Reading...
+data.azurerm_key_vault.ONT-IT-KeyVault: Reading...
+data.azurerm_subnet.subnet-prod-mgmt: Read complete after 0s [id=/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/int-prod-rg/providers/Microsoft.Network/virtualNetworks/intertel-prod-scus-vnet/subnets/intertel-prod-mgmt-scus-snet]
+data.azurerm_virtual_network.IT-Prod-SCUS-VNet: Read complete after 0s [id=/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/IT-Prod-RG/providers/Microsoft.Network/virtualNetworks/IT-Prod-SCUS-VNet]
+data.azurerm_virtual_network.intertel-prod-scus-vnet: Read complete after 0s [id=/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/int-prod-rg/providers/Microsoft.Network/virtualNetworks/intertel-prod-scus-vnet]
+data.azurerm_shared_image.AVD-INT-Win10-img: Read complete after 0s [id=/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/IT-Prod-RG/providers/Microsoft.Compute/galleries/Ont_Prod1_scus_scg/images/AVD-INT-Win10-img]
+data.azurerm_shared_image.AVD-INT-Mgmt-Win10-img: Read complete after 0s [id=/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/IT-Prod-RG/providers/Microsoft.Compute/galleries/Ont_Prod1_scus_scg/images/AVD-INT-Mgmt-Win10-img]
+data.azurerm_key_vault.ONT-IT-KeyVault: Read complete after 0s [id=/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/IT-Prod-RG/providers/Microsoft.KeyVault/vaults/ONT-IT-KeyVault]
+data.azurerm_key_vault_secret.ontadmin: Reading...
+data.azurerm_key_vault_secret.Terraform-SP: Reading...
+data.azurerm_key_vault_secret.intertel-svc-directoryservice: Reading...
+data.azurerm_virtual_network.MR8-Prod-SCUS-VNet: Read complete after 0s [id=/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/MR8-PROD-rg/providers/Microsoft.Network/virtualNetworks/MR8-Prod-SCUS-VNet]
+data.azurerm_route_table.dev-scus-rt: Reading...
+data.azurerm_virtual_network.intertel-dev-scus-vnet: Reading...
+data.azurerm_virtual_network.network-dev-scus-vnet: Reading...
+azurerm_resource_group.main_rg: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg]
+data.azurerm_route_table.dev-scus-rt: Read complete after 0s [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/NetworkServices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt]
+data.azurerm_virtual_network.intertel-dev-scus-vnet: Read complete after 0s [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-dev-rg/providers/Microsoft.Network/virtualNetworks/intertel-dev-scus-vnet]
+data.azurerm_virtual_network.network-dev-scus-vnet: Read complete after 0s [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/virtualNetworks/network-dev-scus-vnet]
+azurerm_public_ip.int-staging-ngw-pip01: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/publicIPAddresses/int-staging-ngw-scus-pip01]
+azurerm_nat_gateway.int-staging-ngw: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/natGateways/ont-dev1-int-staging-scus-ngw]
+azurerm_virtual_network.main_vnet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet]
+azurerm_role_assignment.reader_ra: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Authorization/roleAssignments/638ffbe4-6d6b-c91a-040b-d0d1010644f3]
+azurerm_role_assignment.contributor_ra: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Authorization/roleAssignments/fad004b0-e10c-86f6-1f18-fbde1602184c]
+azurerm_private_dns_zone.privatelink-file-dns: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net]
+azurerm_network_security_group.dmz_nsg: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg]
+azurerm_virtual_desktop_workspace.stg_workspace: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/workspaces/Intertel-Staging]
+azurerm_role_assignment.owner_ra: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Authorization/roleAssignments/5ea8d9d9-8b60-9993-9399-43350bf225ea]
+azurerm_network_security_group.internal_nsg: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg]
+azurerm_virtual_desktop_host_pool.pooled_host_pool["STIN-AVD-Std"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-Std]
+azurerm_managed_disk.imported-disks["ST-TFSServer"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/disks/ST-TFSServer-OsDisk-01]
+azurerm_network_security_group.mgmt_nsg: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-mgmt-scus-nsg]
+azurerm_virtual_desktop_host_pool.pooled_host_pool["STIN-AVD-MgP"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-MgP]
+azurerm_virtual_desktop_host_pool.pooled_host_pool["STIN-AVD-MgS"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-MgS]
+azurerm_virtual_desktop_host_pool.pooled_host_pool["STIN-AVD-PER"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-PER]
+azurerm_network_security_group.avd_nsg: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-avd-scus-nsg]
+azurerm_proximity_placement_group.int-stg-ppg: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/proximityPlacementGroups/int-stg-ppg]
+azurerm_managed_disk.imported-disks["ST-WEB01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/disks/ST-WEB01-OSdisk-01]
+azurerm_managed_disk.imported-disks["ST-UTILSRV01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/disks/ST-UTILSRV01-OsDisk-01]
+azurerm_managed_disk.imported-disks["ST-UTILSRV03"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/disks/ST-UTILSRV03-OsDisk-01]
+azurerm_managed_disk.vm-sql-disks["logs"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/disks/STINB2-SQL01-disk-SQLVMLOGS]
+azurerm_managed_disk.vm-sql-disks["tempdb"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/disks/STINB2-SQL01-disk-SQLVMTEMPDB]
+azurerm_managed_disk.vm-sql-disks["data"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/disks/STINB2-SQL01-disk-SQLVMDATA01]
+azurerm_virtual_network_peering.intertel-staging-scus-vnet_TO_intertel-prod-scus-vnet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/virtualNetworkPeerings/intertel-staging-scus-vnet_TO_intertel-prod-scus-vnet]
+azurerm_subnet.internal_snet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-internal-scus-snet]
+azurerm_virtual_network_peering.intertel-prod-scus-vnet_TO_intertel-staging-scus-vnet: Refreshing state... [id=/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/int-prod-rg/providers/Microsoft.Network/virtualNetworks/intertel-prod-scus-vnet/virtualNetworkPeerings/intertel-prod-scus-vnet_TO_intertel-staging-scus-vnet]
+azurerm_virtual_network_peering.MR8-Prod-SCUS-VNet_main_vnet: Refreshing state... [id=/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/MR8-PROD-rg/providers/Microsoft.Network/virtualNetworks/MR8-Prod-SCUS-VNet/virtualNetworkPeerings/MR8-Prod-SCUS-VNet-TO-intertel-staging-scus-vnet]
+azurerm_subnet.avd_snet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-avd-scus-snet]
+azurerm_virtual_network_peering.network-dev-scus-vnet_main_vnet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/virtualNetworks/network-dev-scus-vnet/virtualNetworkPeerings/network-dev-scus-vnet-TO-intertel-staging-scus-vnet]
+azurerm_virtual_network_peering.main_vnet_MR8-Prod-SCUS-VNet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/virtualNetworkPeerings/intertel-staging-scus-vnet-TO-MR8-Prod-SCUS-VNet]
+azurerm_virtual_network_peering.main_vnet_it_vnet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/virtualNetworkPeerings/intertel-staging-scus-vnet-TO-it-prod-scus-vnet]
+azurerm_virtual_network_peering.prod_it_vnet_main_vnet: Refreshing state... [id=/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/IT-Prod-RG/providers/Microsoft.Network/virtualNetworks/IT-Prod-SCUS-VNet/virtualNetworkPeerings/it-prod-scus-vnet-TO-intertel-staging-scus-vnet]
+azurerm_virtual_network_peering.main_vnet_network-dev-scus-vnet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/virtualNetworkPeerings/intertel-staging-scus-vnet-TO-network-dev-scus-vnet]
+azurerm_subnet.dmz_snet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-dmz-scus-snet]
+azurerm_virtual_network_peering.intertel-dev-scus-vnet_TO_intertel-staging-scus-vnet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-dev-rg/providers/Microsoft.Network/virtualNetworks/intertel-dev-scus-vnet/virtualNetworkPeerings/intertel-dev-scus-vnet_TO_intertel-staging-scus-vnet]
+azurerm_subnet.mgmt_snet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-mgmt-scus-snet]
+azurerm_virtual_network_peering.intertel-staging-scus-vnet_TO_intertel-dev-scus-vnet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/virtualNetworkPeerings/intertel-staging-scus-vnet_TO_intertel-dev-scus-vnet]
+azurerm_nat_gateway_public_ip_association.int-staging-ngw: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/natGateways/ont-dev1-int-staging-scus-ngw|/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/publicIPAddresses/int-staging-ngw-scus-pip01]
+azurerm_private_dns_zone_virtual_network_link.privatelink-file-dns-vnet: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net/virtualNetworkLinks/file]
+azurerm_virtual_desktop_application_group.pooled_host_pool_dag["STIN-AVD-MgS"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-MgS-dag]
+azurerm_virtual_desktop_application_group.pooled_host_pool_dag["STIN-AVD-MgP"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-MgP-dag]
+azurerm_virtual_desktop_application_group.pooled_host_pool_dag["STIN-AVD-PER"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-PER-dag]
+azurerm_virtual_desktop_application_group.pooled_host_pool_dag["STIN-AVD-Std"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-Std-dag]
+azurerm_virtual_desktop_host_pool_registration_info.pooled_host_pool_registration["STIN-AVD-PER"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-PER/registrationInfo/default]
+azurerm_virtual_desktop_host_pool_registration_info.pooled_host_pool_registration["STIN-AVD-Std"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-Std/registrationInfo/default]
+azurerm_virtual_desktop_host_pool_registration_info.pooled_host_pool_registration["STIN-AVD-MgP"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-MgP/registrationInfo/default]
+azurerm_virtual_desktop_host_pool_registration_info.pooled_host_pool_registration["STIN-AVD-MgS"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-MgS/registrationInfo/default]
+azurerm_subnet_nat_gateway_association.int-staging-avd-ngw: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-avd-scus-snet]
+azurerm_storage_account.file_storage_profiles: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Storage/storageAccounts/stgintprofiles01]
+azurerm_subnet_route_table_association.internal_snet_rt_association: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-internal-scus-snet]
+azurerm_storage_account.file_storage_acc: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Storage/storageAccounts/stgintfiles01]
+azurerm_subnet_nat_gateway_association.int-staging-internal-ngw: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-internal-scus-snet]
+azurerm_subnet_network_security_group_association.internal_nsg_association: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-internal-scus-snet]
+azurerm_subnet_network_security_group_association.avd_nsg_association: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-avd-scus-snet]
+azurerm_subnet_route_table_association.avd_snet_rt_association: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-avd-scus-snet]
+azurerm_subnet_route_table_association.dmz_snet_rt_association: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-dmz-scus-snet]
+azurerm_subnet_network_security_group_association.dmz_nsg_association: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-dmz-scus-snet]
+azurerm_network_interface.vm-nics["ST-UTILSRV03"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/ST-UTILSRV03-nic]
+azurerm_network_interface.vm-nics["ST-WEB01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/ST-WEB01-nic]
+azurerm_network_interface.vm-nics["STINB2-MGT01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/STINB2-MGT01-nic]
+azurerm_network_interface.vm-nics["STINB2-SQL01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/STINB2-SQL01-nic]
+azurerm_network_interface.vm-nics["ST-TFSServer"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/ST-TFSServer-nic]
+azurerm_network_interface.vm-nics["ST-UTILSRV01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/ST-UTILSRV01-nic]
+azurerm_subnet_network_security_group_association.mgmt_nsg_association: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-mgmt-scus-snet]
+azurerm_subnet_route_table_association.mgmt_snet_rt_association: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-mgmt-scus-snet]
+azurerm_subnet_nat_gateway_association.int-staging-mgmt-ngw: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-mgmt-scus-snet]
+azurerm_virtual_desktop_workspace_application_group_association.pooled_host_pool_dag_ws_connect["STIN-AVD-MgS"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/workspaces/Intertel-Staging|/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-MgS-dag]
+azurerm_virtual_desktop_workspace_application_group_association.pooled_host_pool_dag_ws_connect["STIN-AVD-PER"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/workspaces/Intertel-Staging|/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-PER-dag]
+azurerm_virtual_desktop_workspace_application_group_association.pooled_host_pool_dag_ws_connect["STIN-AVD-MgP"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/workspaces/Intertel-Staging|/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-MgP-dag]
+azurerm_virtual_desktop_workspace_application_group_association.pooled_host_pool_dag_ws_connect["STIN-AVD-Std"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/workspaces/Intertel-Staging|/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-Std-dag]
+azurerm_role_assignment.pooled_host_pool_role_assign["STIN-AVD-PER"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-PER-dag/providers/Microsoft.Authorization/roleAssignments/0eaf65b7-1fe6-0f06-cdac-441ede33e5fe]
+azurerm_role_assignment.pooled_host_pool_role_assign["STIN-AVD-Std"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-Std-dag/providers/Microsoft.Authorization/roleAssignments/bae99884-1ae1-3c44-0210-c635e37ed6bf]
+azurerm_role_assignment.pooled_host_pool_role_assign["STIN-AVD-MgP"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-MgP-dag/providers/Microsoft.Authorization/roleAssignments/6601356e-2d75-224c-0fc7-764b0f156fa1]
+azurerm_role_assignment.pooled_host_pool_role_assign["STIN-AVD-MgS"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-MgS-dag/providers/Microsoft.Authorization/roleAssignments/029effa8-a033-1605-d93c-b0d348ea2146]
+azurerm_network_interface.pooled_host_pool_vm_nics["STIN-AVD-MgP-2"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/STIN-AVD-MgP-2-nic]
+azurerm_network_interface.pooled_host_pool_vm_nics["STIN-AVD-MgS-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/STIN-AVD-MgS-1-nic]
+azurerm_network_interface.pooled_host_pool_vm_nics["STIN-AVD-PER-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/STIN-AVD-PER-1-nic]
+azurerm_network_interface.pooled_host_pool_vm_nics["STIN-AVD-Std-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/STIN-AVD-Std-1-nic]
+azurerm_network_interface.pooled_host_pool_vm_nics["STIN-AVD-Std-2"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/STIN-AVD-Std-2-nic]
+azurerm_network_interface.pooled_host_pool_vm_nics["STIN-AVD-MgP-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/STIN-AVD-MgP-1-nic]
+azurerm_storage_share.file_share["optifiles"]: Refreshing state... [id=https://stgintfiles01.file.core.windows.net/optifiles]
+azurerm_storage_share.file_share["tloxml"]: Refreshing state... [id=https://stgintfiles01.file.core.windows.net/tloxml]
+azurerm_storage_share.file_share["reportgeneration"]: Refreshing state... [id=https://stgintfiles01.file.core.windows.net/reportgeneration]
+azurerm_storage_share.file_share["codocuments"]: Refreshing state... [id=https://stgintfiles01.file.core.windows.net/codocuments]
+azurerm_role_assignment.File_SMB_Contributor_file_ra: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Storage/storageAccounts/stgintfiles01/providers/Microsoft.Authorization/roleAssignments/a0b242bf-b606-7908-5bd1-a321a2aea00d]
+azurerm_storage_share.file_share["emailattachments"]: Refreshing state... [id=https://stgintfiles01.file.core.windows.net/emailattachments]
+azurerm_storage_share.file_share["humanresources"]: Refreshing state... [id=https://stgintfiles01.file.core.windows.net/humanresources]
+azurerm_storage_share.file_share["itdept"]: Refreshing state... [id=https://stgintfiles01.file.core.windows.net/itdept]
+azurerm_storage_share.file_share["netdata"]: Refreshing state... [id=https://stgintfiles01.file.core.windows.net/netdata]
+azurerm_storage_share.file_share["clientapps"]: Refreshing state... [id=https://stgintfiles01.file.core.windows.net/clientapps]
+azurerm_private_endpoint.file_endpoint: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/privateEndpoints/stgintfiles01-pep01]
+azurerm_private_dns_a_record.dns_file_share: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net/A/stgintfiles01]
+data.azurerm_key_vault_secret.intertel-svc-directoryservice: Read complete after 6s [id=https://ont-it-keyvault.vault.azure.net/secrets/intertel-svc-directoryservice/bbfa0b5bf0014d4e912282e030dfd283]
+data.azurerm_key_vault_secret.Terraform-SP: Read complete after 6s [id=https://ont-it-keyvault.vault.azure.net/secrets/3f31972c-b59f-480d-b4f3-71d39043b74e/4c1e89f486654625957067ff879990f0]
+data.azurerm_key_vault_secret.ontadmin: Read complete after 6s [id=https://ont-it-keyvault.vault.azure.net/secrets/ontadmin/fa0ca39a91b84c629431428f4d20f079]
+azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-Std-2"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-Std-2]
+azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-PER-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-PER-1]
+azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-MgS-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-MgS-1]
+azurerm_windows_virtual_machine.vms["STINB2-MGT01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STINB2-MGT01]
+azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-Std-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-Std-1]
+azurerm_windows_virtual_machine.vms["STINB2-SQL01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STINB2-SQL01]
+azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-MgP-2"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-MgP-2]
+azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-MgP-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-MgP-1]
+azurerm_virtual_machine.imported-vms["ST-TFSServer"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/ST-TFSServer]
+azurerm_virtual_machine.imported-vms["ST-UTILSRV01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/ST-UTILSRV01]
+azurerm_virtual_machine.imported-vms["ST-UTILSRV03"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/ST-UTILSRV03]
+azurerm_dev_test_global_vm_shutdown_schedule.vm-autoshutdown["STINB2-MGT01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DevTestLab/schedules/shutdown-computevm-STINB2-MGT01]
+azurerm_virtual_machine.imported-vms["ST-WEB01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/ST-WEB01]
+azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["data"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STINB2-SQL01/dataDisks/STINB2-SQL01-disk-SQLVMDATA01]
+azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["logs"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STINB2-SQL01/dataDisks/STINB2-SQL01-disk-SQLVMLOGS]
+azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["tempdb"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STINB2-SQL01/dataDisks/STINB2-SQL01-disk-SQLVMTEMPDB]
+azurerm_virtual_machine_extension.pooled_host_pool_domain_join["STIN-AVD-Std-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-Std-1/extensions/STIN-AVD-Std-1-domain-join]
+azurerm_virtual_machine_extension.pooled_host_pool_domain_join["STIN-AVD-Std-2"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-Std-2/extensions/STIN-AVD-Std-2-domain-join]
+azurerm_virtual_machine_extension.pooled_host_pool_domain_join["STIN-AVD-MgP-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-MgP-1/extensions/STIN-AVD-MgP-1-domain-join]
+azurerm_virtual_machine_extension.pooled_host_pool_domain_join["STIN-AVD-MgP-2"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-MgP-2/extensions/STIN-AVD-MgP-2-domain-join]
+azurerm_virtual_machine_extension.pooled_host_pool_domain_join["STIN-AVD-MgS-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-MgS-1/extensions/STIN-AVD-MgS-1-domain-join]
+azurerm_virtual_machine_extension.pooled_host_pool_domain_join["STIN-AVD-PER-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-PER-1/extensions/STIN-AVD-PER-1-domain-join]
+azurerm_virtual_machine_extension.vms-domain-join["STINB2-MGT01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STINB2-MGT01/extensions/STINB2-MGT01-domain-join]
+azurerm_virtual_machine_extension.vms-domain-join["STINB2-SQL01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STINB2-SQL01/extensions/STINB2-SQL01-domain-join]
+azurerm_virtual_machine_extension.vms-domain-join["ST-TFSServer"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/ST-TFSServer/extensions/ST-TFSServer-domain-join]
+azurerm_virtual_machine_extension.vms-domain-join["ST-UTILSRV03"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/ST-UTILSRV03/extensions/ST-UTILSRV03-domain-join]
+azurerm_virtual_machine_extension.vms-domain-join["ST-WEB01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/ST-WEB01/extensions/ST-WEB01-domain-join]
+azurerm_mssql_virtual_machine.vm-sql: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.SqlVirtualMachine/sqlVirtualMachines/STINB2-SQL01]
+azurerm_virtual_machine_extension.vms-domain-join["ST-UTILSRV01"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/ST-UTILSRV01/extensions/ST-UTILSRV01-domain-join]
+azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-Std-2"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-Std-2/extensions/STIN-AVD-Std-2-dsc]
+azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-Std-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-Std-1/extensions/STIN-AVD-Std-1-dsc]
+azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-MgP-2"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-MgP-2/extensions/STIN-AVD-MgP-2-dsc]
+azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-MgS-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-MgS-1/extensions/STIN-AVD-MgS-1-dsc]
+azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-MgP-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-MgP-1/extensions/STIN-AVD-MgP-1-dsc]
+azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-PER-1"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-PER-1/extensions/STIN-AVD-PER-1-dsc]
+azurerm_private_endpoint.profile_endpoint: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/privateEndpoints/stgintprofiles01-pep01]
+azurerm_role_assignment.File_SMB_Contributor_Profile_ra: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Storage/storageAccounts/stgintprofiles01/providers/Microsoft.Authorization/roleAssignments/795c61ef-6b16-e655-9ac3-367810a584e7]
+azurerm_storage_share.file_storage_profiles["mgmt"]: Refreshing state... [id=https://stgintprofiles01.file.core.windows.net/mgmt]
+azurerm_storage_share.file_storage_profiles["profiles01"]: Refreshing state... [id=https://stgintprofiles01.file.core.windows.net/profiles01]
+azurerm_private_dns_a_record.dns_profile_share: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net/A/stgintprofiles01]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_INBOUND_IMPLICIT_DENY"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/INBOUND_IMPLICIT_DENY]
+azurerm_network_security_rule.nsg_rules["intertel-staging-mgmt-scus-nsg_CCA1-IT-001_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-mgmt-scus-nsg/securityRules/CCA1-IT-001_to_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_INTERNAL_to_INTERNAL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/INTERNAL_to_INTERNAL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_WEB01_to_SQL_MSSQL_TCP"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/WEB01_to_SQL_MSSQL_TCP]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_AVD_to_FS_SMB"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/AVD_to_FS_SMB]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_MGMT_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/MGMT_to_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_DCs_to_ALL_DS_TCP_ONLY"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/DCs_to_ALL_DS_TCP_ONLY]
+azurerm_network_security_rule.nsg_rules["intertel-staging-avd-scus-nsg_MGMT_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-avd-scus-nsg/securityRules/MGMT_to_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_DMZ_to_DCs_DS_TCP_ONLY"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/DMZ_to_DCs_DS_TCP_ONLY]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_AVD_to_SQL_MSSQL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/AVD_to_SQL_MSSQL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_CCA1-IT-001_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/CCA1-IT-001_to_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_KIO1-RDM01_to_SQL_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/KIO1-RDM01_to_SQL_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-mgmt-scus-nsg_STL-RT01_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-mgmt-scus-nsg/securityRules/STL-RT01_to_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_TCOOPER01-avd_to_ALL_RDP"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/TCOOPER01-avd_to_ALL_RDP]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_AVD_to_TFS_CUSTOM"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/AVD_to_TFS_CUSTOM]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_INBOUND_IMPLICIT_DENY"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/INBOUND_IMPLICIT_DENY]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_STL-RT01_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/STL-RT01_to_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_TCOOPER01-avd_to_FS_SMB"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/TCOOPER01-avd_to_FS_SMB]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_DVIN-AVD-DEV-2_to_SQL_MSSQL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/DVIN-AVD-DEV-2_to_SQL_MSSQL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-avd-scus-nsg_CCA1-IT-001_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-avd-scus-nsg/securityRules/CCA1-IT-001_to_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_WEB01_to_SQL_MSSQL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/WEB01_to_SQL_MSSQL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_ALL_to_WEB01_HTTP"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/ALL_to_WEB01_HTTP]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_MGMT_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/MGMT_to_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_DCs_to_ALL_DS"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/DCs_to_ALL_DS]
+azurerm_network_security_rule.nsg_rules["intertel-staging-avd-scus-nsg_STL-RT01_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-avd-scus-nsg/securityRules/STL-RT01_to_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-avd-scus-nsg_INBOUND_IMPLICIT_DENY"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-avd-scus-nsg/securityRules/INBOUND_IMPLICIT_DENY]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_TCOOPER01-avd_to_SQL_MSSQL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/TCOOPER01-avd_to_SQL_MSSQL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-mgmt-scus-nsg_INBOUND_IMPLICIT_DENY"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-mgmt-scus-nsg/securityRules/INBOUND_IMPLICIT_DENY]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_DMZ_to_DCs_DS"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/DMZ_to_DCs_DS]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_TCOOPER01-avd_to_ALL_RDP"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/TCOOPER01-avd_to_ALL_RDP]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_OUTBOUND_IMPLICIT_DENY"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/OUTBOUND_IMPLICIT_DENY]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_DMZ_to_INTERNET_HTTP"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/DMZ_to_INTERNET_HTTP]
+azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_STL-RT01_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/STL-RT01_to_ALL]
+azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_CCA1-IT-001_to_ALL"]: Refreshing state... [id=/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/CCA1-IT-001_to_ALL]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the
+following symbols:
+  + create
+  ~ update in-place
+-/+ destroy and then create replacement
+
+Terraform planned the following actions, but then encountered a problem:
+
+  # azurerm_dev_test_global_vm_shutdown_schedule.vm-autoshutdown["STINB2-MGT01"] will be created
+  + resource "azurerm_dev_test_global_vm_shutdown_schedule" "vm-autoshutdown" {
+      + daily_recurrence_time = "2000"
+      + enabled               = true
+      + id                    = (known after apply)
+      + location              = "southcentralus"
+      + tags                  = {
+          + "Migrate Project" = "INT-MigProject-01"
+          + "domain"          = "intertel"
+          + "environment"     = "staging"
+          + "managed by"      = "terraform"
+          + "owner"           = "Greg Johnson"
+        }
+      + timezone              = "Central Standard Time"
+      + virtual_machine_id    = (known after apply)
+
+      + notification_settings {
+          + enabled         = false
+          + time_in_minutes = 30
+        }
+    }
+
+  # azurerm_managed_disk.vm-sql-disks["data"] will be updated in-place
+  ~ resource "azurerm_managed_disk" "vm-sql-disks" {
+      ~ disk_size_gb                     = 2048 -> 1000
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/disks/STINB2-SQL01-disk-SQLVMDATA01"
+        name                             = "STINB2-SQL01-disk-SQLVMDATA01"
+        tags                             = {
+            "Migrate Project" = "INT-MigProject-01"
+            "domain"          = "intertel"
+            "environment"     = "staging"
+            "managed by"      = "terraform"
+            "owner"           = "Greg Johnson"
+        }
+        # (27 unchanged attributes hidden)
+    }
+
+  # azurerm_managed_disk.vm-sql-disks["logs"] will be created
+  + resource "azurerm_managed_disk" "vm-sql-disks" {
+      + create_option                 = "Empty"
+      + disk_iops_read_only           = (known after apply)
+      + disk_iops_read_write          = (known after apply)
+      + disk_mbps_read_only           = (known after apply)
+      + disk_mbps_read_write          = (known after apply)
+      + disk_size_gb                  = 100
+      + id                            = (known after apply)
+      + location                      = "southcentralus"
+      + logical_sector_size           = (known after apply)
+      + max_shares                    = (known after apply)
+      + name                          = "STINB2-SQL01-disk-SQLVMLOGS"
+      + public_network_access_enabled = true
+      + resource_group_name           = "int-staging-rg"
+      + source_uri                    = (known after apply)
+      + storage_account_type          = "Standard_LRS"
+      + tags                          = {
+          + "Migrate Project" = "INT-MigProject-01"
+          + "domain"          = "intertel"
+          + "environment"     = "staging"
+          + "managed by"      = "terraform"
+          + "owner"           = "Greg Johnson"
+        }
+      + tier                          = (known after apply)
+    }
+
+  # azurerm_network_interface.pooled_host_pool_vm_nics["STIN-AVD-MgP-1"] will be created
+  + resource "azurerm_network_interface" "pooled_host_pool_vm_nics" {
+      + applied_dns_servers           = (known after apply)
+      + dns_servers                   = (known after apply)
+      + enable_accelerated_networking = false
+      + enable_ip_forwarding          = false
+      + id                            = (known after apply)
+      + internal_dns_name_label       = (known after apply)
+      + internal_domain_name_suffix   = (known after apply)
+      + location                      = "southcentralus"
+      + mac_address                   = (known after apply)
+      + name                          = "STIN-AVD-MgP-1-nic"
+      + private_ip_address            = (known after apply)
+      + private_ip_addresses          = (known after apply)
+      + resource_group_name           = "int-staging-rg"
+      + tags                          = {
+          + "Migrate Project" = "INT-MigProject-01"
+          + "domain"          = "intertel"
+          + "environment"     = "staging"
+          + "managed by"      = "terraform"
+          + "owner"           = "Greg Johnson"
+        }
+      + virtual_machine_id            = (known after apply)
+
+      + ip_configuration {
+          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+          + name                                               = "STIN-AVD-MgP-1-nic-ip"
+          + primary                                            = (known after apply)
+          + private_ip_address                                 = (known after apply)
+          + private_ip_address_allocation                      = "Dynamic"
+          + private_ip_address_version                         = "IPv4"
+          + subnet_id                                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-mgmt-scus-snet"
+        }
+    }
+
+  # azurerm_network_interface.pooled_host_pool_vm_nics["STIN-AVD-MgP-2"] will be created
+  + resource "azurerm_network_interface" "pooled_host_pool_vm_nics" {
+      + applied_dns_servers           = (known after apply)
+      + dns_servers                   = (known after apply)
+      + enable_accelerated_networking = false
+      + enable_ip_forwarding          = false
+      + id                            = (known after apply)
+      + internal_dns_name_label       = (known after apply)
+      + internal_domain_name_suffix   = (known after apply)
+      + location                      = "southcentralus"
+      + mac_address                   = (known after apply)
+      + name                          = "STIN-AVD-MgP-2-nic"
+      + private_ip_address            = (known after apply)
+      + private_ip_addresses          = (known after apply)
+      + resource_group_name           = "int-staging-rg"
+      + tags                          = {
+          + "Migrate Project" = "INT-MigProject-01"
+          + "domain"          = "intertel"
+          + "environment"     = "staging"
+          + "managed by"      = "terraform"
+          + "owner"           = "Greg Johnson"
+        }
+      + virtual_machine_id            = (known after apply)
+
+      + ip_configuration {
+          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+          + name                                               = "STIN-AVD-MgP-2-nic-ip"
+          + primary                                            = (known after apply)
+          + private_ip_address                                 = (known after apply)
+          + private_ip_address_allocation                      = "Dynamic"
+          + private_ip_address_version                         = "IPv4"
+          + subnet_id                                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-mgmt-scus-snet"
+        }
+    }
+
+  # azurerm_network_interface.pooled_host_pool_vm_nics["STIN-AVD-MgS-1"] will be created
+  + resource "azurerm_network_interface" "pooled_host_pool_vm_nics" {
+      + applied_dns_servers           = (known after apply)
+      + dns_servers                   = (known after apply)
+      + enable_accelerated_networking = false
+      + enable_ip_forwarding          = false
+      + id                            = (known after apply)
+      + internal_dns_name_label       = (known after apply)
+      + internal_domain_name_suffix   = (known after apply)
+      + location                      = "southcentralus"
+      + mac_address                   = (known after apply)
+      + name                          = "STIN-AVD-MgS-1-nic"
+      + private_ip_address            = (known after apply)
+      + private_ip_addresses          = (known after apply)
+      + resource_group_name           = "int-staging-rg"
+      + tags                          = {
+          + "Migrate Project" = "INT-MigProject-01"
+          + "domain"          = "intertel"
+          + "environment"     = "staging"
+          + "managed by"      = "terraform"
+          + "owner"           = "Greg Johnson"
+        }
+      + virtual_machine_id            = (known after apply)
+
+      + ip_configuration {
+          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+          + name                                               = "STIN-AVD-MgS-1-nic-ip"
+          + primary                                            = (known after apply)
+          + private_ip_address                                 = (known after apply)
+          + private_ip_address_allocation                      = "Dynamic"
+          + private_ip_address_version                         = "IPv4"
+          + subnet_id                                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-mgmt-scus-snet"
+        }
+    }
+
+  # azurerm_network_interface.vm-nics["ST-WEB01"] will be updated in-place
+  ~ resource "azurerm_network_interface" "vm-nics" {
+        id                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/ST-WEB01-nic"
+        name                          = "ST-WEB01-nic"
+        tags                          = {
+            "Migrate Project" = "INT-MigProject-01"
+            "domain"          = "intertel"
+            "environment"     = "staging"
+            "managed by"      = "terraform"
+            "owner"           = "Greg Johnson"
+        }
+        # (13 unchanged attributes hidden)
+
+      - ip_configuration {
+          - name                                               = "ST-WEB01-additional-ip-3" -> null
+          - primary                                            = false -> null
+          - private_ip_address                                 = "10.239.88.163" -> null
+          - private_ip_address_allocation                      = "Static" -> null
+          - private_ip_address_version                         = "IPv4" -> null
+          - subnet_id                                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-dmz-scus-snet" -> null
+            # (2 unchanged attributes hidden)
+        }
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # azurerm_network_interface.vm-nics["STINB2-MGT01"] will be created
+  + resource "azurerm_network_interface" "vm-nics" {
+      + applied_dns_servers           = (known after apply)
+      + dns_servers                   = (known after apply)
+      + enable_accelerated_networking = false
+      + enable_ip_forwarding          = false
+      + id                            = (known after apply)
+      + internal_dns_name_label       = (known after apply)
+      + internal_domain_name_suffix   = (known after apply)
+      + location                      = "southcentralus"
+      + mac_address                   = (known after apply)
+      + name                          = "STINB2-MGT01-nic"
+      + private_ip_address            = (known after apply)
+      + private_ip_addresses          = (known after apply)
+      + resource_group_name           = "int-staging-rg"
+      + tags                          = {
+          + "Migrate Project" = "INT-MigProject-01"
+          + "domain"          = "intertel"
+          + "environment"     = "staging"
+          + "managed by"      = "terraform"
+          + "owner"           = "Greg Johnson"
+        }
+      + virtual_machine_id            = (known after apply)
+
+      + ip_configuration {
+          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+          + name                                               = "STINB2-MGT01-nic-ip"
+          + primary                                            = true
+          + private_ip_address                                 = "10.239.89.51"
+          + private_ip_address_allocation                      = "Static"
+          + private_ip_address_version                         = "IPv4"
+          + subnet_id                                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-internal-scus-snet"
+        }
+    }
+
+  # azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_ALL_to_WEB01_HTTP"] will be updated in-place
+  ~ resource "azurerm_network_security_rule" "nsg_rules" {
+      ~ destination_address_prefixes               = [
+          + "10.239.88.163",
+            # (3 unchanged elements hidden)
+        ]
+        id                                         = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/ALL_to_WEB01_HTTP"
+        name                                       = "ALL_to_WEB01_HTTP"
+        # (16 unchanged attributes hidden)
+    }
+
+  # azurerm_network_security_rule.nsg_rules["intertel-staging-dmz-scus-nsg_WEB01_to_SQL_MSSQL_TCP"] will be updated in-place
+  ~ resource "azurerm_network_security_rule" "nsg_rules" {
+        id                                         = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-dmz-scus-nsg/securityRules/WEB01_to_SQL_MSSQL_TCP"
+        name                                       = "WEB01_to_SQL_MSSQL_TCP"
+      ~ source_address_prefixes                    = [
+          + "10.239.88.163",
+            # (3 unchanged elements hidden)
+        ]
+        # (16 unchanged attributes hidden)
+    }
+
+  # azurerm_network_security_rule.nsg_rules["intertel-staging-inernal-scus-nsg_WEB01_to_SQL_MSSQL"] will be updated in-place
+  ~ resource "azurerm_network_security_rule" "nsg_rules" {
+        id                                         = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkSecurityGroups/intertel-staging-inernal-scus-nsg/securityRules/WEB01_to_SQL_MSSQL"
+        name                                       = "WEB01_to_SQL_MSSQL"
+      ~ source_address_prefixes                    = [
+          + "10.239.88.163",
+            # (3 unchanged elements hidden)
+        ]
+        # (16 unchanged attributes hidden)
+    }
+
+  # azurerm_role_assignment.pooled_host_pool_role_assign["STIN-AVD-MgP"] will be created
+  + resource "azurerm_role_assignment" "pooled_host_pool_role_assign" {
+      + id                               = (known after apply)
+      + name                             = (known after apply)
+      + principal_id                     = "2847240d-38f3-4bed-82de-d821af05904d"
+      + principal_type                   = (known after apply)
+      + role_definition_id               = (known after apply)
+      + role_definition_name             = "Desktop Virtualization User"
+      + scope                            = (known after apply)
+      + skip_service_principal_aad_check = (known after apply)
+    }
+
+  # azurerm_role_assignment.pooled_host_pool_role_assign["STIN-AVD-MgS"] will be created
+  + resource "azurerm_role_assignment" "pooled_host_pool_role_assign" {
+      + id                               = (known after apply)
+      + name                             = (known after apply)
+      + principal_id                     = "caf20592-47e9-4528-9e29-e2b39502657b"
+      + principal_type                   = (known after apply)
+      + role_definition_id               = (known after apply)
+      + role_definition_name             = "Desktop Virtualization User"
+      + scope                            = (known after apply)
+      + skip_service_principal_aad_check = (known after apply)
+    }
+
+  # azurerm_role_assignment.pooled_host_pool_role_assign["STIN-AVD-Std"] must be replaced
+-/+ resource "azurerm_role_assignment" "pooled_host_pool_role_assign" {
+      ~ id                                     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-Std-dag/providers/Microsoft.Authorization/roleAssignments/bae99884-1ae1-3c44-0210-c635e37ed6bf" -> (known after apply)
+      ~ name                                   = "bae99884-1ae1-3c44-0210-c635e37ed6bf" -> (known after apply)
+      ~ principal_type                         = "Group" -> (known after apply)
+      ~ role_definition_id                     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/providers/Microsoft.Authorization/roleDefinitions/1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63" -> (known after apply)
+      ~ scope                                  = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-Std-dag" -> (known after apply) # forces replacement
+      + skip_service_principal_aad_check       = (known after apply)
+        # (6 unchanged attributes hidden)
+    }
+
+  # azurerm_storage_account.file_storage_profiles will be updated in-place
+  ~ resource "azurerm_storage_account" "file_storage_profiles" {
+        id                                = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Storage/storageAccounts/stgintprofiles01"
+        name                              = "stgintprofiles01"
+        tags                              = {
+            "Migrate Project" = "INT-MigProject-01"
+            "domain"          = "intertel"
+            "environment"     = "staging"
+            "managed by"      = "terraform"
+            "owner"           = "Greg Johnson"
+        }
+        # (42 unchanged attributes hidden)
+
+      ~ network_rules {
+          ~ ip_rules                   = [
+              - "23.251.206.250",
+                # (5 unchanged elements hidden)
+            ]
+            # (3 unchanged attributes hidden)
+
+            # (1 unchanged block hidden)
+        }
+
+        # (4 unchanged blocks hidden)
+    }
+
+  # azurerm_subnet_route_table_association.avd_snet_rt_association must be replaced
+-/+ resource "azurerm_subnet_route_table_association" "avd_snet_rt_association" {
+      ~ id             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-avd-scus-snet" -> (known after apply)
+      ~ route_table_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/NetworkServices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" # forces replacement
+        # (1 unchanged attribute hidden)
+    }
+
+  # azurerm_subnet_route_table_association.dmz_snet_rt_association must be replaced
+-/+ resource "azurerm_subnet_route_table_association" "dmz_snet_rt_association" {
+      ~ id             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-dmz-scus-snet" -> (known after apply)
+      ~ route_table_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/NetworkServices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" # forces replacement
+        # (1 unchanged attribute hidden)
+    }
+
+  # azurerm_subnet_route_table_association.internal_snet_rt_association must be replaced
+-/+ resource "azurerm_subnet_route_table_association" "internal_snet_rt_association" {
+      ~ id             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-internal-scus-snet" -> (known after apply)
+      ~ route_table_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/NetworkServices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" # forces replacement
+        # (1 unchanged attribute hidden)
+    }
+
+  # azurerm_subnet_route_table_association.mgmt_snet_rt_association must be replaced
+-/+ resource "azurerm_subnet_route_table_association" "mgmt_snet_rt_association" {
+      ~ id             = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-mgmt-scus-snet" -> (known after apply)
+      ~ route_table_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/networkservices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" -> "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/NetworkServices-dev-scus-rg/providers/Microsoft.Network/routeTables/dev-scus-rt" # forces replacement
+        # (1 unchanged attribute hidden)
+    }
+
+  # azurerm_virtual_desktop_application_group.pooled_host_pool_dag["STIN-AVD-MgP"] will be created
+  + resource "azurerm_virtual_desktop_application_group" "pooled_host_pool_dag" {
+      + default_desktop_display_name = "STAGING INTERTEL AVD Mgmt Personal"
+      + description                  = "Desktop application group for STIN-AVD-MgP"
+      + friendly_name                = "STIN-AVD-MgP-dag"
+      + host_pool_id                 = (known after apply)
+      + id                           = (known after apply)
+      + location                     = "southcentralus"
+      + name                         = "STIN-AVD-MgP-dag"
+      + resource_group_name          = "int-staging-rg"
+      + type                         = "Desktop"
+    }
+
+  # azurerm_virtual_desktop_application_group.pooled_host_pool_dag["STIN-AVD-MgS"] will be created
+  + resource "azurerm_virtual_desktop_application_group" "pooled_host_pool_dag" {
+      + default_desktop_display_name = "STAGING INTERTEL AVD Mgmt Shared"
+      + description                  = "Desktop application group for STIN-AVD-MgS"
+      + friendly_name                = "STIN-AVD-MgS-dag"
+      + host_pool_id                 = (known after apply)
+      + id                           = (known after apply)
+      + location                     = "southcentralus"
+      + name                         = "STIN-AVD-MgS-dag"
+      + resource_group_name          = "int-staging-rg"
+      + type                         = "Desktop"
+    }
+
+  # azurerm_virtual_desktop_application_group.pooled_host_pool_dag["STIN-AVD-Std"] must be replaced
+-/+ resource "azurerm_virtual_desktop_application_group" "pooled_host_pool_dag" {
+      ~ host_pool_id                 = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-Std" -> (known after apply) # forces replacement
+      ~ id                           = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-Std-dag" -> (known after apply)
+        name                         = "STIN-AVD-Std-dag"
+      - tags                         = {} -> null
+        # (6 unchanged attributes hidden)
+    }
+
+  # azurerm_virtual_desktop_host_pool.pooled_host_pool["STIN-AVD-MgP"] will be created
+  + resource "azurerm_virtual_desktop_host_pool" "pooled_host_pool" {
+      + custom_rdp_properties            = "drivestoredirect:s:;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:0;devicestoredirect:s:*;redirectcomports:i:0;redirectsmartcards:i:0;usbdevicestoredirect:s:;enablecredsspsupport:i:1;audiocapturemode:i:1;use multimon:i:1;camerastoredirect:s:;enablerdsaadauth:i:1;"
+      + description                      = "AVD personal host pool for Intertel Mgmt"
+      + friendly_name                    = "STIN-AVD-MgP"
+      + id                               = (known after apply)
+      + load_balancer_type               = "Persistent"
+      + location                         = "southcentralus"
+      + maximum_sessions_allowed         = 999999
+      + name                             = "STIN-AVD-MgP"
+      + personal_desktop_assignment_type = "Automatic"
+      + preferred_app_group_type         = "Desktop"
+      + resource_group_name              = "int-staging-rg"
+      + start_vm_on_connect              = true
+      + tags                             = {
+          + "Migrate Project"    = "INT-MigProject-01"
+          + "OffPeakConcurrency" = "1"
+          + "PeakConcurrency"    = "1"
+          + "domain"             = "intertel"
+          + "environment"        = "staging"
+          + "managed by"         = "terraform"
+          + "owner"              = "Greg Johnson"
+        }
+      + type                             = "Personal"
+      + validate_environment             = true
+    }
+
+  # azurerm_virtual_desktop_host_pool.pooled_host_pool["STIN-AVD-MgS"] will be created
+  + resource "azurerm_virtual_desktop_host_pool" "pooled_host_pool" {
+      + custom_rdp_properties    = "drivestoredirect:s:;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:0;devicestoredirect:s:*;redirectcomports:i:0;redirectsmartcards:i:0;usbdevicestoredirect:s:;enablecredsspsupport:i:1;audiocapturemode:i:1;use multimon:i:1;camerastoredirect:s:;enablerdsaadauth:i:1;"
+      + description              = "AVD shared host pool for Intertel Mgmt"
+      + friendly_name            = "STIN-AVD-MgS"
+      + id                       = (known after apply)
+      + load_balancer_type       = "BreadthFirst"
+      + location                 = "southcentralus"
+      + maximum_sessions_allowed = 12
+      + name                     = "STIN-AVD-MgS"
+      + preferred_app_group_type = "Desktop"
+      + resource_group_name      = "int-staging-rg"
+      + start_vm_on_connect      = true
+      + tags                     = {
+          + "Migrate Project"    = "INT-MigProject-01"
+          + "OffPeakConcurrency" = "1"
+          + "PeakConcurrency"    = "1"
+          + "domain"             = "intertel"
+          + "environment"        = "staging"
+          + "managed by"         = "terraform"
+          + "owner"              = "Greg Johnson"
+        }
+      + type                     = "Pooled"
+      + validate_environment     = true
+    }
+
+  # azurerm_virtual_desktop_host_pool.pooled_host_pool["STIN-AVD-PER"] will be updated in-place
+  ~ resource "azurerm_virtual_desktop_host_pool" "pooled_host_pool" {
+      ~ custom_rdp_properties            = "drivestoredirect:s:;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:0;devicestoredirect:s:*;redirectcomports:i:0;redirectsmartcards:i:0;usbdevicestoredirect:s:;enablecredsspsupport:i:1;audiocapturemode:i:1;use multimon:i:1;camerastoredirect:s:;enablerdsaadauth:i:1;redirectwebauthn:i:1;" -> "drivestoredirect:s:;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:0;devicestoredirect:s:*;redirectcomports:i:0;redirectsmartcards:i:0;usbdevicestoredirect:s:;enablecredsspsupport:i:1;audiocapturemode:i:1;use multimon:i:1;camerastoredirect:s:;enablerdsaadauth:i:1;"
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-PER"
+        name                             = "STIN-AVD-PER"
+        tags                             = {
+            "Migrate Project"    = "INT-MigProject-01"
+            "OffPeakConcurrency" = "1"
+            "PeakConcurrency"    = "1"
+            "domain"             = "intertel"
+            "environment"        = "staging"
+            "managed by"         = "terraform"
+            "owner"              = "Greg Johnson"
+        }
+        # (11 unchanged attributes hidden)
+    }
+
+  # azurerm_virtual_desktop_host_pool.pooled_host_pool["STIN-AVD-Std"] must be replaced
+-/+ resource "azurerm_virtual_desktop_host_pool" "pooled_host_pool" {
+      ~ id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-Std" -> (known after apply)
+        name                             = "STIN-AVD-Std"
+      ~ preferred_app_group_type         = "None" -> "Desktop" # forces replacement
+        tags                             = {
+            "Migrate Project"    = "INT-MigProject-01"
+            "OffPeakConcurrency" = "1"
+            "PeakConcurrency"    = "1"
+            "domain"             = "intertel"
+            "environment"        = "staging"
+            "managed by"         = "terraform"
+            "owner"              = "Greg Johnson"
+        }
+        # (11 unchanged attributes hidden)
+    }
+
+  # azurerm_virtual_desktop_host_pool_registration_info.pooled_host_pool_registration["STIN-AVD-MgP"] will be created
+  + resource "azurerm_virtual_desktop_host_pool_registration_info" "pooled_host_pool_registration" {
+      + expiration_date = (known after apply)
+      + hostpool_id     = (known after apply)
+      + id              = (known after apply)
+      + token           = (sensitive value)
+    }
+
+  # azurerm_virtual_desktop_host_pool_registration_info.pooled_host_pool_registration["STIN-AVD-MgS"] will be created
+  + resource "azurerm_virtual_desktop_host_pool_registration_info" "pooled_host_pool_registration" {
+      + expiration_date = (known after apply)
+      + hostpool_id     = (known after apply)
+      + id              = (known after apply)
+      + token           = (sensitive value)
+    }
+
+  # azurerm_virtual_desktop_host_pool_registration_info.pooled_host_pool_registration["STIN-AVD-PER"] will be created
+  + resource "azurerm_virtual_desktop_host_pool_registration_info" "pooled_host_pool_registration" {
+      + expiration_date = (known after apply)
+      + hostpool_id     = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/hostPools/STIN-AVD-PER"
+      + id              = (known after apply)
+      + token           = (sensitive value)
+    }
+
+  # azurerm_virtual_desktop_host_pool_registration_info.pooled_host_pool_registration["STIN-AVD-Std"] will be created
+  + resource "azurerm_virtual_desktop_host_pool_registration_info" "pooled_host_pool_registration" {
+      + expiration_date = (known after apply)
+      + hostpool_id     = (known after apply)
+      + id              = (known after apply)
+      + token           = (sensitive value)
+    }
+
+  # azurerm_virtual_desktop_workspace_application_group_association.pooled_host_pool_dag_ws_connect["STIN-AVD-MgP"] will be created
+  + resource "azurerm_virtual_desktop_workspace_application_group_association" "pooled_host_pool_dag_ws_connect" {
+      + application_group_id = (known after apply)
+      + id                   = (known after apply)
+      + workspace_id         = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/workspaces/Intertel-Staging"
+    }
+
+  # azurerm_virtual_desktop_workspace_application_group_association.pooled_host_pool_dag_ws_connect["STIN-AVD-MgS"] will be created
+  + resource "azurerm_virtual_desktop_workspace_application_group_association" "pooled_host_pool_dag_ws_connect" {
+      + application_group_id = (known after apply)
+      + id                   = (known after apply)
+      + workspace_id         = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/workspaces/Intertel-Staging"
+    }
+
+  # azurerm_virtual_desktop_workspace_application_group_association.pooled_host_pool_dag_ws_connect["STIN-AVD-Std"] must be replaced
+-/+ resource "azurerm_virtual_desktop_workspace_application_group_association" "pooled_host_pool_dag_ws_connect" {
+      ~ application_group_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-Std-dag" -> (known after apply) # forces replacement
+      ~ id                   = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/workspaces/Intertel-Staging|/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.DesktopVirtualization/applicationGroups/STIN-AVD-Std-dag" -> (known after apply)
+        # (1 unchanged attribute hidden)
+    }
+
+  # azurerm_virtual_machine.imported-vms["ST-UTILSRV01"] will be updated in-place
+  ~ resource "azurerm_virtual_machine" "imported-vms" {
+        id                               = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/ST-UTILSRV01"
+        name                             = "ST-UTILSRV01"
+      ~ tags                             = {
+            "Migrate Project" = "INT-MigProject-01"
+          - "Offline"         = "No" -> null
+            "domain"          = "intertel"
+            "environment"     = "staging"
+            "managed by"      = "terraform"
+            "owner"           = "Greg Johnson"
+        }
+        # (9 unchanged attributes hidden)
+
+        # (2 unchanged blocks hidden)
+    }
+
+  # azurerm_virtual_machine_data_disk_attachment.vm-sql-disks-attach["logs"] will be created
+  + resource "azurerm_virtual_machine_data_disk_attachment" "vm-sql-disks-attach" {
+      + caching                   = "None"
+      + create_option             = "Attach"
+      + id                        = (known after apply)
+      + lun                       = 2
+      + managed_disk_id           = (known after apply)
+      + virtual_machine_id        = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STINB2-SQL01"
+      + write_accelerator_enabled = false
+    }
+
+  # azurerm_virtual_machine_extension.pooled_host_pool_domain_join["STIN-AVD-MgP-1"] will be created
+  + resource "azurerm_virtual_machine_extension" "pooled_host_pool_domain_join" {
+      + auto_upgrade_minor_version  = true
+      + failure_suppression_enabled = false
+      + id                          = (known after apply)
+      + name                        = "STIN-AVD-MgP-1-domain-join"
+      + protected_settings          = (sensitive value)
+      + publisher                   = "Microsoft.Compute"
+      + settings                    = <<-EOT
+            {
+                  "Name": "intertel.local",
+                  "OUPath": "OU=Staging,OU=IN-AVD-MgP,OU=Azure AVD,OU=Azure,DC=intertel,DC=local",
+                  "User": "svc.directoryservice@intertel.local",
+                  "Restart": "true",
+                  "Options": "3"
+                }
+        EOT
+      + type                        = "JsonADDomainExtension"
+      + type_handler_version        = "1.3"
+      + virtual_machine_id          = (known after apply)
+    }
+
+  # azurerm_virtual_machine_extension.pooled_host_pool_domain_join["STIN-AVD-MgP-2"] will be created
+  + resource "azurerm_virtual_machine_extension" "pooled_host_pool_domain_join" {
+      + auto_upgrade_minor_version  = true
+      + failure_suppression_enabled = false
+      + id                          = (known after apply)
+      + name                        = "STIN-AVD-MgP-2-domain-join"
+      + protected_settings          = (sensitive value)
+      + publisher                   = "Microsoft.Compute"
+      + settings                    = <<-EOT
+            {
+                  "Name": "intertel.local",
+                  "OUPath": "OU=Staging,OU=IN-AVD-MgP,OU=Azure AVD,OU=Azure,DC=intertel,DC=local",
+                  "User": "svc.directoryservice@intertel.local",
+                  "Restart": "true",
+                  "Options": "3"
+                }
+        EOT
+      + type                        = "JsonADDomainExtension"
+      + type_handler_version        = "1.3"
+      + virtual_machine_id          = (known after apply)
+    }
+
+  # azurerm_virtual_machine_extension.pooled_host_pool_domain_join["STIN-AVD-MgS-1"] will be created
+  + resource "azurerm_virtual_machine_extension" "pooled_host_pool_domain_join" {
+      + auto_upgrade_minor_version  = true
+      + failure_suppression_enabled = false
+      + id                          = (known after apply)
+      + name                        = "STIN-AVD-MgS-1-domain-join"
+      + protected_settings          = (sensitive value)
+      + publisher                   = "Microsoft.Compute"
+      + settings                    = <<-EOT
+            {
+                  "Name": "intertel.local",
+                  "OUPath": "OU=Staging,OU=IN-AVD-MgS,OU=Azure AVD,OU=Azure,DC=intertel,DC=local",
+                  "User": "svc.directoryservice@intertel.local",
+                  "Restart": "true",
+                  "Options": "3"
+                }
+        EOT
+      + type                        = "JsonADDomainExtension"
+      + type_handler_version        = "1.3"
+      + virtual_machine_id          = (known after apply)
+    }
+
+  # azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-MgP-1"] will be created
+  + resource "azurerm_virtual_machine_extension" "pooled_host_pool_dsc" {
+      + auto_upgrade_minor_version  = true
+      + failure_suppression_enabled = false
+      + id                          = (known after apply)
+      + name                        = "STIN-AVD-MgP-1-dsc"
+      + protected_settings          = (sensitive value)
+      + publisher                   = "Microsoft.Powershell"
+      + settings                    = jsonencode(
+            {
+              + configurationFunction = "Configuration.ps1\\AddSessionHost"
+              + modulesUrl            = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip"
+              + properties            = {
+                  + HostPoolName = "STIN-AVD-MgP"
+                }
+            }
+        )
+      + type                        = "DSC"
+      + type_handler_version        = "2.73"
+      + virtual_machine_id          = (known after apply)
+    }
+
+  # azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-MgP-2"] will be created
+  + resource "azurerm_virtual_machine_extension" "pooled_host_pool_dsc" {
+      + auto_upgrade_minor_version  = true
+      + failure_suppression_enabled = false
+      + id                          = (known after apply)
+      + name                        = "STIN-AVD-MgP-2-dsc"
+      + protected_settings          = (sensitive value)
+      + publisher                   = "Microsoft.Powershell"
+      + settings                    = jsonencode(
+            {
+              + configurationFunction = "Configuration.ps1\\AddSessionHost"
+              + modulesUrl            = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip"
+              + properties            = {
+                  + HostPoolName = "STIN-AVD-MgP"
+                }
+            }
+        )
+      + type                        = "DSC"
+      + type_handler_version        = "2.73"
+      + virtual_machine_id          = (known after apply)
+    }
+
+  # azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-MgS-1"] will be created
+  + resource "azurerm_virtual_machine_extension" "pooled_host_pool_dsc" {
+      + auto_upgrade_minor_version  = true
+      + failure_suppression_enabled = false
+      + id                          = (known after apply)
+      + name                        = "STIN-AVD-MgS-1-dsc"
+      + protected_settings          = (sensitive value)
+      + publisher                   = "Microsoft.Powershell"
+      + settings                    = jsonencode(
+            {
+              + configurationFunction = "Configuration.ps1\\AddSessionHost"
+              + modulesUrl            = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip"
+              + properties            = {
+                  + HostPoolName = "STIN-AVD-MgS"
+                }
+            }
+        )
+      + type                        = "DSC"
+      + type_handler_version        = "2.73"
+      + virtual_machine_id          = (known after apply)
+    }
+
+  # azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-PER-1"] will be updated in-place
+  ~ resource "azurerm_virtual_machine_extension" "pooled_host_pool_dsc" {
+        id                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-PER-1/extensions/STIN-AVD-PER-1-dsc"
+        name                        = "STIN-AVD-PER-1-dsc"
+      ~ protected_settings          = (sensitive value)
+        tags                        = {}
+        # (8 unchanged attributes hidden)
+    }
+
+  # azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-Std-1"] will be updated in-place
+  ~ resource "azurerm_virtual_machine_extension" "pooled_host_pool_dsc" {
+        id                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-Std-1/extensions/STIN-AVD-Std-1-dsc"
+        name                        = "STIN-AVD-Std-1-dsc"
+      ~ protected_settings          = (sensitive value)
+        tags                        = {}
+        # (8 unchanged attributes hidden)
+    }
+
+  # azurerm_virtual_machine_extension.pooled_host_pool_dsc["STIN-AVD-Std-2"] will be updated in-place
+  ~ resource "azurerm_virtual_machine_extension" "pooled_host_pool_dsc" {
+        id                          = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-Std-2/extensions/STIN-AVD-Std-2-dsc"
+        name                        = "STIN-AVD-Std-2-dsc"
+      ~ protected_settings          = (sensitive value)
+        tags                        = {}
+        # (8 unchanged attributes hidden)
+    }
+
+  # azurerm_virtual_machine_extension.vms-domain-join["STINB2-MGT01"] will be created
+  + resource "azurerm_virtual_machine_extension" "vms-domain-join" {
+      + auto_upgrade_minor_version  = true
+      + failure_suppression_enabled = false
+      + id                          = (known after apply)
+      + name                        = "STINB2-MGT01-domain-join"
+      + protected_settings          = (sensitive value)
+      + publisher                   = "Microsoft.Compute"
+      + settings                    = <<-EOT
+            {
+                  "Name": "intertel.local",
+                  "OUPath": "OU=Staging,OU=Azure Servers,OU=Azure,DC=intertel,DC=local",
+                  "User": "svc.directoryservice@intertel.local",
+                  "Restart": "true",
+                  "Options": "3"
+                }
+        EOT
+      + type                        = "JsonADDomainExtension"
+      + type_handler_version        = "1.3"
+      + virtual_machine_id          = (known after apply)
+    }
+
+  # azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-MgP-1"] will be created
+  + resource "azurerm_windows_virtual_machine" "pooled_host_pool_vms" {
+      + admin_password               = (sensitive value)
+      + admin_username               = "ONTAdmin"
+      + allow_extension_operations   = true
+      + computer_name                = (known after apply)
+      + enable_automatic_updates     = true
+      + extensions_time_budget       = "PT1H30M"
+      + hotpatching_enabled          = false
+      + id                           = (known after apply)
+      + location                     = "southcentralus"
+      + max_bid_price                = -1
+      + name                         = "STIN-AVD-MgP-1"
+      + network_interface_ids        = (known after apply)
+      + patch_assessment_mode        = "ImageDefault"
+      + patch_mode                   = "AutomaticByOS"
+      + platform_fault_domain        = -1
+      + priority                     = "Regular"
+      + private_ip_address           = (known after apply)
+      + private_ip_addresses         = (known after apply)
+      + provision_vm_agent           = true
+      + proximity_placement_group_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/proximityPlacementGroups/int-stg-ppg"
+      + public_ip_address            = (known after apply)
+      + public_ip_addresses          = (known after apply)
+      + resource_group_name          = "int-staging-rg"
+      + size                         = "Standard_B4ms"
+      + source_image_id              = "/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/IT-Prod-RG/providers/Microsoft.Compute/galleries/Ont_Prod1_scus_scg/images/AVD-INT-Mgmt-Win10-img"
+      + tags                         = {
+          + "Migrate Project" = "INT-MigProject-01"
+          + "domain"          = "intertel"
+          + "environment"     = "staging"
+          + "managed by"      = "terraform"
+          + "owner"           = "Greg Johnson"
+        }
+      + timezone                     = "Central Standard Time"
+      + virtual_machine_id           = (known after apply)
+
+      + identity {
+          + principal_id = (known after apply)
+          + tenant_id    = (known after apply)
+          + type         = "SystemAssigned"
+        }
+
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = (known after apply)
+          + name                      = "stin-avd-mgp-1"
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+
+      + termination_notification (known after apply)
+    }
+
+  # azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-MgP-2"] will be created
+  + resource "azurerm_windows_virtual_machine" "pooled_host_pool_vms" {
+      + admin_password               = (sensitive value)
+      + admin_username               = "ONTAdmin"
+      + allow_extension_operations   = true
+      + computer_name                = (known after apply)
+      + enable_automatic_updates     = true
+      + extensions_time_budget       = "PT1H30M"
+      + hotpatching_enabled          = false
+      + id                           = (known after apply)
+      + location                     = "southcentralus"
+      + max_bid_price                = -1
+      + name                         = "STIN-AVD-MgP-2"
+      + network_interface_ids        = (known after apply)
+      + patch_assessment_mode        = "ImageDefault"
+      + patch_mode                   = "AutomaticByOS"
+      + platform_fault_domain        = -1
+      + priority                     = "Regular"
+      + private_ip_address           = (known after apply)
+      + private_ip_addresses         = (known after apply)
+      + provision_vm_agent           = true
+      + proximity_placement_group_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/proximityPlacementGroups/int-stg-ppg"
+      + public_ip_address            = (known after apply)
+      + public_ip_addresses          = (known after apply)
+      + resource_group_name          = "int-staging-rg"
+      + size                         = "Standard_B4ms"
+      + source_image_id              = "/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/IT-Prod-RG/providers/Microsoft.Compute/galleries/Ont_Prod1_scus_scg/images/AVD-INT-Mgmt-Win10-img"
+      + tags                         = {
+          + "Migrate Project" = "INT-MigProject-01"
+          + "domain"          = "intertel"
+          + "environment"     = "staging"
+          + "managed by"      = "terraform"
+          + "owner"           = "Greg Johnson"
+        }
+      + timezone                     = "Central Standard Time"
+      + virtual_machine_id           = (known after apply)
+
+      + identity {
+          + principal_id = (known after apply)
+          + tenant_id    = (known after apply)
+          + type         = "SystemAssigned"
+        }
+
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = (known after apply)
+          + name                      = "stin-avd-mgp-2"
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+
+      + termination_notification (known after apply)
+    }
+
+  # azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-MgS-1"] will be created
+  + resource "azurerm_windows_virtual_machine" "pooled_host_pool_vms" {
+      + admin_password               = (sensitive value)
+      + admin_username               = "ONTAdmin"
+      + allow_extension_operations   = true
+      + computer_name                = (known after apply)
+      + enable_automatic_updates     = true
+      + extensions_time_budget       = "PT1H30M"
+      + hotpatching_enabled          = false
+      + id                           = (known after apply)
+      + location                     = "southcentralus"
+      + max_bid_price                = -1
+      + name                         = "STIN-AVD-MgS-1"
+      + network_interface_ids        = (known after apply)
+      + patch_assessment_mode        = "ImageDefault"
+      + patch_mode                   = "AutomaticByOS"
+      + platform_fault_domain        = -1
+      + priority                     = "Regular"
+      + private_ip_address           = (known after apply)
+      + private_ip_addresses         = (known after apply)
+      + provision_vm_agent           = true
+      + proximity_placement_group_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/proximityPlacementGroups/int-stg-ppg"
+      + public_ip_address            = (known after apply)
+      + public_ip_addresses          = (known after apply)
+      + resource_group_name          = "int-staging-rg"
+      + size                         = "Standard_B2ms"
+      + source_image_id              = "/subscriptions/58e2361d-344c-4e85-b45b-c7435e9e2a42/resourceGroups/IT-Prod-RG/providers/Microsoft.Compute/galleries/Ont_Prod1_scus_scg/images/AVD-INT-Mgmt-Win10-img"
+      + tags                         = {
+          + "Migrate Project" = "INT-MigProject-01"
+          + "domain"          = "intertel"
+          + "environment"     = "staging"
+          + "managed by"      = "terraform"
+          + "owner"           = "Greg Johnson"
+        }
+      + timezone                     = "Central Standard Time"
+      + virtual_machine_id           = (known after apply)
+
+      + identity {
+          + principal_id = (known after apply)
+          + tenant_id    = (known after apply)
+          + type         = "SystemAssigned"
+        }
+
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = (known after apply)
+          + name                      = "stin-avd-mgs-1"
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+
+      + termination_notification (known after apply)
+    }
+
+  # azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-PER-1"] will be updated in-place
+  ~ resource "azurerm_windows_virtual_machine" "pooled_host_pool_vms" {
+        id                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-PER-1"
+      - license_type                  = "Windows_Client" -> null
+        name                          = "STIN-AVD-PER-1"
+        tags                          = {
+            "Migrate Project" = "INT-MigProject-01"
+            "domain"          = "intertel"
+            "environment"     = "staging"
+            "managed by"      = "terraform"
+            "owner"           = "Greg Johnson"
+        }
+        # (37 unchanged attributes hidden)
+
+      - boot_diagnostics {
+            # (1 unchanged attribute hidden)
+        }
+
+        # (2 unchanged blocks hidden)
+    }
+
+  # azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-Std-1"] will be updated in-place
+  ~ resource "azurerm_windows_virtual_machine" "pooled_host_pool_vms" {
+        id                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-Std-1"
+      - license_type                  = "Windows_Client" -> null
+        name                          = "STIN-AVD-Std-1"
+      + proximity_placement_group_id  = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/proximityPlacementGroups/int-stg-ppg"
+        tags                          = {
+            "Migrate Project" = "INT-MigProject-01"
+            "domain"          = "intertel"
+            "environment"     = "staging"
+            "managed by"      = "terraform"
+            "owner"           = "Greg Johnson"
+        }
+        # (36 unchanged attributes hidden)
+
+        # (2 unchanged blocks hidden)
+    }
+
+  # azurerm_windows_virtual_machine.pooled_host_pool_vms["STIN-AVD-Std-2"] will be updated in-place
+  ~ resource "azurerm_windows_virtual_machine" "pooled_host_pool_vms" {
+        id                            = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STIN-AVD-Std-2"
+      - license_type                  = "Windows_Client" -> null
+        name                          = "STIN-AVD-Std-2"
+      + proximity_placement_group_id  = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/proximityPlacementGroups/int-stg-ppg"
+        tags                          = {
+            "Migrate Project" = "INT-MigProject-01"
+            "domain"          = "intertel"
+            "environment"     = "staging"
+            "managed by"      = "terraform"
+            "owner"           = "Greg Johnson"
+        }
+        # (36 unchanged attributes hidden)
+
+        # (2 unchanged blocks hidden)
+    }
+
+  # azurerm_windows_virtual_machine.vms["STINB2-MGT01"] will be created
+  + resource "azurerm_windows_virtual_machine" "vms" {
+      + admin_password               = (sensitive value)
+      + admin_username               = "ONTAdmin"
+      + allow_extension_operations   = true
+      + computer_name                = (known after apply)
+      + enable_automatic_updates     = false
+      + extensions_time_budget       = "PT1H30M"
+      + hotpatching_enabled          = false
+      + id                           = (known after apply)
+      + location                     = "southcentralus"
+      + max_bid_price                = -1
+      + name                         = "STINB2-MGT01"
+      + network_interface_ids        = (known after apply)
+      + patch_assessment_mode        = "ImageDefault"
+      + patch_mode                   = "Manual"
+      + platform_fault_domain        = -1
+      + priority                     = "Regular"
+      + private_ip_address           = (known after apply)
+      + private_ip_addresses         = (known after apply)
+      + provision_vm_agent           = true
+      + proximity_placement_group_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/proximityPlacementGroups/int-stg-ppg"
+      + public_ip_address            = (known after apply)
+      + public_ip_addresses          = (known after apply)
+      + resource_group_name          = "int-staging-rg"
+      + size                         = "Standard_B2ms"
+      + tags                         = {
+          + "Migrate Project" = "INT-MigProject-01"
+          + "domain"          = "intertel"
+          + "environment"     = "staging"
+          + "managed by"      = "terraform"
+          + "owner"           = "Greg Johnson"
+        }
+      + timezone                     = "Central Standard Time"
+      + virtual_machine_id           = (known after apply)
+
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = (known after apply)
+          + name                      = "STINB2-MGT01-disk-os"
+          + storage_account_type      = "Premium_LRS"
+          + write_accelerator_enabled = false
+        }
+
+      + source_image_reference {
+          + offer     = "WindowsServer"
+          + publisher = "MicrosoftWindowsServer"
+          + sku       = "2019-Datacenter"
+          + version   = "latest"
+        }
+
+      + termination_notification (known after apply)
+    }
+
+Plan: 38 to add, 14 to change, 8 to destroy.
+╷
+│ Error: building account: could not acquire access token to parse claims: clientCredentialsToken: received HTTP status 401 with response: {"error":"invalid_client","error_description":"AADSTS7000222: The provided client secret keys for app '3f31972c-b59f-480d-b4f3-71d39043b74e' are expired. Visit the Azure portal to create new keys for your app: https://aka.ms/NewClientSecret, or consider using certificate credentials for added security: https://aka.ms/certCreds. Trace ID: 8c68644c-c9ff-4ea1-8d9f-7cd07c814a00 Correlation ID: c62cb326-ba4e-45f7-a5a6-a94b3765cee1 Timestamp: 2025-09-06 15:15:46Z","error_codes":[7000222],"timestamp":"2025-09-06 15:15:46Z","trace_id":"8c68644c-c9ff-4ea1-8d9f-7cd07c814a00","correlation_id":"c62cb326-ba4e-45f7-a5a6-a94b3765cee1","error_uri":"https://login.microsoftonline.com/error?code=7000222"}
+│
+│   with provider["registry.terraform.io/hashicorp/azurerm"].OntellusTenant,
+│   on provider.tf line 26, in provider "azurerm":
+│   26: provider "azurerm" {
+│
+╵
+╷
+│ Error: building account: could not acquire access token to parse claims: clientCredentialsToken: received HTTP status 401 with response: {"error":"invalid_client","error_description":"AADSTS7000222: The provided client secret keys for app '3f31972c-b59f-480d-b4f3-71d39043b74e' are expired. Visit the Azure portal to create new keys for your app: https://aka.ms/NewClientSecret, or consider using certificate credentials for added security: https://aka.ms/certCreds. Trace ID: 4bbbac92-ad74-4818-b75e-b7e025c33800 Correlation ID: 70c60b1d-25e6-43b5-9ce2-81e3f8d94d63 Timestamp: 2025-09-06 15:15:46Z","error_codes":[7000222],"timestamp":"2025-09-06 15:15:46Z","trace_id":"4bbbac92-ad74-4818-b75e-b7e025c33800","correlation_id":"70c60b1d-25e6-43b5-9ce2-81e3f8d94d63","error_uri":"https://login.microsoftonline.com/error?code=7000222"}
+│
+│   with provider["registry.terraform.io/hashicorp/azurerm"].RecordsXTenant,
+│   on provider.tf line 37, in provider "azurerm":
+│   37: provider "azurerm" {
+│
+╵
+╷
+│ Error: building account: could not acquire access token to parse claims: clientCredentialsToken: received HTTP status 401 with response: {"error":"invalid_client","error_description":"AADSTS7000222: The provided client secret keys for app '3f31972c-b59f-480d-b4f3-71d39043b74e' are expired. Visit the Azure portal to create new keys for your app: https://aka.ms/NewClientSecret, or consider using certificate credentials for added security: https://aka.ms/certCreds. Trace ID: 3f9d367c-7ecd-438f-a4e8-75ce352e1a00 Correlation ID: 561fc7bf-8e7e-42c4-83f2-ccfab96131b7 Timestamp: 2025-09-06 15:15:46Z","error_codes":[7000222],"timestamp":"2025-09-06 15:15:46Z","trace_id":"3f9d367c-7ecd-438f-a4e8-75ce352e1a00","correlation_id":"561fc7bf-8e7e-42c4-83f2-ccfab96131b7","error_uri":"https://login.microsoftonline.com/error?code=7000222"}
+│
+│   with provider["registry.terraform.io/hashicorp/azurerm"].OntellusProd1,
+│   on provider.tf line 48, in provider "azurerm":
+│   48: provider "azurerm" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:06866d79-001a-0063-2641-1f7eb7000000\nTime:2025-09-06T15:15:42.9856436Z"
+│
+│   with azurerm_storage_share.file_share["optifiles"],
+│   on storage.tf line 36, in resource "azurerm_storage_share" "file_share":
+│   36: resource "azurerm_storage_share" "file_share" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:46611d73-a01a-0018-4441-1f3c2b000000\nTime:2025-09-06T15:15:42.9892412Z"
+│
+│   with azurerm_storage_share.file_share["emailattachments"],
+│   on storage.tf line 36, in resource "azurerm_storage_share" "file_share":
+│   36: resource "azurerm_storage_share" "file_share" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:10e99125-f01a-0048-2941-1ffe7b000000\nTime:2025-09-06T15:15:42.9839803Z"
+│
+│   with azurerm_storage_share.file_share["tloxml"],
+│   on storage.tf line 36, in resource "azurerm_storage_share" "file_share":
+│   36: resource "azurerm_storage_share" "file_share" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:4928b564-601a-0065-0241-1f4d08000000\nTime:2025-09-06T15:15:42.9827141Z"
+│
+│   with azurerm_storage_share.file_share["reportgeneration"],
+│   on storage.tf line 36, in resource "azurerm_storage_share" "file_share":
+│   36: resource "azurerm_storage_share" "file_share" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:10e99127-f01a-0048-2a41-1ffe7b000000\nTime:2025-09-06T15:15:42.9961128Z"
+│
+│   with azurerm_storage_share.file_share["itdept"],
+│   on storage.tf line 36, in resource "azurerm_storage_share" "file_share":
+│   36: resource "azurerm_storage_share" "file_share" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:46611d75-a01a-0018-4541-1f3c2b000000\nTime:2025-09-06T15:15:43.0012207Z"
+│
+│   with azurerm_storage_share.file_share["humanresources"],
+│   on storage.tf line 36, in resource "azurerm_storage_share" "file_share":
+│   36: resource "azurerm_storage_share" "file_share" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:46611d76-a01a-0018-4641-1f3c2b000000\nTime:2025-09-06T15:15:43.0030427Z"
+│
+│   with azurerm_storage_share.file_share["clientapps"],
+│   on storage.tf line 36, in resource "azurerm_storage_share" "file_share":
+│   36: resource "azurerm_storage_share" "file_share" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:4b214f69-001a-0011-1441-1f79f8000000\nTime:2025-09-06T15:15:43.0179085Z"
+│
+│   with azurerm_storage_share.file_share["codocuments"],
+│   on storage.tf line 36, in resource "azurerm_storage_share" "file_share":
+│   36: resource "azurerm_storage_share" "file_share" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:10e99128-f01a-0048-2b41-1ffe7b000000\nTime:2025-09-06T15:15:42.9981060Z"
+│
+│   with azurerm_storage_share.file_share["netdata"],
+│   on storage.tf line 36, in resource "azurerm_storage_share" "file_share":
+│   36: resource "azurerm_storage_share" "file_share" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:31e7ee59-c01a-001d-6c41-1fab39000000\nTime:2025-09-06T15:15:49.0088458Z"
+│
+│   with azurerm_storage_share.file_storage_profiles["profiles01"],
+│   on storage.tf line 109, in resource "azurerm_storage_share" "file_storage_profiles":
+│  109: resource "azurerm_storage_share" "file_storage_profiles" {
+│
+╵
+╷
+│ Error: shares.Client#GetProperties: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailure" Message="This request is not authorized to perform this operation.\nRequestId:594cf5cd-a01a-001b-6141-1f9886000000\nTime:2025-09-06T15:15:49.0075189Z"
+│
+│   with azurerm_storage_share.file_storage_profiles["mgmt"],
+│   on storage.tf line 109, in resource "azurerm_storage_share" "file_storage_profiles":
+│  109: resource "azurerm_storage_share" "file_storage_profiles" {
+│
+╵
+╷
+│ Error: reading Sql Virtual Machine (Subscription: "ffe5c17f-a5cd-46d5-8137-b8c02ee481af"
+│ Resource Group Name: "int-staging-rg"
+│ Sql Virtual Machine Name: "STINB2-SQL01"): sqlvirtualmachines.SqlVirtualMachinesClient#Get: Failure responding to request: StatusCode=400 -- Original Error: autorest/azure: Service returned an error. Status=400 Code="VmNotRunning" Message="The VM: /subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/virtualMachines/STINB2-SQL01 is not in running state."
+│
+│   with azurerm_mssql_virtual_machine.vm-sql,
+│   on virtual-machines.tf line 224, in resource "azurerm_mssql_virtual_machine" "vm-sql":
+│  224: resource "azurerm_mssql_virtual_machine" "vm-sql" {

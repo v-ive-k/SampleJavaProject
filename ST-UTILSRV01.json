@@ -1,0 +1,116 @@
+{
+    "name": "ST-UTILSRV01",
+    "id": "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/INT-STAGING-RG/providers/Microsoft.Compute/virtualMachines/ST-UTILSRV01",
+    "type": "Microsoft.Compute/virtualMachines",
+    "location": "southcentralus",
+    "tags": {
+        "Migrate Project": "INT-MigProject-01",
+        "domain": "intertel",
+        "environment": "staging",
+        "managed by": "terraform",
+        "owner": "Greg Johnson",
+        "Offline": "No"
+    },
+    "properties": {
+        "hardwareProfile": {
+            "vmSize": "Standard_B2ms"
+        },
+        "provisioningState": "Succeeded",
+        "vmId": "5bd7396c-7544-4899-a83d-598d6a121b94",
+        "proximityPlacementGroup": {
+            "id": "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/INT-STAGING-RG/providers/Microsoft.Compute/proximityPlacementGroups/int-stg-ppg"
+        },
+        "storageProfile": {
+            "osDisk": {
+                "osType": "Windows",
+                "name": "ST-UTILSRV01-OsDisk-01",
+                "createOption": "Attach",
+                "caching": "ReadWrite",
+                "managedDisk": {
+                    "id": "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/disks/ST-UTILSRV01-OsDisk-01"
+                },
+                "deleteOption": "Detach"
+            },
+            "dataDisks": []
+        },
+        "networkProfile": {
+            "networkInterfaces": [
+                {
+                    "id": "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/networkInterfaces/ST-UTILSRV01-nic",
+                    "properties": {
+                        "primary": false
+                    }
+                }
+            ]
+        },
+        "diagnosticsProfile": {
+            "bootDiagnostics": {
+                "enabled": true
+            }
+        },
+        "licenseType": "Windows_Server"
+    },
+    "resources": [
+        {
+            "name": "MDE.Windows",
+            "id": "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/INT-STAGING-RG/providers/Microsoft.Compute/virtualMachines/ST-UTILSRV01/extensions/MDE.Windows",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "location": "southcentralus",
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "forceUpdateTag": "1d27f003-9455-4a1a-a0e4-6f18733a2463",
+                "provisioningState": "Succeeded",
+                "publisher": "Microsoft.Azure.AzureDefenderForServers",
+                "type": "MDE.Windows",
+                "typeHandlerVersion": "1.0",
+                "settings": {
+                    "azureResourceId": "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/INT-STAGING-RG/providers/Microsoft.Compute/virtualMachines/ST-UTILSRV01",
+                    "forceReOnboarding": false,
+                    "vNextEnabled": true,
+                    "autoUpdate": true
+                }
+            }
+        },
+        {
+            "name": "MicrosoftMonitoringAgent",
+            "id": "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/INT-STAGING-RG/providers/Microsoft.Compute/virtualMachines/ST-UTILSRV01/extensions/MicrosoftMonitoringAgent",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "location": "southcentralus",
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "provisioningState": "Succeeded",
+                "enableAutomaticUpgrade": false,
+                "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                "type": "MicrosoftMonitoringAgent",
+                "typeHandlerVersion": "1.0",
+                "settings": {
+                    "workspaceId": "7909f153-bed4-43f2-ae71-4e0247c14b46"
+                }
+            }
+        },
+        {
+            "name": "ST-UTILSRV01-domain-join",
+            "id": "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/INT-STAGING-RG/providers/Microsoft.Compute/virtualMachines/ST-UTILSRV01/extensions/ST-UTILSRV01-domain-join",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "location": "southcentralus",
+            "tags": {},
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "provisioningState": "Succeeded",
+                "enableAutomaticUpgrade": false,
+                "suppressFailures": false,
+                "publisher": "Microsoft.Compute",
+                "type": "JsonADDomainExtension",
+                "typeHandlerVersion": "1.3",
+                "settings": {
+                    "Name": "intertel.local",
+                    "OUPath": "OU=Staging,OU=Azure Servers,OU=Azure,DC=intertel,DC=local",
+                    "Options": "3",
+                    "Restart": "true",
+                    "User": "svc.directoryservice@intertel.local"
+                }
+            }
+        }
+    ],
+    "apiVersion": "2021-03-01"
+}

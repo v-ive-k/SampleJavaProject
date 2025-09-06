@@ -1,1 +1,1 @@
-https://us06web.zoom.us/j/9348043770?pwd=JayaMBmyOj1H9PCUXNEU0i0q7uFlQS.1
+https://us05web.zoom.us/j/4903422015?pwd=MOb1R3Zbbw2RqIYVAE0oSU5BacPtyP.1

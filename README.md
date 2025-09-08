@@ -1,168 +1,80 @@
-az-admin@ONT-Infra-23:/mnt/c/Users/VKovi/azure-infra/subscriptions/Ont-Dev1/int-staging-rg$ terraform plan
-var.AVD_shared_tags
-  Enter a value:
+# ==== silence everything we’re not using ====
+AVD_shared_tags                 = {}
+AVD_tags                        = {}
 
-var.AVD_tags
-  Enter a value:
+avd_snet_address_prefix         = "10.239.0.0/24"     # any CIDR; not used
+dmz_snet_address_prefix         = "10.239.1.0/24"     # any CIDR; not used
+internal_snet_address_prefix    = "10.239.2.0/24"     # any CIDR; not used
+mgmt_snet_address_prefix        = "10.239.3.0/24"     # any CIDR; not used
+main_vnet_address_space         = ["10.239.0.0/16"]   # any CIDR; not used
 
-var.avd_snet_address_prefix
-  Enter a value:
+domain_controller_ips           = []                  # list(string)
+file_profiles                   = {}                  # map(...), left empty
+file_profiles_contributor_group_id = ""
+file_shares                     = {}                  # map(...), left empty
+file_shares_contributor_group_id = ""
 
-var.dmz_snet_address_prefix
-  Enter a value:
+# If your variables.tf defines host_pool as a map/object this {} is correct.
+# If it's a bool, change this to: false
+host_pool                       = {}
 
-var.domain_controller_ips
-  list of IP addresses to domain controllers
+mgmt_ips                        = {}                  # map(string) or map(object) – empty is fine
+net_services                    = {}                  # map(object) – empty is fine
+rg_contributor_group_id         = ""
+rg_owner_group_id               = ""
+rg_reader_group_id              = ""
+server_names                    = {}                  # map(string) – empty okay
+sql_settings                    = {}                  # map/object – left empty
 
-  Enter a value:
+stg_workspace                   = false
+stg_workspace_description       = ""
+stg_workspace_friendly          = ""
 
-var.file_profiles
-  Enter a value:
+# global tags still used elsewhere
+tags = {
+  domain       = "intertel"
+  environment  = "staging"
+  "managed by" = "terraform"
+}
 
-var.file_profiles_contributor_group_id
-  Enter a value:
+# ==== only the new utility VM ====
+# Uses Internal subnet + your existing PPG. Clean Windows Server image.
+vms = {
+  STINB2-UTL01 = {
+    location            = "southcentralus"
+    resource_group_name = "int-staging-rg"
 
-var.file_shares
-  Enter a value:
+    subnet_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Network/virtualNetworks/intertel-staging-scus-vnet/subnets/intertel-staging-internal-scus-snet"
 
-var.file_shares_contributor_group_id
-  Enter a value:
+    size = "Standard_B2ms"
 
-var.host_pool
-  Enter a value:
+    # If your VM code expects "source_image_reference" instead, rename the key.
+    source_image = {
+      publisher = "MicrosoftWindowsServer"
+      offer     = "WindowsServer"
+      sku       = "2019-Datacenter"
+      version   = "latest"
+    }
 
-var.internal_snet_address_prefix
-  Enter a value:
+    ppg_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/proximityPlacementGroups/int-stg-ppg"
 
-var.main_vnet_address_space
-  Enter a value:
+    domain_join = {
+      enabled = true
+      domain  = "intertel.local"
+      ou_path = "OU=Staging,OU=Azure Servers,OU=Azure,DC=intertel,DC=local"
+      user    = "svc.directoryservice@intertel.local"
+    }
 
-var.mgmt_ips
-  Map of management PC names and IP addresses
+    tags = {
+      "Migrate Project" = "INT-MigProject-01"
+      domain            = "intertel"
+      environment       = "staging"
+      "managed by"      = "terraform"
+      owner             = "Greg Johnson"
+    }
+  }
+}
 
-  Enter a value:
-
-var.mgmt_snet_address_prefix
-  Enter a value:
-
-var.net_services
-  Map of network services associated with port numbers. Protocol is to help user determine how to set up rule. It is not used otherwise yet.
-
-  Enter a value:
-
-var.rg_contributor_group_id
-  Enter a value:
-
-var.rg_owner_group_id
-  Enter a value:
-
-var.rg_reader_group_id
-  Enter a value:
-
-var.server_names
-  Names assigned to servers. These may need to be changed between environments (dev, staging, prod, etc)
-
-  Enter a value:
-
-var.sql_settings
-  Enter a value:
-
-var.stg_workspace
-  Create Workspace for AVD pools
-
-  Enter a value:
-
-var.stg_workspace_description
-  Portal workspace discription
-
-  Enter a value:
-
-var.stg_workspace_friendly
-  The name seein in the client
-
-  Enter a value:
-
-var.tags
-  Enter a value:
-
-╷
-│ Error: Missing expression
-│
-│   on <value for var.domain_controller_ips> line 1:
-│   (source code not available)
-│
-│ Expected the start of an expression, but found the end of the file.
-╵
-╷
-│ Error: Missing expression
-│
-│   on <value for var.mgmt_ips> line 1:
-│   (source code not available)
-│
-│ Expected the start of an expression, but found the end of the file.
-╵
-╷
-│ Error: Missing expression
-│
-│   on <value for var.net_services> line 1:
-│   (source code not available)
-│
-│ Expected the start of an expression, but found the end of the file.
-╵
-╷
-│ Error: Missing expression
-│
-│   on <value for var.server_names> line 1:
-│   (source code not available)
-│
-│ Expected the start of an expression, but found the end of the file.
-╵
-╷
-│ Error: Missing expression
-│
-│   on <value for var.sql_settings> line 1:
-│   (source code not available)
-│
-│ Expected the start of an expression, but found the end of the file.
-╵
-╷
-│ Error: No value for required variable
-│
-│   on variables.tf line 54:
-│   54: variable "sql_settings" {
-│
-│ The root module input variable "sql_settings" is not set, and has no default value. Use a -var or -var-file command line argument to provide a value for this variable.
-╵
-╷
-│ Error: No value for required variable
-│
-│   on variables.tf line 113:
-│  113: variable "domain_controller_ips" {
-│
-│ The root module input variable "domain_controller_ips" is not set, and has no default value. Use a -var or -var-file command line argument to provide a value for this variable.
-╵
-╷
-│ Error: No value for required variable
-│
-│   on variables.tf line 117:
-│  117: variable "mgmt_ips" {
-│
-│ The root module input variable "mgmt_ips" is not set, and has no default value. Use a -var or -var-file command line argument to provide a value for this variable.
-╵
-╷
-│ Error: No value for required variable
-│
-│   on variables.tf line 124:
-│  124: variable "server_names" {
-│
-│ The root module input variable "server_names" is not set, and has no default value. Use a -var or -var-file command line argument to provide a value for this variable.
-╵
-╷
-│ Error: No value for required variable
-│
-│   on variables.tf line 128:
-│  128: variable "net_services" {
-│
-│ The root module input variable "net_services" is not set, and has no default value. Use a -var or -var-file command line argument to provide a value for this variable.
-╵
-az-admin@ONT-Infra-23:/mnt/c/Users/VKovi/azure-infra/subscriptions/Ont-Dev1/int-staging-rg$
+# Keep AVD things empty so no host pools/session hosts get created
+avd_host_pools    = {}
+avd_session_hosts = {}

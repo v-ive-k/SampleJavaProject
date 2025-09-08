@@ -1,1 +1,19 @@
-<img width="951" height="617" alt="image" src="https://github.com/user-attachments/assets/429ff667-9872-4d4f-afc3-29d3a8e75198" />
+# by LUN
+az vm run-command invoke \
+  -g mr8-dev-rg -n dvkib2-mrfl01 \
+  --command-id RunPowerShellScript \
+  --scripts \
+'$targetLun = 0;' \
+'$disk = Get-Disk | Where-Object { $_.Location -match "LUN $targetLun" };' \
+'if (-not $disk) { throw "Disk with LUN $targetLun not found." };' \
+'if ($disk.PartitionStyle -eq "RAW") { Initialize-Disk -Number $disk.Number -PartitionStyle GPT -Confirm:$false; $p = New-Partition -DiskNumber $disk.Number -UseMaximumSize -AssignDriveLetter; Format-Volume -Partition $p -FileSystem NTFS -NewFileSystemLabel "Data" -Confirm:$false; } else { $p = Get-Partition -DiskNumber $disk.Number | Sort-Object Size -Descending | Select-Object -First 1 };' \
+'$desired="E"; if (-not (Get-Volume -DriveLetter $desired -ErrorAction SilentlyContinue)) { Set-Partition -DiskNumber $disk.Number -PartitionNumber $p.PartitionNumber -NewDriveLetter $desired -ErrorAction Stop }; Write-Host "Mounted as $desired:"'
+
+
+
+
+az vm run-command invoke -g mr8-dev-rg -n dvkib2-mrfl01 \
+  --command-id RunPowerShellScript --scripts \
+'Get-Volume | Select DriveLetter,FileSystemLabel,FileSystem,Size,SizeRemaining | Sort DriveLetter' \
+'Get-Disk | Select Number,FriendlyName,Size,PartitionStyle,Location | Sort Number' \
+'Get-Partition | Select DiskNumber,PartitionNumber,DriveLetter,Size | Sort DiskNumber,PartitionNumber'

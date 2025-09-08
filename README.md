@@ -84,3 +84,85 @@ var.stg_workspace_friendly
 
 var.tags
   Enter a value:
+
+╷
+│ Error: Missing expression
+│
+│   on <value for var.domain_controller_ips> line 1:
+│   (source code not available)
+│
+│ Expected the start of an expression, but found the end of the file.
+╵
+╷
+│ Error: Missing expression
+│
+│   on <value for var.mgmt_ips> line 1:
+│   (source code not available)
+│
+│ Expected the start of an expression, but found the end of the file.
+╵
+╷
+│ Error: Missing expression
+│
+│   on <value for var.net_services> line 1:
+│   (source code not available)
+│
+│ Expected the start of an expression, but found the end of the file.
+╵
+╷
+│ Error: Missing expression
+│
+│   on <value for var.server_names> line 1:
+│   (source code not available)
+│
+│ Expected the start of an expression, but found the end of the file.
+╵
+╷
+│ Error: Missing expression
+│
+│   on <value for var.sql_settings> line 1:
+│   (source code not available)
+│
+│ Expected the start of an expression, but found the end of the file.
+╵
+╷
+│ Error: No value for required variable
+│
+│   on variables.tf line 54:
+│   54: variable "sql_settings" {
+│
+│ The root module input variable "sql_settings" is not set, and has no default value. Use a -var or -var-file command line argument to provide a value for this variable.
+╵
+╷
+│ Error: No value for required variable
+│
+│   on variables.tf line 113:
+│  113: variable "domain_controller_ips" {
+│
+│ The root module input variable "domain_controller_ips" is not set, and has no default value. Use a -var or -var-file command line argument to provide a value for this variable.
+╵
+╷
+│ Error: No value for required variable
+│
+│   on variables.tf line 117:
+│  117: variable "mgmt_ips" {
+│
+│ The root module input variable "mgmt_ips" is not set, and has no default value. Use a -var or -var-file command line argument to provide a value for this variable.
+╵
+╷
+│ Error: No value for required variable
+│
+│   on variables.tf line 124:
+│  124: variable "server_names" {
+│
+│ The root module input variable "server_names" is not set, and has no default value. Use a -var or -var-file command line argument to provide a value for this variable.
+╵
+╷
+│ Error: No value for required variable
+│
+│   on variables.tf line 128:
+│  128: variable "net_services" {
+│
+│ The root module input variable "net_services" is not set, and has no default value. Use a -var or -var-file command line argument to provide a value for this variable.
+╵
+az-admin@ONT-Infra-23:/mnt/c/Users/VKovi/azure-infra/subscriptions/Ont-Dev1/int-staging-rg$

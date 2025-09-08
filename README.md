@@ -1,55 +1,86 @@
-# keep your other maps empty/unchanged so nothing else is created
-avd_host_pools   = {}
-avd_session_hosts = {}
+az-admin@ONT-Infra-23:/mnt/c/Users/VKovi/azure-infra/subscriptions/Ont-Dev1/int-staging-rg$ terraform plan
+var.AVD_shared_tags
+  Enter a value:
 
-# ADD or REPLACE just this entry under your existing vms map
-vms = {
-  STINB2-UTL01 = {
-    location            = "southcentralus"
-    resource_group_name = "int-staging-rg"
+var.AVD_tags
+  Enter a value:
 
-    # Use the same subnet as ST-UTILSRV01. In your state you have:
-    # azurerm_subnet.internal_snet  (most likely the utils server lived here)
-    subnet_id = azurerm_subnet.internal_snet.id
+var.avd_snet_address_prefix
+  Enter a value:
 
-    size           = "Standard_B2ms"
-    admin_username = "ONTAdmin"
-    admin_password = data.azurerm_key_vault_secret.ontadmin.value
+var.dmz_snet_address_prefix
+  Enter a value:
 
-    # Platform image (new OS disk auto-created)
-    source_image = {
-      publisher = "MicrosoftWindowsServer"
-      offer     = "WindowsServer"
-      sku       = "2019-Datacenter"
-      version   = "latest"
-    }
+var.domain_controller_ips
+  list of IP addresses to domain controllers
 
-    # Optional, only if your VM code reads it:
-    # ppg_id = "/subscriptions/ffe5c17f-a5cd-46d5-8137-b8c02ee481af/resourceGroups/int-staging-rg/providers/Microsoft.Compute/proximityPlacementGroups/int-stg-ppg"
+  Enter a value:
 
-    # Domain join — mirrors the old extension settings
-    domain_join = {
-      enabled = true
-      domain  = "intertel.local"
-      ou_path = "OU=Staging,OU=Azure Servers,OU=Azure,DC=intertel,DC=local"
-      user    = "svc.directoryservice@intertel.local"
-    }
+var.file_profiles
+  Enter a value:
 
-    # Optional explicit OS disk controls (only if your code supports this block):
-    # os_disk = {
-    #   storage_account_type = "Premium_LRS"
-    #   disk_size_gb         = 128
-    #   caching              = "ReadWrite"
-    # }
+var.file_profiles_contributor_group_id
+  Enter a value:
 
-    # tags (if your module lets you override)
-    # tags = {
-    #   "Migrate Project" = "INT-MigProject-01"
-    #   "domain"          = "intertel"
-    #   "environment"     = "staging"
-    #   "managed by"      = "terraform"
-    #   "owner"           = "Greg Johnson"
-    # }
-  }
-}
+var.file_shares
+  Enter a value:
 
+var.file_shares_contributor_group_id
+  Enter a value:
+
+var.host_pool
+  Enter a value:
+
+var.internal_snet_address_prefix
+  Enter a value:
+
+var.main_vnet_address_space
+  Enter a value:
+
+var.mgmt_ips
+  Map of management PC names and IP addresses
+
+  Enter a value:
+
+var.mgmt_snet_address_prefix
+  Enter a value:
+
+var.net_services
+  Map of network services associated with port numbers. Protocol is to help user determine how to set up rule. It is not used otherwise yet.
+
+  Enter a value:
+
+var.rg_contributor_group_id
+  Enter a value:
+
+var.rg_owner_group_id
+  Enter a value:
+
+var.rg_reader_group_id
+  Enter a value:
+
+var.server_names
+  Names assigned to servers. These may need to be changed between environments (dev, staging, prod, etc)
+
+  Enter a value:
+
+var.sql_settings
+  Enter a value:
+
+var.stg_workspace
+  Create Workspace for AVD pools
+
+  Enter a value:
+
+var.stg_workspace_description
+  Portal workspace discription
+
+  Enter a value:
+
+var.stg_workspace_friendly
+  The name seein in the client
+
+  Enter a value:
+
+var.tags
+  Enter a value:
